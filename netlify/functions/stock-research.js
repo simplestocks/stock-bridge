@@ -54,7 +54,7 @@ Keep the analysis concise but actionable. Focus on swing trading opportunities w
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({
-        research: data.content[0].text,
+        research: data.content?.[0]?.text || data.text || JSON.stringify(data),
         ticker: ticker
       })
     };
