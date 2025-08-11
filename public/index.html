@@ -1,46 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Stock Research Widget</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Analysis Tool</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
-        .widget { border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
-        input { padding: 10px; width: 200px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 20px; background: #007cba; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; }
-        button:hover { background: #005a87; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        .results { margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 4px; white-space: pre-wrap; }
-        .error { color: red; }
-        .loading { color: #666; }
+        .trading-tool {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .tool-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .tool-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .tool-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .input-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .ticker-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .ticker-input:focus {
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+        }
+        
+        .analyze-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .results-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .ticker-symbol {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+        
+        .analysis-title {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .analysis-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+            white-space: pre-wrap;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .disclaimer {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
-    <div class="widget">
-        <h2>AI Stock Research</h2>
-        <div>
-            <input type="text" id="tickerInput" placeholder="Enter ticker (e.g., AAPL)" maxlength="10">
-            <button onclick="researchStock()" id="researchBtn">Research</button>
+    <div class="trading-tool">
+        <div class="tool-header">
+            <h2>📈 Trading Analysis</h2>
+            <p>Get instant technical analysis for any stock</p>
         </div>
-        <div id="results"></div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="tickerInput">Enter Stock Ticker Symbol</label>
+                <input 
+                    type="text" 
+                    id="tickerInput" 
+                    class="ticker-input" 
+                    placeholder="e.g., AAPL, TSLA, NVDA"
+                    maxlength="10"
+                >
+            </div>
+            
+            <button id="analyzeBtn" class="analyze-btn">
+                Analyze Stock
+            </button>
+        </div>
+        
+        <div id="resultsSection" class="results-section">
+            <div class="results-header">
+                <div id="tickerSymbol" class="ticker-symbol"></div>
+                <h3 class="analysis-title">Trading Analysis</h3>
+            </div>
+            <div id="analysisContent" class="analysis-content"></div>
+        </div>
+        
+        <div class="disclaimer">
+            ⚠️ This analysis is for educational purposes only. Not financial advice. Always do your own research before making investment decisions.
+        </div>
     </div>
 
     <script>
-        async function researchStock() {
-            const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
-            const resultsDiv = document.getElementById('results');
-            const btn = document.getElementById('researchBtn');
+        // DOM elements
+        const tickerInput = document.getElementById('tickerInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const tickerSymbol = document.getElementById('tickerSymbol');
+        const analysisContent = document.getElementById('analysisContent');
+
+        // Event listeners
+        analyzeBtn.addEventListener('click', analyzeTicker);
+        tickerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeTicker();
+            }
+        });
+
+        // Auto-uppercase ticker input
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        async function analyzeTicker() {
+            const ticker = tickerInput.value.trim();
             
             if (!ticker) {
-                resultsDiv.innerHTML = '<div class="error">Please enter a ticker symbol</div>';
+                showError('Please enter a stock ticker symbol');
                 return;
             }
-            
-            btn.disabled = true;
-            btn.textContent = 'Researching...';
-            resultsDiv.innerHTML = '<div class="loading">Analyzing ' + ticker + '...</div>';
-            
+
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analyzing...';
+            resultsSection.style.display = 'block';
+            tickerSymbol.textContent = ticker;
+            analysisContent.innerHTML = '<div class="loading">🔍 Analyzing ' + ticker + '... Please wait.</div>';
+
             try {
-                // This URL will be your deployed Netlify function
+                // Call our secure bridge function
                 const response = await fetch('/.netlify/functions/stock-research', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -50,22 +251,26 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    resultsDiv.innerHTML = `<div><strong>${ticker} Research:</strong><br><br>${data.research}</div>`;
+                    analysisContent.textContent = data.research;
                 } else {
-                    resultsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                    throw new Error(data.error || 'Analysis failed');
                 }
+                
             } catch (error) {
-                resultsDiv.innerHTML = '<div class="error">Connection failed. Please try again.</div>';
+                console.error('Error:', error);
+                showError('Analysis failed. Please try again.');
+            } finally {
+                // Reset button
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = 'Analyze Stock';
             }
-            
-            btn.disabled = false;
-            btn.textContent = 'Research';
         }
-        
-        // Allow Enter key to trigger research
-        document.getElementById('tickerInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') researchStock();
-        });
+
+        function showError(message) {
+            resultsSection.style.display = 'block';
+            analysisContent.innerHTML = '<div class="error">' + message + '</div>';
+            tickerSymbol.textContent = '';
+        }
     </script>
 </body>
 </html>
