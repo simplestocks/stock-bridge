@@ -31,7 +31,15 @@ export const handler = async (event, context) => {
         max_tokens: 1000,
         messages: [{
           role: 'user',
-          content: `Research ${ticker} stock. Give me: 1) Current price trends 2) Key financials 3) Recent news 4) Investment thesis. Be concise for retail traders.`
+          content: `You are my professional trading analyst. Analyze the stock ticker ${ticker} and give me:
+
+1. **Current Technical Setup**: Key support/resistance levels, chart patterns, trend direction
+2. **Entry Strategy**: Best entry points and timing considerations  
+3. **Risk Management**: Stop loss suggestions and position sizing
+4. **Target Levels**: Realistic profit targets based on technical analysis
+5. **Market Context**: How broader market conditions affect this trade
+
+Keep the analysis concise but actionable. Focus on swing trading opportunities with clear risk/reward ratios. Always include specific price levels when possible.`
         }]
       })
     });
