@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Research Widget</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
+        .widget { border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+        input { padding: 10px; width: 200px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; background: #007cba; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; }
+        button:hover { background: #005a87; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .results { margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 4px; white-space: pre-wrap; }
+        .error { color: red; }
+        .loading { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <h2>AI Stock Research</h2>
+        <div>
+            <input type="text" id="tickerInput" placeholder="Enter ticker (e.g., AAPL)" maxlength="10">
+            <button onclick="researchStock()" id="researchBtn">Research</button>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function researchStock() {
+            const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
+            const resultsDiv = document.getElementById('results');
+            const btn = document.getElementById('researchBtn');
+            
+            if (!ticker) {
+                resultsDiv.innerHTML = '<div class="error">Please enter a ticker symbol</div>';
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'Researching...';
+            resultsDiv.innerHTML = '<div class="loading">Analyzing ' + ticker + '...</div>';
+            
+            try {
+                // This URL will be your deployed Netlify function
+                const response = await fetch('/.netlify/functions/stock-research', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticker: ticker })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `<div><strong>${ticker} Research:</strong><br><br>${data.research}</div>`;
+                } else {
+                    resultsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<div class="error">Connection failed. Please try again.</div>';
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Research';
+        }
+        
+        // Allow Enter key to trigger research
+        document.getElementById('tickerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') researchStock();
+        });
+    </script>
+</body>
+</html>
