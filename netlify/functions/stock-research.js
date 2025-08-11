@@ -60,9 +60,19 @@ Keep the analysis concise but actionable. Focus on swing trading opportunities w
     };
 
   } catch (error) {
+    console.error('Function error:', error);
+    console.error('Error details:', error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Research failed' })
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST'
+      },
+      body: JSON.stringify({ 
+        error: 'Research failed', 
+        details: error.message 
+      })
     };
   }
 };
