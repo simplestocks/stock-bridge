@@ -18,92 +18,91 @@ export const handler = async (event, context) => {
       };
     }
 
-    // First, get financial data from Yahoo Finance
+    // Get financial data from Polygon API
+    const polygonApiKey = process.env.POLYGON_API_KEY;
     let financialData = {};
     let dataSource = "Claude knowledge base";
     
     try {
-      const yahooResponse = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-      });
+      // Get company details and financials from Polygon
+      const [companyResponse, financialsResponse] = await Promise.all([
+        fetch(`https://api.polygon.io/v3/reference/tickers/${ticker}?apikey=${polygonApiKey}`),
+        fetch(`https://api.polygon.io/vX/reference/financials?ticker=${ticker}&limit=4&apikey=${polygonApiKey}`)
+      ]);
 
-      if (yahooResponse.ok) {
-        const yahooData = await yahooResponse.json();
-        if (yahooData.chart?.result?.[0]) {
-          financialData = yahooData.chart.result[0];
-          dataSource = "Yahoo Finance + Claude analysis";
-        }
+      if (companyResponse.ok && financialsResponse.ok) {
+        const companyData = await companyResponse.json();
+        const financialsData = await financialsResponse.json();
+        
+        financialData = {
+          company: companyData.results,
+          financials: financialsData.results
+        };
+        dataSource = "Polygon.io financial data";
       }
     } catch (error) {
-      console.log('Yahoo Finance fetch failed:', error.message);
+      console.log('Polygon API fetch failed:', error.message);
       // Continue with Claude knowledge only
     }
 
-    // Call Claude API with the financial data
+    // Call Claude API
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.CLAUDE_API_KEY, // Your API key goes in Netlify env vars
+        'x-api-key': process.env.CLAUDE_API_KEY,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1000,
+        max_tokens: 2000,
         messages: [{
           role: 'user',
-          content: `You are my professional trading analyst. I'm requesting analysis for ${ticker}.
+          content: `You are my professional trading analyst. I'm providing you with current financial data for ${ticker} from Polygon.io.
 
 DATA SOURCE: ${dataSource}
-${Object.keys(financialData).length > 0 ? `FINANCIAL DATA: ${JSON.stringify(financialData, null, 2)}` : 'Using your knowledge base for analysis.'}
+FINANCIAL DATA: ${JSON.stringify(financialData, null, 2)}
 
-Provide a comprehensive report in this EXACT format:
+Analyze this data and provide a comprehensive report in this EXACT format:
 
 📍 [Company Name]: Provide a 2-sentence description of the company and its industry.
 
 ## Financial Data Table
-Create a table with these columns: Metric | TTM | Most Recent Quarter | Prior Quarter
+Create a clean table with these columns: Metric | TTM | Most Recent Quarter | Prior Quarter
 
 **Business Health:**
-- Sales Growth Rate
+- Sales Growth Rate (%)
 - Actual Sales ($)
-- Comparable Sales (if applicable)
-- Profit Growth (Earnings) Rate  
+- Profit Growth Rate (%)  
 - Profit ($)
 - Gross Margin %
-- Gross Margin ($)
 - Operating Margin %
-- Operating Margin ($)
 
 **Valuation Metrics:**
 - Price to Earnings (P/E)
 - Price to Sales (P/S)
 
-*Note: P/E is used for mature non-growth companies, P/S for growth companies*
-
 **Debt Analysis:**
-- Total Debt
-- Net Debt  
-- Cash from Operations
+- Total Debt ($)
+- Net Debt ($)
+- Cash from Operations ($)
 
 **Important Dates:**
 - Next Ex-Dividend Date
 - Next Earnings Report
 
 ## Technical Analysis
-Provide chart patterns, support/resistance levels, and technical commentary.
+Provide support/resistance levels and technical patterns.
 
 ## Wall Street Commentary
-Include any analyst upgrades, downgrades, price targets, or expert opinions.
+Include analyst upgrades, downgrades, and price targets if available in the data.
 
 ## AI Trade Suggestion
-Provide a paper trading suggestion with entry points, stop loss, and targets.
+Provide entry points, stop loss, and price targets for paper trading.
 
 **Data Source:** ${dataSource}
 
-**DISCLAIMER:** This analysis is for educational and paper trading purposes only. Not financial advice. All data is historical and may not reflect current market conditions. Always conduct your own research and consult qualified financial advisors before making investment decisions. Past performance does not guarantee future results.`
+**DISCLAIMER:** This analysis is for educational and paper trading purposes only. Not financial advice. Always conduct your own research and consult qualified financial advisors before making investment decisions. Past performance does not guarantee future results.`
         }]
       })
     });
@@ -118,7 +117,7 @@ Provide a paper trading suggestion with entry points, stop loss, and targets.
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({
-        research: data.content[0].text,
+        research: data.content?.[0]?.text || data.text || JSON.stringify(data),
         ticker: ticker
       })
     };
