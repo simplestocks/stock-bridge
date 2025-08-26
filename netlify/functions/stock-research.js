@@ -18,7 +18,20 @@ export const handler = async (event, context) => {
       };
     }
 
-    // Call Claude API (replace YOUR_API_KEY with your actual key)
+    // First, get financial data from Yahoo Finance
+    const yahooResponse = await fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=financialData,summaryDetail,defaultKeyStatistics,incomeStatementHistory,balanceSheetHistory,cashflowStatementHistory,upgradeDowngradeHistory,calendarEvents`, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    let financialData = {};
+    if (yahooResponse.ok) {
+      const yahooData = await yahooResponse.json();
+      financialData = yahooData.quoteSummary?.result?.[0] || {};
+    }
+
+    // Call Claude API with the financial data
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -31,15 +44,54 @@ export const handler = async (event, context) => {
         max_tokens: 1000,
         messages: [{
           role: 'user',
-          content: `You are my professional trading analyst. Analyze the stock ticker ${ticker} and give me:
+          content: `You are my professional trading analyst. I'm providing you with current financial data for ${ticker}. Analyze this data and provide a comprehensive report in this EXACT format:
 
-1. **Current Technical Setup**: Key support/resistance levels, chart patterns, trend direction
-2. **Entry Strategy**: Best entry points and timing considerations  
-3. **Risk Management**: Stop loss suggestions and position sizing
-4. **Target Levels**: Realistic profit targets based on technical analysis
-5. **Market Context**: How broader market conditions affect this trade
+FINANCIAL DATA PROVIDED:
+${JSON.stringify(financialData, null, 2)}
 
-Keep the analysis concise but actionable. Focus on swing trading opportunities with clear risk/reward ratios. Always include specific price levels when possible.`
+📍 [Company Name]: Provide a 2-sentence description of the company and its industry.
+
+## Financial Data Table
+Create a table with these columns: Metric | TTM | Most Recent Quarter | Prior Quarter
+
+**Business Health:**
+- Sales Growth Rate
+- Actual Sales ($)
+- Comparable Sales (if applicable)
+- Profit Growth (Earnings) Rate  
+- Profit ($)
+- Gross Margin %
+- Gross Margin ($)
+- Operating Margin %
+- Operating Margin ($)
+
+**Valuation Metrics:**
+- Price to Earnings (P/E)
+- Price to Sales (P/S)
+
+*Note: P/E is used for mature non-growth companies, P/S for growth companies*
+
+**Debt Analysis:**
+- Total Debt
+- Net Debt  
+- Cash from Operations
+
+**Important Dates:**
+- Next Ex-Dividend Date
+- Next Earnings Report
+
+## Technical Analysis
+Provide chart patterns, support/resistance levels, and technical commentary based on available data.
+
+## Wall Street Commentary
+Include any analyst upgrades, downgrades, price targets, or expert opinions from the provided data.
+
+## AI Trade Suggestion
+Provide a paper trading suggestion with entry points, stop loss, and targets.
+
+**Data Verification Note:** Mark any metrics from limited sources with ** and note "** = data from single source" at the end.
+
+**DISCLAIMER:** This analysis is for educational and paper trading purposes only. Not financial advice. All data is historical and may not reflect current market conditions. Always conduct your own research and consult qualified financial advisors before making investment decisions. Past performance does not guarantee future results.`
         }]
       })
     });
@@ -54,7 +106,7 @@ Keep the analysis concise but actionable. Focus on swing trading opportunities w
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({
-        research: data.content?.[0]?.text || data.text || JSON.stringify(data),
+        research: data.content[0].text,
         ticker: ticker
       })
     };
