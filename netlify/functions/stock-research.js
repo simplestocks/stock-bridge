@@ -22,21 +22,33 @@ exports.handler = async (event, context) => {
     let dataSource = "Claude knowledge base";
     
     try {
+      // Add logging to see what Polygon actually returns
+      console.log('Calling Polygon API for ticker:', ticker);
+      
       const companyUrl = 'https://api.polygon.io/v3/reference/tickers/' + ticker + '?apikey=' + polygonApiKey;
-      const financialsUrl = 'https://api.polygon.io/vX/reference/financials?ticker=' + ticker + '&limit=4&apikey=' + polygonApiKey;
+      const financialsUrl = 'https://api.polygon.io/vX/reference/financials?ticker=' + ticker + '&limit=4&timeframe=annual&apikey=' + polygonApiKey;
+      
+      console.log('Financials URL:', financialsUrl);
       
       const companyResponse = await fetch(companyUrl);
       const financialsResponse = await fetch(financialsUrl);
 
+      console.log('Company response status:', companyResponse.status);
+      console.log('Financials response status:', financialsResponse.status);
+
       if (companyResponse.ok && financialsResponse.ok) {
         const companyData = await companyResponse.json();
         const financialsDataResult = await financialsResponse.json();
+        
+        console.log('Raw Polygon financials data:', JSON.stringify(financialsDataResult, null, 2));
         
         financialData = {
           company: companyData.results,
           financials: financialsDataResult.results
         };
         dataSource = "Polygon.io financial data";
+      } else {
+        console.log('Polygon API call failed - company ok:', companyResponse.ok, 'financials ok:', financialsResponse.ok);
       }
     } catch (error) {
       console.log('Polygon API failed:', error.message);
