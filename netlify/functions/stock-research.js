@@ -63,42 +63,57 @@ export const handler = async (event, context) => {
 DATA SOURCE: ${dataSource}
 FINANCIAL DATA: ${JSON.stringify(financialData, null, 2)}
 
+Use ONLY the actual field names and values provided in the financial data above. Do not make up any numbers.
+
 Analyze this data and provide a comprehensive report in this EXACT format:
 
 📍 [Company Name]: Provide a 2-sentence description of the company and its industry.
 
 ## Financial Data Table
-Create a clean table with these columns: Metric | TTM | Most Recent Quarter | Prior Quarter
+Format as a proper markdown table using ONLY available data fields:
 
-**Business Health:**
-- Sales Growth Rate (%)
-- Actual Sales ($)
-- Profit Growth Rate (%)  
-- Profit ($)
-- Gross Margin %
-- Operating Margin %
+| Metric | TTM | Most Recent Quarter | Prior Quarter |
+|--------|-----|---------------------|---------------|
+| Revenue ($B) | [revenues field] | [revenues field] | [revenues field] |
+| Net Income ($B) | [net_income_loss field] | [net_income_loss field] | [net_income_loss field] |
+| Gross Profit ($B) | [gross_profit field] | [gross_profit field] | [gross_profit field] |
+| Operating Income ($B) | [operating_income_loss field] | [operating_income_loss field] | [operating_income_loss field] |
 
-**Valuation Metrics:**
-- Price to Earnings (P/E)
-- Price to Sales (P/S)
+**Valuation Metrics (from available data):**
+- Price to Earnings (P/E): [calculate from market cap and net_income_loss if available]
+- Price to Sales (P/S): [calculate from market cap and revenues if available]
 
-**Debt Analysis:**
-- Total Debt ($)
-- Net Debt ($)
-- Cash from Operations ($)
+**Debt Analysis (use exact field names from balance sheet):**
+- Total Debt ($B): [debt field from balance_sheet]
+- Cash & Equivalents ($B): [cash_and_cash_equivalents or similar field]
+- Net Debt ($B): [Total Debt minus Cash, show calculation: "debt - cash_and_cash_equivalents = $X"]
+- Cash from Operations ($B): [net_cash_flow_from_operating_activities from cash_flow_statement]
 
 **Important Dates:**
-- Next Ex-Dividend Date
-- Next Earnings Report
+- Next Ex-Dividend Date: "Data not available in provided dataset"
+- Next Earnings Report: "Data not available in provided dataset"
 
 ## Technical Analysis
-Provide support/resistance levels and technical patterns.
+Provide specific support and resistance levels with actual price points:
+- Current Price: $[from company data if available]
+- Key Support Levels: [based on available price data]
+- Key Resistance Levels: [based on available price data]
+- Trend Analysis: [based on available data]
 
 ## Wall Street Commentary
-Include analyst upgrades, downgrades, and price targets if available in the data.
+"Analyst data not included in current dataset"
 
 ## AI Trade Suggestion
-Provide entry points, stop loss, and price targets for paper trading.
+Based on available financial metrics:
+- Entry Strategy: [based on financial health from actual data]
+- Risk Assessment: [based on debt levels and cash flow from actual data]
+- Price Targets: [based on valuation metrics from actual data]
+
+**CRITICAL: Use only field names that exist in the provided JSON data. If a field doesn't exist, state "Not available in dataset"**
+
+**Data Source:** ${dataSource}
+
+**DISCLAIMER:** This analysis is for educational and paper trading purposes only. Not financial advice. Always conduct your own research and consult qualified financial advisors before making investment decisions. Past performance does not guarantee future results.`
 
 **Data Source:** ${dataSource}
 
