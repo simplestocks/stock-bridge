@@ -19,16 +19,26 @@ export const handler = async (event, context) => {
     }
 
     // First, get financial data from Yahoo Finance
-    const yahooResponse = await fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=financialData,summaryDetail,defaultKeyStatistics,incomeStatementHistory,balanceSheetHistory,cashflowStatementHistory,upgradeDowngradeHistory,calendarEvents`, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
-    });
-
     let financialData = {};
-    if (yahooResponse.ok) {
-      const yahooData = await yahooResponse.json();
-      financialData = yahooData.quoteSummary?.result?.[0] || {};
+    let dataSource = "Claude knowledge base";
+    
+    try {
+      const yahooResponse = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+      });
+
+      if (yahooResponse.ok) {
+        const yahooData = await yahooResponse.json();
+        if (yahooData.chart?.result?.[0]) {
+          financialData = yahooData.chart.result[0];
+          dataSource = "Yahoo Finance + Claude analysis";
+        }
+      }
+    } catch (error) {
+      console.log('Yahoo Finance fetch failed:', error.message);
+      // Continue with Claude knowledge only
     }
 
     // Call Claude API with the financial data
@@ -44,10 +54,12 @@ export const handler = async (event, context) => {
         max_tokens: 1000,
         messages: [{
           role: 'user',
-          content: `You are my professional trading analyst. I'm providing you with current financial data for ${ticker}. Analyze this data and provide a comprehensive report in this EXACT format:
+          content: `You are my professional trading analyst. I'm requesting analysis for ${ticker}.
 
-FINANCIAL DATA PROVIDED:
-${JSON.stringify(financialData, null, 2)}
+DATA SOURCE: ${dataSource}
+${Object.keys(financialData).length > 0 ? `FINANCIAL DATA: ${JSON.stringify(financialData, null, 2)}` : 'Using your knowledge base for analysis.'}
+
+Provide a comprehensive report in this EXACT format:
 
 📍 [Company Name]: Provide a 2-sentence description of the company and its industry.
 
@@ -81,15 +93,15 @@ Create a table with these columns: Metric | TTM | Most Recent Quarter | Prior Qu
 - Next Earnings Report
 
 ## Technical Analysis
-Provide chart patterns, support/resistance levels, and technical commentary based on available data.
+Provide chart patterns, support/resistance levels, and technical commentary.
 
 ## Wall Street Commentary
-Include any analyst upgrades, downgrades, price targets, or expert opinions from the provided data.
+Include any analyst upgrades, downgrades, price targets, or expert opinions.
 
 ## AI Trade Suggestion
 Provide a paper trading suggestion with entry points, stop loss, and targets.
 
-**Data Verification Note:** Mark any metrics from limited sources with ** and note "** = data from single source" at the end.
+**Data Source:** ${dataSource}
 
 **DISCLAIMER:** This analysis is for educational and paper trading purposes only. Not financial advice. All data is historical and may not reflect current market conditions. Always conduct your own research and consult qualified financial advisors before making investment decisions. Past performance does not guarantee future results.`
         }]
