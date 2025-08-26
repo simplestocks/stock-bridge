@@ -42,7 +42,7 @@ exports.handler = async (event, context) => {
       console.log('Polygon API failed:', error.message);
     }
 
-    const prompt = 'You are my professional trading analyst. Analyze ' + ticker + ' using this data: ' + JSON.stringify(financialData, null, 2) + '. Provide a comprehensive financial analysis with the exact debt figures from the balance sheet data. Use only the actual field names provided. Data source: ' + dataSource;
+    const prompt = 'You are my professional trading analyst. Analyze ' + ticker + ' using this Polygon financial data. CRITICAL REQUIREMENTS: 1) Calculate Net Debt using this formula: Net Debt = (Short Term Debt + Long Term Debt) - Cash & Cash Equivalents. 2) Show the calculation with actual numbers. 3) Use only field names that exist in the data. Raw data: ' + JSON.stringify(financialData, null, 2) + '. Provide analysis showing: Total Debt (short-term + long-term), Cash position, and Net Debt calculation. Data source: ' + dataSource;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
