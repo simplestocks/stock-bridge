@@ -18,43 +18,70 @@ exports.handler = async (event, context) => {
     }
 
     const polygonApiKey = process.env.POLYGON_API_KEY;
-    let financialData = {};
-    let dataSource = "Claude knowledge base";
+    let financialData = null;
+    let hasRealData = false;
     
     try {
-      // Add logging to see what Polygon actually returns
-      console.log('Calling Polygon API for ticker:', ticker);
+      // Fixed API endpoints
+      const companyUrl = `https://api.polygon.io/v3/reference/tickers/${ticker}?apikey=${polygonApiKey}`;
+      const financialsUrl = `https://api.polygon.io/v1/reference/financials?ticker=${ticker}&limit=4&timeframe=annual&apikey=${polygonApiKey}`;
       
-      const companyUrl = 'https://api.polygon.io/v3/reference/tickers/' + ticker + '?apikey=' + polygonApiKey;
-      const financialsUrl = 'https://api.polygon.io/vX/reference/financials?ticker=' + ticker + '&limit=4&timeframe=annual&apikey=' + polygonApiKey;
+      console.log('Calling Polygon APIs for ticker:', ticker);
       
-      console.log('Financials URL:', financialsUrl);
-      
-      const companyResponse = await fetch(companyUrl);
-      const financialsResponse = await fetch(financialsUrl);
+      const [companyResponse, financialsResponse] = await Promise.all([
+        fetch(companyUrl),
+        fetch(financialsUrl)
+      ]);
 
-      console.log('Company response status:', companyResponse.status);
-      console.log('Financials response status:', financialsResponse.status);
+      console.log('API responses - Company:', companyResponse.status, 'Financials:', financialsResponse.status);
 
       if (companyResponse.ok && financialsResponse.ok) {
         const companyData = await companyResponse.json();
         const financialsDataResult = await financialsResponse.json();
         
-        console.log('Raw Polygon financials data:', JSON.stringify(financialsDataResult, null, 2));
+        console.log('Financials structure:', JSON.stringify(financialsDataResult, null, 2));
         
-        financialData = {
-          company: companyData.results,
-          financials: financialsDataResult.results
-        };
-        dataSource = "Polygon.io financial data";
-      } else {
-        console.log('Polygon API call failed - company ok:', companyResponse.ok, 'financials ok:', financialsResponse.ok);
+        if (companyData.results && financialsDataResult.results && financialsDataResult.results.length > 0) {
+          financialData = {
+            company: companyData.results,
+            financials: financialsDataResult.results
+          };
+          hasRealData = true;
+        }
       }
     } catch (error) {
-      console.log('Polygon API failed:', error.message);
+      console.log('Polygon API error:', error.message);
     }
 
-    const prompt = 'You are my professional trading analyst. Analyze ' + ticker + ' using this Polygon financial data. CRITICAL REQUIREMENTS: 1) Calculate Net Debt using this formula: Net Debt = (Short Term Debt + Long Term Debt) - Cash & Cash Equivalents. 2) Show the calculation with actual numbers. 3) Use only field names that exist in the data. Raw data: ' + JSON.stringify(financialData, null, 2) + '. Provide analysis showing: Total Debt (short-term + long-term), Cash position, and Net Debt calculation. Data source: ' + dataSource;
+    // Build prompt based on what data we have
+    let prompt;
+    if (hasRealData) {
+      prompt = `You are a professional trading analyst. Analyze ${ticker} using this Polygon.io financial data.
+
+CRITICAL: Use ONLY the field names that actually exist in this data structure. Do not assume standard accounting terms.
+
+Raw Polygon data: ${JSON.stringify(financialData, null, 2)}
+
+Analyze:
+1. Company overview from the ticker data
+2. Financial health using available balance sheet fields 
+3. If debt and cash fields exist, calculate net debt position
+4. Revenue trends if income statement data available
+5. Key financial ratios using only available fields
+6. Trading recommendation based on the data
+
+Be specific about which fields you're using and show calculations with actual numbers.`;
+    } else {
+      prompt = `Analyze ${ticker} as a trading analyst. Since live financial data is unavailable, provide analysis based on general knowledge of this company including:
+
+1. Business model and sector analysis
+2. Recent performance trends (if known)
+3. Key risks and opportunities
+4. Technical considerations for trading
+5. Your trading recommendation
+
+Note: This analysis uses general market knowledge, not real-time financial data.`;
+    }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -75,6 +102,10 @@ exports.handler = async (event, context) => {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      throw new Error(`Claude API error: ${data.error?.message || 'Unknown error'}`);
+    }
+
     return {
       statusCode: 200,
       headers: {
@@ -83,8 +114,9 @@ exports.handler = async (event, context) => {
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({
-        research: data.content && data.content[0] && data.content[0].text ? data.content[0].text : 'Analysis failed',
-        ticker: ticker
+        research: data.content?.[0]?.text || 'Analysis failed',
+        ticker: ticker,
+        dataSource: hasRealData ? 'Polygon.io live data' : 'General knowledge'
       })
     };
 
@@ -98,7 +130,7 @@ exports.handler = async (event, context) => {
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({ 
-        error: 'Research failed', 
+        error: 'Analysis failed', 
         details: error.message 
       })
     };
