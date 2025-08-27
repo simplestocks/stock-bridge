@@ -24,7 +24,7 @@ exports.handler = async (event, context) => {
     try {
       // Fixed API endpoints
       const companyUrl = `https://api.polygon.io/v3/reference/tickers/${ticker}?apikey=${polygonApiKey}`;
-      const financialsUrl = `https://api.polygon.io/v1/reference/financials?ticker=${ticker}&limit=4&timeframe=annual&apikey=${polygonApiKey}`;
+      const financialsUrl = `https://api.polygon.io/vX/reference/financials?ticker=${ticker}&limit=4&timeframe=annual&apikey=${polygonApiKey}`;
       
       console.log('Calling Polygon APIs for ticker:', ticker);
       
