@@ -19,44 +19,77 @@ exports.handler = async (event, context) => {
 
     const alphaVantageApiKey = "SXPYQMC37XZJTWM9";
     
-    // Get Alpha Vantage OVERVIEW data
-    const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
-    
-    console.log('Calling Alpha Vantage OVERVIEW for ticker:', ticker);
-    
-    const response = await fetch(overviewUrl);
-    const data = await response.json();
-    
-    console.log('Alpha Vantage OVERVIEW response:', JSON.stringify(data, null, 2));
-    
-    // Check if we got the key fields you need
-    const hasRequiredFields = {
-      PERatio: data.PERatio ? 'YES' : 'NO',
-      PriceToSalesRatioTTM: data.PriceToSalesRatioTTM ? 'YES' : 'NO', 
-      TotalDebt: data.TotalDebt ? 'YES' : 'NO',
-      OperatingCashflowTTM: data.OperatingCashflowTTM ? 'YES' : 'NO',
-      RevenueTTM: data.RevenueTTM ? 'YES' : 'NO',
-      GrossProfitTTM: data.GrossProfitTTM ? 'YES' : 'NO'
+    // Get all required data from Alpha Vantage
+    const [overviewResponse, balanceSheetResponse, cashFlowResponse] = await Promise.all([
+      fetch(`https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${alphaVantageApiKey}`),
+      fetch(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${ticker}&apikey=${alphaVantageApiKey}`),
+      fetch(`https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${ticker}&apikey=${alphaVantageApiKey}`)
+    ]);
+
+    const [overviewData, balanceSheetData, cashFlowData] = await Promise.all([
+      overviewResponse.json(),
+      balanceSheetResponse.json(),
+      cashFlowResponse.json()
+    ]);
+
+    console.log('Alpha Vantage responses received');
+
+    // Extract latest balance sheet data
+    const latestBalanceSheet = balanceSheetData.annualReports?.[0] || {};
+    const latestCashFlow = cashFlowData.annualReports?.[0] || {};
+
+    // Calculate Net Debt
+    const shortTermDebt = parseFloat(latestBalanceSheet.shortTermDebt || 0);
+    const longTermDebt = parseFloat(latestBalanceSheet.longTermDebt || 0);
+    const cash = parseFloat(latestBalanceSheet.cashAndCashEquivalentsAtCarryingValue || 0);
+    const totalDebt = shortTermDebt + longTermDebt;
+    const netDebt = totalDebt - cash;
+
+    // Build comprehensive data object
+    const stockData = {
+      overview: overviewData,
+      balanceSheet: latestBalanceSheet,
+      cashFlow: latestCashFlow,
+      calculated: {
+        totalDebt: totalDebt,
+        netDebt: netDebt,
+        shortTermDebt: shortTermDebt,
+        longTermDebt: longTermDebt,
+        cash: cash
+      }
     };
-    
-    console.log('Required fields check:', hasRequiredFields);
 
-    const analysisResult = `ALPHA VANTAGE OVERVIEW TEST FOR ${ticker}
+    const prompt = `You are a professional stock analyst. Create a comprehensive trading analysis for ${ticker} using this Alpha Vantage data.
 
-FIELD AVAILABILITY CHECK:
-- PE Ratio: ${hasRequiredFields.PERatio} ${data.PERatio || 'N/A'}
-- Price to Sales Ratio: ${hasRequiredFields.PriceToSalesRatioTTM} ${data.PriceToSalesRatioTTM || 'N/A'}
-- Total Debt: ${hasRequiredFields.TotalDebt} ${data.TotalDebt || 'N/A'}
-- Operating Cash Flow: ${hasRequiredFields.OperatingCashflowTTM} ${data.OperatingCashflowTTM || 'N/A'}
-- Revenue TTM: ${hasRequiredFields.RevenueTTM} ${data.RevenueTTM || 'N/A'}
-- Gross Profit TTM: ${hasRequiredFields.GrossProfitTTM} ${data.GrossProfitTTM || 'N/A'}
+REQUIREMENTS:
+1. Use ONLY the actual field names and values from the data provided
+2. Calculate and show Net Debt = Total Debt - Cash with actual numbers
+3. Format the response as professional trading analysis matching the style of the stock research design
+4. Include all key metrics: PE, P/S, margins, cash flow, debt analysis
+5. Provide clear buy/sell/hold recommendation with rationale
 
-SAMPLE OF OTHER AVAILABLE FIELDS:
-${Object.keys(data).slice(0, 20).map(key => `- ${key}: ${data[key]}`).join('\n')}
+Data: ${JSON.stringify(stockData, null, 2)}
 
-TOTAL FIELDS AVAILABLE: ${Object.keys(data).length}
+Format the analysis professionally for trading subscribers.`;
 
-${Object.keys(data).length > 0 ? 'SUCCESS: Alpha Vantage OVERVIEW is working!' : 'ERROR: No data returned'}`;
+    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      })
+    });
+
+    const claudeData = await claudeResponse.json();
 
     return {
       statusCode: 200,
@@ -66,9 +99,16 @@ ${Object.keys(data).length > 0 ? 'SUCCESS: Alpha Vantage OVERVIEW is working!' :
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({
-        research: analysisResult,
+        research: claudeData.content?.[0]?.text || 'Analysis failed',
         ticker: ticker,
-        rawData: data
+        rawData: {
+          peRatio: overviewData.PERatio,
+          psRatio: overviewData.PriceToSalesRatioTTM,
+          netDebt: netDebt,
+          operatingCashFlow: latestCashFlow.operatingCashflow,
+          revenue: overviewData.RevenueTTM,
+          grossProfit: overviewData.GrossProfitTTM
+        }
       })
     };
 
@@ -82,7 +122,7 @@ ${Object.keys(data).length > 0 ? 'SUCCESS: Alpha Vantage OVERVIEW is working!' :
         'Access-Control-Allow-Methods': 'POST'
       },
       body: JSON.stringify({ 
-        error: 'Test failed', 
+        error: 'Analysis failed', 
         details: error.message 
       })
     };
