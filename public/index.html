@@ -156,11 +156,6 @@
             font-weight: bold;
         }
         
-        .options-section {
-            grid-column: span 2;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-        }
-        
         .technical-section {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         }
@@ -211,16 +206,6 @@
             color: #718096;
         }
         
-        .alert-box {
-            background: #fed7d7;
-            border: 1px solid #feb2b2;
-            color: #9b2c2c;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-        
         .success-box {
             background: #c6f6d5;
             border: 1px solid #9ae6b4;
@@ -243,19 +228,23 @@
             color: #667eea;
         }
         
+        .alert-box {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            color: #9b2c2c;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
         @media (max-width: 1024px) {
             .content {
                 grid-template-columns: 1fr 1fr;
             }
-            
             .price-section {
                 grid-column: span 2;
             }
-            
-            .options-section {
-                grid-column: span 2;
-            }
-            
             .full-width {
                 grid-column: span 2;
             }
@@ -265,9 +254,7 @@
             .content {
                 grid-template-columns: 1fr;
             }
-            
             .price-section,
-            .options-section,
             .full-width {
                 grid-column: span 1;
             }
@@ -284,7 +271,6 @@
                 <button class="research-btn" id="researchBtn">🔍 Research</button>
             </div>
         </div>
-        
         <div class="content" id="contentArea">
             <!-- Content will be populated by JavaScript -->
         </div>
@@ -304,6 +290,7 @@
 
         async function researchStock() {
             const ticker = tickerInput.value.trim().toUpperCase();
+            
             if (!ticker) {
                 alert('Please enter a ticker symbol');
                 return;
@@ -311,7 +298,6 @@
 
             researchBtn.disabled = true;
             researchBtn.textContent = 'Researching...';
-            
             showLoading();
 
             try {
@@ -343,7 +329,7 @@
                 <div class="loading">
                     🔍 Fetching comprehensive stock data from Alpha Vantage...
                     <br><br>
-                    This includes: Company Overview, Balance Sheet, Cash Flow
+                    This includes: Company Overview, Balance Sheet, Cash Flow, Technical Indicators
                 </div>
             `;
         }
@@ -365,14 +351,29 @@
                 if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
                 return n.toFixed(2);
             };
-
+            
             const formatCurrency = (num) => {
                 if (!num || isNaN(num)) return 'N/A';
                 return '$' + formatNumber(num);
             };
-
+            
             const netDebtFormatted = rawData.netDebt ? 
-                (rawData.netDebt < 0 ? '-' + formatCurrency(Math.abs(rawData.netDebt)) : formatCurrency(rawData.netDebt)) : 'N/A';
+                (rawData.netDebt < 0 ? '-' + formatCurrency(Math.abs(rawData.netDebt)) : 
+                formatCurrency(rawData.netDebt)) : 'N/A';
+
+            const formatTechnical = (value) => {
+                if (!value || value === 'N/A') return 'N/A';
+                const num = parseFloat(value);
+                return isNaN(num) ? 'N/A' : num.toFixed(2);
+            };
+
+            const getRsiColor = (rsi) => {
+                if (!rsi || rsi === 'N/A') return 'neutral';
+                const value = parseFloat(rsi);
+                if (value > 70) return 'bearish';
+                if (value < 30) return 'bullish';
+                return 'neutral';
+            };
 
             contentArea.innerHTML = `
                 <!-- Price Section -->
@@ -406,43 +407,13 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Options Analysis -->
-                <div class="card options-section">
-                    <div class="card-title">
-                        <span class="icon">📈</span>
-                        Alpha Vantage Data
-                    </div>
-                    
-                    <div class="success-box">
-                        ✅ LIVE: Real financial data from SEC filings
-                    </div>
-                    
-                    <div class="data-row">
-                        <div class="data-label">Data Source</div>
-                        <div class="data-value">Alpha Vantage API</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Analysis Type</div>
-                        <div class="data-value">Fundamental</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">API Calls Used</div>
-                        <div class="data-value">3 (Overview, Balance, Cash Flow)</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Plan Required</div>
-                        <div class="data-value">Free Tier (25/day)</div>
-                    </div>
-                </div>
-                
+
                 <!-- Fundamentals -->
                 <div class="card fundamentals-section">
                     <div class="card-title">
                         <span class="icon">💰</span>
                         Key Fundamentals
                     </div>
-                    
                     <div class="data-row">
                         <div class="data-label">P/E Ratio</div>
                         <div class="data-value">${rawData.peRatio || 'N/A'}</div>
@@ -468,46 +439,42 @@
                         <div class="data-value">${formatCurrency(rawData.operatingCashFlow)}</div>
                     </div>
                 </div>
-                
+
                 <!-- Technical Analysis -->
                 <div class="card technical-section">
                     <div class="card-title">
                         <span class="icon">📉</span>
                         Technical Analysis
                     </div>
-                    
-                    <div class="alert-box">
-                        ⚠️ Technical indicators require premium Alpha Vantage
+                    <div class="success-box">
+                        ✅ LIVE: Real technical indicators from Alpha Vantage
                     </div>
-                    
                     <div class="data-row">
                         <div class="data-label">RSI (14)</div>
-                        <div class="data-value neutral">Premium Only</div>
+                        <div class="data-value ${getRsiColor(rawData.rsi)}">${formatTechnical(rawData.rsi)}</div>
                     </div>
                     <div class="data-row">
-                        <div class="data-label">MACD</div>
-                        <div class="data-value neutral">Premium Only</div>
+                        <div class="data-label">Stochastic %K</div>
+                        <div class="data-value neutral">${formatTechnical(rawData.stochastic)}</div>
                     </div>
                     <div class="data-row">
-                        <div class="data-label">Moving Averages</div>
-                        <div class="data-value neutral">Premium Only</div>
+                        <div class="data-label">ADX (14)</div>
+                        <div class="data-value neutral">${formatTechnical(rawData.adx)}</div>
                     </div>
                 </div>
-                
-                <!-- Earnings -->
+
+                <!-- Financial Health -->
                 <div class="card earnings-section">
                     <div class="card-title">
                         <span class="icon">📊</span>
                         Financial Health
                     </div>
-                    
                     <div class="success-box">
                         ✅ DATA: Comprehensive balance sheet analysis
                     </div>
-                    
                     <div class="data-row">
                         <div class="data-label">Revenue Growth</div>
-                        <div class="data-value">Available in premium</div>
+                        <div class="data-value">Available in API</div>
                     </div>
                     <div class="data-row">
                         <div class="data-label">Margin Analysis</div>
@@ -518,14 +485,13 @@
                         <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
                     </div>
                 </div>
-                
-                <!-- Catalysts -->
+
+                <!-- Data Coverage -->
                 <div class="card catalyst-section">
                     <div class="card-title">
                         <span class="icon">⚡</span>
                         Data Coverage
                     </div>
-                    
                     <div class="data-row">
                         <div class="data-label">Company Overview</div>
                         <div class="data-value bullish">✓ Available</div>
@@ -539,18 +505,17 @@
                         <div class="data-value bullish">✓ Available</div>
                     </div>
                     <div class="data-row">
-                        <div class="data-label">Income Statement</div>
-                        <div class="data-value bullish">✓ Available</div>
+                        <div class="data-label">Technical Indicators</div>
+                        <div class="data-value bullish">✓ Live Data</div>
                     </div>
                 </div>
-                
+
                 <!-- AI Analysis Summary -->
                 <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
                         <span class="icon">🤖</span>
                         Claude AI Analysis Summary
                     </div>
-                    
                     <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
                 </div>
             `;
