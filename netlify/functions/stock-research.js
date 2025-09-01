@@ -73,28 +73,39 @@ exports.handler = async (event, context) => {
     const stochK = getLatestValue(stochData, 'Technical Analysis: STOCH');
     const adxValue = getLatestValue(adxData, 'Technical Analysis: ADX');
 
+    // Calculate additional metrics
+    const currentRevenue = parseFloat(overviewData.RevenueTTM || 0);
+    const grossProfit = parseFloat(overviewData.GrossProfitTTM || 0);
+    const grossMargin = currentRevenue > 0 ? ((grossProfit / currentRevenue) * 100).toFixed(1) : 'N/A';
+    
+    // Get revenue growth from quarterly data
+    const quarterlyRevenueGrowth = overviewData.QuarterlyRevenueGrowthYOY ? 
+      (parseFloat(overviewData.QuarterlyRevenueGrowthYOY) * 100).toFixed(1) : 'N/A';
+
     // Enhanced prompt with technical data
     const prompt = `Professional stock analysis for ${ticker}:
 
 FUNDAMENTAL DATA:
 - PE Ratio: ${overviewData.PERatio || 'N/A'}
 - P/S Ratio: ${overviewData.PriceToSalesRatioTTM || 'N/A'}
-- Revenue TTM: $${overviewData.RevenueTTM || 'N/A'}
-- Gross Profit TTM: $${overviewData.GrossProfitTTM || 'N/A'}
+- Revenue TTM: ${overviewData.RevenueTTM || 'N/A'}
+- Gross Profit TTM: ${overviewData.GrossProfitTTM || 'N/A'}
+- Gross Margin: ${grossMargin}%
+- Quarterly Revenue Growth YoY: ${quarterlyRevenueGrowth}%
 
 DEBT ANALYSIS:
-- Short Term Debt: $${shortTermDebt.toFixed(0)}
-- Long Term Debt: $${longTermDebt.toFixed(0)}
-- Total Debt: $${totalDebt.toFixed(0)}
-- Cash: $${cash.toFixed(0)}
-- Net Debt: $${netDebt.toFixed(0)}
+- Short Term Debt: ${shortTermDebt.toFixed(0)}
+- Long Term Debt: ${longTermDebt.toFixed(0)}
+- Total Debt: ${totalDebt.toFixed(0)}
+- Cash: ${cash.toFixed(0)}
+- Net Debt: ${netDebt.toFixed(0)}
 
 TECHNICAL INDICATORS:
 - RSI (14): ${rsiValue}
 - Stochastic %K: ${stochK}
 - ADX: ${adxValue}
 
-Operating Cash Flow: $${latestCashFlow.operatingCashflow || 'N/A'}
+Operating Cash Flow: ${latestCashFlow.operatingCashflow || 'N/A'}
 
 Provide professional trading analysis for subscribers with both fundamental and technical insights.`;
 
@@ -134,6 +145,8 @@ Provide professional trading analysis for subscribers with both fundamental and 
           operatingCashFlow: latestCashFlow.operatingCashflow,
           revenue: overviewData.RevenueTTM,
           grossProfit: overviewData.GrossProfitTTM,
+          grossMargin: grossMargin,
+          revenueGrowth: quarterlyRevenueGrowth,
           // Technical indicators
           rsi: rsiValue,
           stochastic: stochK,
