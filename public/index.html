@@ -414,52 +414,458 @@
                         <span class="icon">💰</span>
                         Key Fundamentals
                     </div>
-                    <div class="data-row">
-                        <div class="data-label">P/E Ratio</div>
-                        <div class="data-value">${rawData.peRatio || 'N/A'}</div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                        <div>Metric</div>
+                        <div>TTM</div>
+                        <div>Forward</div>
                     </div>
-                    <div class="data-row">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                        <div class="data-label">P/E Ratio</div>
+                        <div class="data-value">${rawData.trailingPE || rawData.peRatio || 'N/A'}</div>
+                        <div class="data-value">${rawData.forwardPE || 'N/A'}</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
                         <div class="data-label">P/S Ratio</div>
                         <div class="data-value">${rawData.psRatio || 'N/A'}</div>
+                        <div class="data-value">N/A</div>
                     </div>
-                    <div class="data-row">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                        <div class="data-label">PEG Ratio</div>
+                        <div class="data-value">${rawData.pegRatio || 'N/A'}</div>
+                        <div class="data-value">N/A</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                        <div class="data-label">Price to Book</div>
+                        <div class="data-value">${rawData.priceToBook || 'N/A'}</div>
+                        <div class="data-value">N/A</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
                         <div class="data-label">Net Debt</div>
                         <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${netDebtFormatted}</div>
+                        <div class="data-value">N/A</div>
                     </div>
-                    <div class="data-row">
-                        <div class="data-label">Revenue TTM</div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0;">
+                        <div class="data-label">Revenue</div>
                         <div class="data-value">${formatCurrency(rawData.revenue)}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Gross Profit TTM</div>
-                        <div class="data-value">${formatCurrency(rawData.grossProfit)}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Operating Cash Flow</div>
-                        <div class="data-value">${formatCurrency(rawData.operatingCashFlow)}</div>
+                        <div class="data-value">N/A</div>
                     </div>
                 </div>
 
-                <!-- Technical Analysis -->
+                <!-- Relative Valuation -->
                 <div class="card technical-section">
                     <div class="card-title">
-                        <span class="icon">📉</span>
-                        Technical Analysis
+                        <span class="icon">📊</span>
+                        Relative Valuation
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Beta</div>
+                        <div class="data-value">${rawData.beta || 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">52 Week High</div>
+                        <div class="data-value">${rawData.weekHigh52 ? '
+
+                <!-- Analyst Metrics -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">🎯</span>
+                        Analyst Metrics
                     </div>
                     <div class="success-box">
-                        ✅ LIVE: Real technical indicators from Alpha Vantage
+                        ✅ DATA: Analyst ratings and price targets
                     </div>
                     <div class="data-row">
-                        <div class="data-label">RSI (14)</div>
-                        <div class="data-value ${getRsiColor(rawData.rsi)}">${formatTechnical(rawData.rsi)}</div>
+                        <div class="data-label">Target Price</div>
+                        <div class="data-value">${rawData.analystTargetPrice ? '
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.weekHigh52).toFixed(2) : 'N/A'}</div>
                     </div>
                     <div class="data-row">
-                        <div class="data-label">Stochastic %K</div>
-                        <div class="data-value neutral">${formatTechnical(rawData.stochastic)}</div>
+                        <div class="data-label">52 Week Low</div>
+                        <div class="data-value">${rawData.weekLow52 ? '
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
                     </div>
                     <div class="data-row">
-                        <div class="data-label">ADX (14)</div>
-                        <div class="data-value neutral">${formatTechnical(rawData.adx)}</div>
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.weekLow52).toFixed(2) : 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">50-Day MA</div>
+                        <div class="data-value">${rawData.movingAverage50 ? '
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.movingAverage50).toFixed(2) : 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">200-Day MA</div>
+                        <div class="data-value">${rawData.movingAverage200 ? '
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.movingAverage200).toFixed(2) : 'N/A'}</div>
+                    </div>
+                </div>
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.analystTargetPrice).toFixed(2) : 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Strong Buy</div>
+                        <div class="data-value bullish">${rawData.analystRatingStrongBuy || '0'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Buy</div>
+                        <div class="data-value bullish">${rawData.analystRatingBuy || '0'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Hold</div>
+                        <div class="data-value neutral">${rawData.analystRatingHold || '0'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Sell</div>
+                        <div class="data-value bearish">${rawData.analystRatingSell || '0'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Strong Sell</div>
+                        <div class="data-value bearish">${rawData.analystRatingStrongSell || '0'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.weekHigh52).toFixed(2) : 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">52 Week Low</div>
+                        <div class="data-value">${rawData.weekLow52 ? '
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.weekLow52).toFixed(2) : 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">50-Day MA</div>
+                        <div class="data-value">${rawData.movingAverage50 ? '
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.movingAverage50).toFixed(2) : 'N/A'}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">200-Day MA</div>
+                        <div class="data-value">${rawData.movingAverage200 ? '
+
+                <!-- Financial Health -->
+                <div class="card earnings-section">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Financial Health
+                    </div>
+                    <div class="success-box">
+                        ✅ DATA: Comprehensive balance sheet analysis
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Revenue Growth YoY</div>
+                        <div class="data-value">${rawData.revenueGrowth || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Gross Margin</div>
+                        <div class="data-value">${rawData.grossMargin || 'N/A'}%</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label">Debt Position</div>
+                        <div class="data-value ${rawData.netDebt && rawData.netDebt < 0 ? 'bullish' : 'neutral'}">${rawData.netDebt && rawData.netDebt < 0 ? 'Net Cash' : 'Net Debt'}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- AI Analysis Summary -->
+                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        <span class="icon">🤖</span>
+                        Claude AI Analysis Summary
+                    </div>
+                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                </div>
+            `;
+        }
+
+        tickerInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html> + parseFloat(rawData.movingAverage200).toFixed(2) : 'N/A'}</div>
                     </div>
                 </div>
 
