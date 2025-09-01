@@ -13,133 +13,155 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a1a1a;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            background: #2d3748;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
             color: white;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
         }
         
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
         .ticker-input {
-            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
         }
         
         .ticker-input input {
-            padding: 15px 20px;
-            font-size: 24px;
-            border: 3px solid #4fd1c7;
-            border-radius: 50px;
-            width: 300px;
+            padding: 12px 18px;
+            font-size: 20px;
+            border: 2px solid #4fd1c7;
+            border-radius: 25px;
+            width: 250px;
             text-align: center;
             text-transform: uppercase;
             font-weight: bold;
             outline: none;
             transition: all 0.3s ease;
+            background: white;
         }
         
         .ticker-input input:focus {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(79, 209, 199, 0.5);
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(79, 209, 199, 0.5);
         }
         
         .research-btn {
             background: linear-gradient(135deg, #4fd1c7 0%, #38b2ac 100%);
             color: white;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            margin-left: 20px;
+            border-radius: 25px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: bold;
         }
         
         .research-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(79, 209, 199, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(79, 209, 199, 0.3);
         }
         
         .research-btn:disabled {
-            background: #ccc;
+            background: #666;
             cursor: not-allowed;
             transform: none;
         }
         
         .content {
-            padding: 30px;
+            padding: 20px;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 30px;
-            min-height: 400px;
+            gap: 20px;
         }
         
         .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e2e8f0;
+            background: #1a202c;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid #4a5568;
             transition: all 0.3s ease;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 209, 199, 0.1);
+            border-color: #4fd1c7;
         }
         
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            color: #2d3748;
-            margin-bottom: 15px;
+            color: #4fd1c7;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             border-bottom: 2px solid #4fd1c7;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         
         .icon {
-            margin-right: 10px;
-            font-size: 20px;
+            margin-right: 8px;
+            font-size: 18px;
         }
         
         .price-section {
             grid-column: span 3;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
             color: white;
             text-align: center;
-            padding: 40px;
+            padding: 25px;
         }
         
         .price {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .price-change {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #4fd1c7;
         }
         
         .price-details {
             display: flex;
             justify-content: space-around;
-            margin-top: 30px;
+            margin-top: 20px;
         }
         
         .price-item {
@@ -147,38 +169,22 @@
         }
         
         .price-label {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.8;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         
         .price-value {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-        }
-        
-        .technical-section {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        }
-        
-        .fundamentals-section {
-            background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
-        }
-        
-        .earnings-section {
-            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
-        }
-        
-        .catalyst-section {
-            background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
         }
         
         .data-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(79, 209, 199, 0.2);
         }
         
         .data-row:last-child {
@@ -187,34 +193,48 @@
         
         .data-label {
             font-weight: 500;
-            color: #4a5568;
+            color: #cbd5e0;
+            font-size: 14px;
         }
         
         .data-value {
             font-weight: bold;
-            color: #2d3748;
+            color: white;
+            font-size: 14px;
         }
         
         .bullish {
-            color: #38a169;
+            color: #68d391;
         }
         
         .bearish {
-            color: #e53e3e;
+            color: #fc8181;
         }
         
         .neutral {
-            color: #718096;
+            color: #a0aec0;
         }
         
         .success-box {
-            background: #c6f6d5;
-            border: 1px solid #9ae6b4;
-            color: #276749;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+            background: rgba(79, 209, 199, 0.2);
+            border: 1px solid #4fd1c7;
+            color: #4fd1c7;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
             font-weight: 500;
+            font-size: 12px;
+        }
+        
+        .alert-box {
+            background: rgba(252, 129, 129, 0.2);
+            border: 1px solid #fc8181;
+            color: #fc8181;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: 500;
+            font-size: 12px;
         }
         
         .full-width {
@@ -224,25 +244,37 @@
         .loading {
             grid-column: span 3;
             text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: #667eea;
+            padding: 30px;
+            font-size: 16px;
+            color: #4fd1c7;
         }
         
-        .alert-box {
-            background: #fed7d7;
-            border: 1px solid #feb2b2;
-            color: #9b2c2c;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-weight: 500;
+        /* Compact fundamentals table */
+        .fundamentals-table {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            border-bottom: 1px solid #4fd1c7;
+            padding-bottom: 4px;
+            font-size: 12px;
+            color: #4fd1c7;
+        }
+        
+        .fundamentals-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 8px;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(79, 209, 199, 0.2);
         }
         
         @media (max-width: 1024px) {
             .content {
                 grid-template-columns: 1fr 1fr;
-                gap: 20px;
+                gap: 15px;
             }
             .price-section {
                 grid-column: span 2;
@@ -255,12 +287,23 @@
         @media (max-width: 768px) {
             .content {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 12px;
                 padding: 15px;
             }
             .price-section,
             .full-width {
                 grid-column: span 1;
+            }
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .ticker-input {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .ticker-input input {
+                width: 200px;
             }
         }
     </style>
@@ -268,8 +311,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Professional Stock Research</h1>
-            <p>Powered by Alpha Vantage • Real-time Analysis</p>
+            <div class="header-top">
+                <div>
+                    <div class="header-title">📊 Professional Stock Research</div>
+                    <div class="header-subtitle">Powered by Alpha Vantage • Real-time Analysis</div>
+                </div>
+            </div>
             <div class="ticker-input">
                 <input type="text" placeholder="Enter Ticker (e.g., AAPL)" id="tickerInput">
                 <button class="research-btn" id="researchBtn">🔍 Research</button>
@@ -365,20 +412,12 @@
                 if (!price || isNaN(price)) return 'N/A';
                 return '$' + parseFloat(price).toFixed(2);
             };
-            
-            const netDebtFormatted = rawData.netDebt ? 
-                (rawData.netDebt < 0 ? '-' + formatCurrency(Math.abs(rawData.netDebt)) : 
-                formatCurrency(rawData.netDebt)) : 'N/A';
-
-            const getDebtColor = (netDebt) => {
-                return (netDebt && netDebt < 0) ? 'bullish' : 'neutral';
-            };
 
             contentArea.innerHTML = `
                 <!-- Price Section -->
                 <div class="card price-section">
                     <div class="price">${ticker}</div>
-                    <div class="price-change neutral">Alpha Vantage Fundamental Analysis</div>
+                    <div class="price-change">Alpha Vantage Fundamental Analysis</div>
                     <div class="price-details">
                         <div class="price-item">
                             <div class="price-label">P/E RATIO</div>
@@ -387,10 +426,6 @@
                         <div class="price-item">
                             <div class="price-label">P/S RATIO</div>
                             <div class="price-value">${rawData.psRatio || 'N/A'}</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-label">NET DEBT</div>
-                            <div class="price-value">${netDebtFormatted}</div>
                         </div>
                         <div class="price-item">
                             <div class="price-label">REVENUE TTM</div>
@@ -408,50 +443,39 @@
                 </div>
 
                 <!-- Fundamentals -->
-                <div class="card fundamentals-section">
+                <div class="card">
                     <div class="card-title">
                         <span class="icon">💰</span>
                         Key Fundamentals
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                    <div class="fundamentals-table">
                         <div>Metric</div>
                         <div>TTM</div>
-                        <div>Forward</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                    <div class="fundamentals-row">
                         <div class="data-label">P/E Ratio</div>
                         <div class="data-value">${rawData.trailingPE || rawData.peRatio || 'N/A'}</div>
-                        <div class="data-value">${rawData.forwardPE || 'N/A'}</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                    <div class="fundamentals-row">
                         <div class="data-label">P/S Ratio</div>
                         <div class="data-value">${rawData.psRatio || 'N/A'}</div>
-                        <div class="data-value">N/A</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                    <div class="fundamentals-row">
                         <div class="data-label">PEG Ratio</div>
                         <div class="data-value">${rawData.pegRatio || 'N/A'}</div>
-                        <div class="data-value">N/A</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                    <div class="fundamentals-row">
                         <div class="data-label">Price to Book</div>
                         <div class="data-value">${rawData.priceToBook || 'N/A'}</div>
-                        <div class="data-value">N/A</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
-                        <div class="data-label">Net Debt</div>
-                        <div class="data-value ${getDebtColor(rawData.netDebt)}">${netDebtFormatted}</div>
-                        <div class="data-value">N/A</div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center; padding: 8px 0;">
+                    <div class="fundamentals-row">
                         <div class="data-label">Revenue</div>
                         <div class="data-value">${formatCurrency(rawData.revenue)}</div>
-                        <div class="data-value">N/A</div>
                     </div>
                 </div>
 
                 <!-- Relative Valuation -->
-                <div class="card technical-section">
+                <div class="card">
                     <div class="card-title">
                         <span class="icon">📊</span>
                         Relative Valuation
@@ -479,7 +503,7 @@
                 </div>
 
                 <!-- Analyst Metrics -->
-                <div class="card earnings-section">
+                <div class="card">
                     <div class="card-title">
                         <span class="icon">🎯</span>
                         Analyst Metrics
@@ -514,12 +538,12 @@
                 </div>
 
                 <!-- AI Analysis Summary -->
-                <div class="card full-width" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                    <div class="card-title" style="color: white; border-color: rgba(255,255,255,0.3);">
+                <div class="card full-width" style="background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);">
+                    <div class="card-title">
                         <span class="icon">🤖</span>
                         Claude AI Analysis Summary
                     </div>
-                    <div style="line-height: 1.6; font-size: 16px; white-space: pre-wrap;">${data.research || 'Analysis not available'}</div>
+                    <div style="line-height: 1.6; font-size: 14px; white-space: pre-wrap; color: #e2e8f0;">${data.research || 'Analysis not available'}</div>
                 </div>
             `;
         }
