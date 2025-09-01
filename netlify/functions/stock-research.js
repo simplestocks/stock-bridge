@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
     const alphaVantageApiKey = process.env.ALPHA_VANTAGE_API_KEY;
     console.log('Starting analysis for ticker:', ticker);
 
-    // Build all API URLs - reduced to 3 calls
+    // Build API URLs - only 3 calls
     const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
     const balanceSheetUrl = `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
     const cashFlowUrl = `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
@@ -50,20 +50,6 @@ exports.handler = async (event, context) => {
     const totalDebt = shortTermDebt + longTermDebt;
     const netDebt = totalDebt - cash;
 
-    // Get latest technical indicator values
-    const getLatestValue = (data, key) => {
-      if (!data[key]) return 'N/A';
-      const dates = Object.keys(data[key]);
-      if (dates.length === 0) return 'N/A';
-      const latestDate = dates[0];
-      const value = data[key][latestDate];
-      return Object.values(value)[0] || 'N/A';
-    };
-
-    const rsiValue = getLatestValue(rsiData, 'Technical Analysis: RSI');
-    const stochK = getLatestValue(stochData, 'Technical Analysis: STOCH');
-    const adxValue = getLatestValue(adxData, 'Technical Analysis: ADX');
-
     // Calculate additional metrics
     const currentRevenue = parseFloat(overviewData.RevenueTTM || 0);
     const grossProfit = parseFloat(overviewData.GrossProfitTTM || 0);
@@ -73,32 +59,45 @@ exports.handler = async (event, context) => {
     const quarterlyRevenueGrowth = overviewData.QuarterlyRevenueGrowthYOY ? 
       (parseFloat(overviewData.QuarterlyRevenueGrowthYOY) * 100).toFixed(1) : 'N/A';
 
-    // Enhanced prompt with technical data
+    // Enhanced prompt with all valuation data
     const prompt = `Professional stock analysis for ${ticker}:
 
-FUNDAMENTAL DATA:
-- PE Ratio: ${overviewData.PERatio || 'N/A'}
+VALUATION METRICS:
+- PE Ratio: ${overviewData.PERatio || 'N/A'} (Trailing: ${overviewData.TrailingPE || 'N/A'}, Forward: ${overviewData.ForwardPE || 'N/A'})
+- PEG Ratio: ${overviewData.PEGRatio || 'N/A'}
 - P/S Ratio: ${overviewData.PriceToSalesRatioTTM || 'N/A'}
-- Revenue TTM: ${overviewData.RevenueTTM || 'N/A'}
-- Gross Profit TTM: ${overviewData.GrossProfitTTM || 'N/A'}
+- P/B Ratio: ${overviewData.PriceToBookRatio || 'N/A'}
+- EV/Revenue: ${overviewData.EVToRevenue || 'N/A'}
+- EV/EBITDA: ${overviewData.EVToEBITDA || 'N/A'}
+
+FUNDAMENTAL DATA:
+- Revenue TTM: $${overviewData.RevenueTTM || 'N/A'}
+- Gross Profit TTM: $${overviewData.GrossProfitTTM || 'N/A'}
 - Gross Margin: ${grossMargin}%
 - Quarterly Revenue Growth YoY: ${quarterlyRevenueGrowth}%
+- Market Cap: $${overviewData.MarketCapitalization || 'N/A'}
 
 DEBT ANALYSIS:
-- Short Term Debt: ${shortTermDebt.toFixed(0)}
-- Long Term Debt: ${longTermDebt.toFixed(0)}
-- Total Debt: ${totalDebt.toFixed(0)}
-- Cash: ${cash.toFixed(0)}
-- Net Debt: ${netDebt.toFixed(0)}
+- Short Term Debt: $${shortTermDebt.toFixed(0)}
+- Long Term Debt: $${longTermDebt.toFixed(0)}
+- Total Debt: $${totalDebt.toFixed(0)}
+- Cash: $${cash.toFixed(0)}
+- Net Debt: $${netDebt.toFixed(0)}
 
-TECHNICAL INDICATORS:
-- RSI (14): ${rsiValue}
-- Stochastic %K: ${stochK}
-- ADX: ${adxValue}
+RELATIVE VALUATION:
+- Beta: ${overviewData.Beta || 'N/A'}
+- 52W High/Low: $${overviewData['52WeekHigh'] || 'N/A'} / $${overviewData['52WeekLow'] || 'N/A'}
+- 50-Day MA: $${overviewData['50DayMovingAverage'] || 'N/A'}
+- 200-Day MA: $${overviewData['200DayMovingAverage'] || 'N/A'}
 
-Operating Cash Flow: ${latestCashFlow.operatingCashflow || 'N/A'}
+ANALYST CONSENSUS:
+- Target Price: $${overviewData.AnalystTargetPrice || 'N/A'}
+- Strong Buy: ${overviewData.AnalystRatingStrongBuy || '0'}, Buy: ${overviewData.AnalystRatingBuy || '0'}
+- Hold: ${overviewData.AnalystRatingHold || '0'}, Sell: ${overviewData.AnalystRatingSell || '0'}
 
-Provide professional trading analysis for subscribers with both fundamental and technical insights.`;
+Operating Cash Flow: $${latestCashFlow.operatingCashflow || 'N/A'}
+
+Provide professional trading analysis for subscribers with comprehensive valuation insights.`;
 
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
