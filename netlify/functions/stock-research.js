@@ -40,15 +40,8 @@ exports.handler = async (event, context) => {
 
     console.log('All Alpha Vantage responses received');
 
-    // Process financial data
-    const latestBalanceSheet = balanceSheetData.annualReports?.[0] || {};
+    // Process financial data - REMOVED NET DEBT CALCULATION
     const latestCashFlow = cashFlowData.annualReports?.[0] || {};
-
-    const shortTermDebt = parseFloat(latestBalanceSheet.shortTermDebt || "0");
-    const longTermDebt = parseFloat(latestBalanceSheet.longTermDebt || "0");
-    const cash = parseFloat(latestBalanceSheet.cashAndCashEquivalentsAtCarryingValue || "0");
-    const totalDebt = shortTermDebt + longTermDebt;
-    const netDebt = totalDebt - cash;
 
     // Calculate additional metrics
     const currentRevenue = parseFloat(overviewData.RevenueTTM || 0);
@@ -59,11 +52,11 @@ exports.handler = async (event, context) => {
     const quarterlyRevenueGrowth = overviewData.QuarterlyRevenueGrowthYOY ? 
       (parseFloat(overviewData.QuarterlyRevenueGrowthYOY) * 100).toFixed(1) : 'N/A';
 
-    // Enhanced prompt with all valuation data
+    // Enhanced prompt with all valuation data - REMOVED NET DEBT REFERENCES
     const prompt = `Professional stock analysis for ${ticker}:
 
 VALUATION METRICS:
-- PE Ratio: ${overviewData.PERatio || 'N/A'} (Trailing: ${overviewData.TrailingPE || 'N/A'}, Forward: ${overviewData.ForwardPE || 'N/A'})
+- PE Ratio: ${overviewData.PERatio || 'N/A'} (Trailing: ${overviewData.TrailingPE || 'N/A'})
 - PEG Ratio: ${overviewData.PEGRatio || 'N/A'}
 - P/S Ratio: ${overviewData.PriceToSalesRatioTTM || 'N/A'}
 - P/B Ratio: ${overviewData.PriceToBookRatio || 'N/A'}
@@ -76,13 +69,6 @@ FUNDAMENTAL DATA:
 - Gross Margin: ${grossMargin}%
 - Quarterly Revenue Growth YoY: ${quarterlyRevenueGrowth}%
 - Market Cap: $${overviewData.MarketCapitalization || 'N/A'}
-
-DEBT ANALYSIS:
-- Short Term Debt: $${shortTermDebt.toFixed(0)}
-- Long Term Debt: $${longTermDebt.toFixed(0)}
-- Total Debt: $${totalDebt.toFixed(0)}
-- Cash: $${cash.toFixed(0)}
-- Net Debt: $${netDebt.toFixed(0)}
 
 RELATIVE VALUATION:
 - Beta: ${overviewData.Beta || 'N/A'}
@@ -131,11 +117,11 @@ Provide professional trading analysis for subscribers with comprehensive valuati
         rawData: {
           peRatio: overviewData.PERatio,
           trailingPE: overviewData.TrailingPE,
-          forwardPE: overviewData.ForwardPE,
+          // REMOVED: forwardPE (not available)
           psRatio: overviewData.PriceToSalesRatioTTM,
           pegRatio: overviewData.PEGRatio,
           priceToBook: overviewData.PriceToBookRatio,
-          netDebt: netDebt,
+          // REMOVED: netDebt (wrong calculation)
           operatingCashFlow: latestCashFlow.operatingCashflow,
           revenue: overviewData.RevenueTTM,
           grossProfit: overviewData.GrossProfitTTM,
