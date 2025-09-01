@@ -20,31 +20,22 @@ exports.handler = async (event, context) => {
     const alphaVantageApiKey = process.env.ALPHA_VANTAGE_API_KEY;
     console.log('Starting analysis for ticker:', ticker);
 
-    // Build all API URLs
+    // Build all API URLs - reduced to 3 calls
     const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
     const balanceSheetUrl = `https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
     const cashFlowUrl = `https://www.alphavantage.co/query?function=CASH_FLOW&symbol=${ticker}&apikey=${alphaVantageApiKey}`;
-    const rsiUrl = `https://www.alphavantage.co/query?function=RSI&symbol=${ticker}&interval=daily&time_period=14&series_type=close&apikey=${alphaVantageApiKey}`;
-    const stochUrl = `https://www.alphavantage.co/query?function=STOCH&symbol=${ticker}&interval=daily&apikey=${alphaVantageApiKey}`;
-    const adxUrl = `https://www.alphavantage.co/query?function=ADX&symbol=${ticker}&interval=daily&time_period=14&apikey=${alphaVantageApiKey}`;
 
     // Make all API calls
-    const [overviewResponse, balanceSheetResponse, cashFlowResponse, rsiResponse, stochResponse, adxResponse] = await Promise.all([
+    const [overviewResponse, balanceSheetResponse, cashFlowResponse] = await Promise.all([
       fetch(overviewUrl),
       fetch(balanceSheetUrl),
-      fetch(cashFlowUrl),
-      fetch(rsiUrl),
-      fetch(stochUrl),
-      fetch(adxUrl)
+      fetch(cashFlowUrl)
     ]);
 
-    const [overviewData, balanceSheetData, cashFlowData, rsiData, stochData, adxData] = await Promise.all([
+    const [overviewData, balanceSheetData, cashFlowData] = await Promise.all([
       overviewResponse.json(),
       balanceSheetResponse.json(),
-      cashFlowResponse.json(),
-      rsiResponse.json(),
-      stochResponse.json(),
-      adxResponse.json()
+      cashFlowResponse.json()
     ]);
 
     console.log('All Alpha Vantage responses received');
@@ -140,17 +131,30 @@ Provide professional trading analysis for subscribers with both fundamental and 
         ticker: ticker,
         rawData: {
           peRatio: overviewData.PERatio,
+          trailingPE: overviewData.TrailingPE,
+          forwardPE: overviewData.ForwardPE,
           psRatio: overviewData.PriceToSalesRatioTTM,
+          pegRatio: overviewData.PEGRatio,
+          priceToBook: overviewData.PriceToBookRatio,
           netDebt: netDebt,
           operatingCashFlow: latestCashFlow.operatingCashflow,
           revenue: overviewData.RevenueTTM,
           grossProfit: overviewData.GrossProfitTTM,
           grossMargin: grossMargin,
           revenueGrowth: quarterlyRevenueGrowth,
-          // Technical indicators
-          rsi: rsiValue,
-          stochastic: stochK,
-          adx: adxValue
+          // Relative valuation
+          beta: overviewData.Beta,
+          weekHigh52: overviewData['52WeekHigh'],
+          weekLow52: overviewData['52WeekLow'],
+          movingAverage50: overviewData['50DayMovingAverage'],
+          movingAverage200: overviewData['200DayMovingAverage'],
+          // Analyst metrics
+          analystTargetPrice: overviewData.AnalystTargetPrice,
+          analystRatingStrongBuy: overviewData.AnalystRatingStrongBuy,
+          analystRatingBuy: overviewData.AnalystRatingBuy,
+          analystRatingHold: overviewData.AnalystRatingHold,
+          analystRatingSell: overviewData.AnalystRatingSell,
+          analystRatingStrongSell: overviewData.AnalystRatingStrongSell
         }
       })
     };
