@@ -1,0 +1,8 @@
+{
+  "name": "trading-survey-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for trading room survey",
+  "dependencies": {
+    "@octokit/rest": "^19.0.0"
+  }
+}
