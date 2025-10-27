@@ -1,10 +1,28 @@
 const { Octokit } = require("@octokit/rest");
 
 exports.handler = async (event) => {
+  // Handle preflight OPTIONS request
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
+      body: ''
+    };
+  }
+
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
       body: JSON.stringify({ error: "Method not allowed" })
     };
   }
@@ -68,6 +86,11 @@ exports.handler = async (event) => {
     
     return {
       statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
       body: JSON.stringify({ success: true, message: "Response saved" })
     };
     
@@ -75,6 +98,11 @@ exports.handler = async (event) => {
     console.error("Error:", error);
     return {
       statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
       body: JSON.stringify({ error: "Failed to save response", details: error.message })
     };
   }
