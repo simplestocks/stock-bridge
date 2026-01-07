@@ -1,0 +1,157 @@
+/* CSS RESET & BASICS */
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* INPUT SECTION */
+.search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.logo {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #fff;
+    white-space: nowrap;
+}
+input {
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    flex-grow: 1;
+    border-radius: 4px;
+    outline: none;
+}
+input:focus { border-color: #555; }
+
+button {
+    background: #00ff00;
+    color: #000;
+    border: none;
+    padding: 0 30px;
+    height: 50px;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+button:hover { background: #fff; }
+
+/* LAYOUT GRID */
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* 60% Chart, 40% Data */
+    gap: 20px;
+    height: 80vh; 
+}
+
+/* ZONES */
+.zone-visual, .zone-vitals, .zone-pulse {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.zone-vitals { flex: 0 0 auto; }
+.zone-pulse { flex: 1 1 auto; overflow-y: auto; }
+
+.zone-header {
+    font-size: 12px;
+    color: #666;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+}
+
+/* CHART */
+#tv-chart-container {
+    flex-grow: 1;
+    height: 100%;
+    min-height: 400px;
+}
+
+/* SIGNAL BOX (The Validator Result) */
+.signal-box {
+    background: #111;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #888;
+}
+.signal-box span {
+    display: block;
+    font-size: 24px;
+    margin-top: 5px;
+    color: #fff;
+    font-weight: 900;
+}
+
+/* VITALS GRID */
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.metric-box {
+    background: #000;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+.label { display: block; font-size: 10px; color: #666; margin-bottom: 4px; text-transform: uppercase; }
+.value { font-size: 16px; font-weight: bold; color: #fff; }
+
+/* NEWS FEED */
+.news-item {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+}
+.news-meta { font-size: 10px; color: #666; display: flex; justify-content: space-between; margin-bottom: 5px; }
+.news-title { font-size: 14px; color: #ddd; line-height: 1.4; text-decoration: none; display: block; }
+.news-title:hover { color: #00ff00; }
+.sentiment-tag { padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; }
+
+/* UTILS */
+.bullish { color: #00ff00 !important; }
+.bearish { color: #ff0055 !important; }
+.bg-bull { background: rgba(0, 255, 0, 0.1); color: #00ff00; }
+.bg-bear { background: rgba(255, 0, 85, 0.1); color: #ff0055; }
+.placeholder-text { color: #444; font-style: italic; text-align: center; margin-top: 20px; }
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .grid-layout { grid-template-columns: 1fr; height: auto; }
+    #tv-chart-container { min-height: 350px; }
+}
