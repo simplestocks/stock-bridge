@@ -3,554 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Research Tool</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a1a;
-            min-height: 100vh;
-            padding: 10px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: #2d3748;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .header-title {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .header-subtitle {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        .ticker-input {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .ticker-input input {
-            padding: 12px 18px;
-            font-size: 20px;
-            border: 2px solid #4fd1c7;
-            border-radius: 25px;
-            width: 250px;
-            text-align: center;
-            text-transform: uppercase;
-            font-weight: bold;
-            outline: none;
-            transition: all 0.3s ease;
-            background: white;
-        }
-        
-        .ticker-input input:focus {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(79, 209, 199, 0.5);
-        }
-        
-        .research-btn {
-            background: linear-gradient(135deg, #4fd1c7 0%, #38b2ac 100%);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-        
-        .research-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(79, 209, 199, 0.3);
-        }
-        
-        .research-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .content {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-        }
-        
-        .card {
-            background: #1a202c;
-            border-radius: 12px;
-            padding: 18px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid #4a5568;
-            transition: all 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(79, 209, 199, 0.1);
-            border-color: #4fd1c7;
-        }
-        
-        .card-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #4fd1c7;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            border-bottom: 2px solid #4fd1c7;
-            padding-bottom: 8px;
-        }
-        
-        .icon {
-            margin-right: 8px;
-            font-size: 18px;
-        }
-        
-        .price-section {
-            grid-column: span 3;
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            color: white;
-            text-align: center;
-            padding: 25px;
-        }
-        
-        .price {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
-        .price-change {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: #4fd1c7;
-        }
-        
-        .price-details {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-        
-        .price-item {
-            text-align: center;
-        }
-        
-        .price-label {
-            font-size: 11px;
-            opacity: 0.8;
-            margin-bottom: 4px;
-        }
-        
-        .price-value {
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(79, 209, 199, 0.2);
-        }
-        
-        .data-row:last-child {
-            border-bottom: none;
-        }
-        
-        .data-label {
-            font-weight: 500;
-            color: #cbd5e0;
-            font-size: 14px;
-        }
-        
-        .data-value {
-            font-weight: bold;
-            color: white;
-            font-size: 14px;
-        }
-        
-        .bullish {
-            color: #68d391;
-        }
-        
-        .bearish {
-            color: #fc8181;
-        }
-        
-        .neutral {
-            color: #a0aec0;
-        }
-        
-        .success-box {
-            background: rgba(79, 209, 199, 0.2);
-            border: 1px solid #4fd1c7;
-            color: #4fd1c7;
-            padding: 10px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-weight: 500;
-            font-size: 12px;
-        }
-        
-        .alert-box {
-            background: rgba(252, 129, 129, 0.2);
-            border: 1px solid #fc8181;
-            color: #fc8181;
-            padding: 10px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-weight: 500;
-            font-size: 12px;
-        }
-        
-        .full-width {
-            grid-column: span 3;
-        }
-        
-        .loading {
-            grid-column: span 3;
-            text-align: center;
-            padding: 30px;
-            font-size: 16px;
-            color: #4fd1c7;
-        }
-        
-        /* Compact fundamentals table */
-        .fundamentals-table {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            border-bottom: 1px solid #4fd1c7;
-            padding-bottom: 4px;
-            font-size: 12px;
-            color: #4fd1c7;
-        }
-        
-        .fundamentals-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 8px;
-            align-items: center;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(79, 209, 199, 0.2);
-        }
-        
-        @media (max-width: 1024px) {
-            .content {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-            .price-section {
-                grid-column: span 2;
-            }
-            .full-width {
-                grid-column: span 2;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-                gap: 12px;
-                padding: 15px;
-            }
-            .price-section,
-            .full-width {
-                grid-column: span 1;
-            }
-            .header-top {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .ticker-input {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .ticker-input input {
-                width: 200px;
-            }
-        }
-    </style>
+    <title>Simple Stocks Super Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-top">
-                <div>
-                    <div class="header-title">📊 Professional Stock Research</div>
-                    <div class="header-subtitle">Powered by Alpha Vantage • Real-time Analysis</div>
-                </div>
-            </div>
-            <div class="ticker-input">
-                <input type="text" placeholder="Enter Ticker (e.g., AAPL)" id="tickerInput">
-                <button class="research-btn" id="researchBtn">🔍 Research</button>
-            </div>
+
+    <div class="dashboard-container">
+        <div class="search-bar">
+            <div class="logo">$ SIMPLE STOCKS</div>
+            <input type="text" id="tickerInput" placeholder="ENTER TICKER (e.g. NVDA)" onkeyup="handleEnter(event)">
+            <button onclick="runAnalysis()">ANALYZE</button>
         </div>
-        <div class="content" id="contentArea">
-            <!-- Content will be populated by JavaScript -->
+
+        <div class="grid-layout">
+            
+            <div class="zone-visual">
+                <div class="zone-header">CHART</div>
+                <div id="tv-chart-container"></div> 
+            </div>
+
+            <div class="right-column">
+                
+                <div class="zone-vitals">
+                    <div class="zone-header">VALIDATOR & VITALS</div>
+                    
+                    <div id="signal-box" class="signal-box">
+                        STATUS: <span id="val-signal">WAITING...</span>
+                    </div>
+
+                    <div id="vitals-content" class="data-grid">
+                        <div class="metric-box">
+                            <span class="label">PRICE</span>
+                            <span class="value" id="val-price">--</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="label">RSI (14)</span>
+                            <span class="value" id="val-rsi">--</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="label">TREND (200 SMA)</span>
+                            <span class="value" id="val-trend">--</span>
+                        </div>
+                         <div class="metric-box">
+                            <span class="label">MKT CAP</span>
+                            <span class="value" id="val-mktcap">--</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="label">P/E RATIO</span>
+                            <span class="value" id="val-pe">--</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="label">DIV YIELD</span>
+                            <span class="value" id="val-div">--</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="label">SALES G/Y</span>
+                            <span class="value" id="val-sales">--</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="label">EPS G/Y</span>
+                            <span class="value" id="val-eps">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="zone-pulse">
+                    <div class="zone-header">MARKET PULSE (AI SENTIMENT)</div>
+                    <div id="news-feed" class="news-list">
+                        <div class="placeholder-text">ENTER TICKER TO SCAN.</div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
-    <script>
-        const tickerInput = document.getElementById('tickerInput');
-        const researchBtn = document.getElementById('researchBtn');
-        const contentArea = document.getElementById('contentArea');
-
-        researchBtn.addEventListener('click', researchStock);
-        tickerInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                researchStock();
-            }
-        });
-
-        async function researchStock() {
-            const ticker = tickerInput.value.trim().toUpperCase();
-            
-            if (!ticker) {
-                alert('Please enter a ticker symbol');
-                return;
-            }
-
-            researchBtn.disabled = true;
-            researchBtn.textContent = 'Researching...';
-            showLoading();
-
-            try {
-                const response = await fetch('/.netlify/functions/stock-research', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ticker: ticker })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    displayStockData(ticker, data);
-                } else {
-                    throw new Error(data.error || 'Analysis failed');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showError('Analysis failed. Please try again.');
-            } finally {
-                researchBtn.disabled = false;
-                researchBtn.textContent = '🔍 Research';
-            }
-        }
-
-        function showLoading() {
-            contentArea.innerHTML = `
-                <div class="loading">
-                    🔍 Fetching comprehensive stock data from Alpha Vantage...
-                    <br><br>
-                    This includes: Company Overview, Balance Sheet, Cash Flow
-                </div>
-            `;
-        }
-
-        function showError(message) {
-            contentArea.innerHTML = `
-                <div class="alert-box" style="grid-column: span 3;">${message}</div>
-            `;
-        }
-
-        function displayStockData(ticker, data) {
-            const rawData = data.rawData || {};
-            
-            const formatNumber = (num) => {
-                if (!num || isNaN(num)) return 'N/A';
-                const n = parseFloat(num);
-                if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
-                if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
-                if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
-                return n.toFixed(2);
-            };
-            
-            const formatCurrency = (num) => {
-                if (!num || isNaN(num)) return 'N/A';
-                return '$' + formatNumber(num);
-            };
-            
-            const formatPrice = (price) => {
-                if (!price || isNaN(price)) return 'N/A';
-                return '$' + parseFloat(price).toFixed(2);
-            };
-
-            contentArea.innerHTML = `
-                <!-- Price Section -->
-                <div class="card price-section">
-                    <div class="price">${ticker}</div>
-                    <div class="price-change">Alpha Vantage Fundamental Analysis</div>
-                    <div class="price-details">
-                        <div class="price-item">
-                            <div class="price-label">P/E RATIO</div>
-                            <div class="price-value">${rawData.peRatio || 'N/A'}</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-label">P/S RATIO</div>
-                            <div class="price-value">${rawData.psRatio || 'N/A'}</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-label">REVENUE TTM</div>
-                            <div class="price-value">${formatCurrency(rawData.revenue)}</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-label">GROSS PROFIT</div>
-                            <div class="price-value">${formatCurrency(rawData.grossProfit)}</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-label">OP CASH FLOW</div>
-                            <div class="price-value">${formatCurrency(rawData.operatingCashFlow)}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fundamentals -->
-                <div class="card">
-                    <div class="card-title">
-                        <span class="icon">💰</span>
-                        Key Fundamentals
-                    </div>
-                    <div class="fundamentals-table">
-                        <div>Metric</div>
-                        <div>TTM</div>
-                    </div>
-                    <div class="fundamentals-row">
-                        <div class="data-label">P/E Ratio</div>
-                        <div class="data-value">${rawData.trailingPE || rawData.peRatio || 'N/A'}</div>
-                    </div>
-                    <div class="fundamentals-row">
-                        <div class="data-label">P/S Ratio</div>
-                        <div class="data-value">${rawData.psRatio || 'N/A'}</div>
-                    </div>
-                    <div class="fundamentals-row">
-                        <div class="data-label">PEG Ratio</div>
-                        <div class="data-value">${rawData.pegRatio || 'N/A'}</div>
-                    </div>
-                    <div class="fundamentals-row">
-                        <div class="data-label">Price to Book</div>
-                        <div class="data-value">${rawData.priceToBook || 'N/A'}</div>
-                    </div>
-                    <div class="fundamentals-row">
-                        <div class="data-label">Revenue</div>
-                        <div class="data-value">${formatCurrency(rawData.revenue)}</div>
-                    </div>
-                </div>
-
-                <!-- Relative Valuation -->
-                <div class="card">
-                    <div class="card-title">
-                        <span class="icon">📊</span>
-                        Relative Valuation
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Beta</div>
-                        <div class="data-value">${rawData.beta || 'N/A'}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">52 Week High</div>
-                        <div class="data-value">${formatPrice(rawData.weekHigh52)}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">52 Week Low</div>
-                        <div class="data-value">${formatPrice(rawData.weekLow52)}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">50-Day MA</div>
-                        <div class="data-value">${formatPrice(rawData.movingAverage50)}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">200-Day MA</div>
-                        <div class="data-value">${formatPrice(rawData.movingAverage200)}</div>
-                    </div>
-                </div>
-
-                <!-- Analyst Metrics -->
-                <div class="card">
-                    <div class="card-title">
-                        <span class="icon">🎯</span>
-                        Analyst Metrics
-                    </div>
-                    <div class="success-box">
-                        ✅ DATA: Analyst ratings and price targets
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Target Price</div>
-                        <div class="data-value">${formatPrice(rawData.analystTargetPrice)}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Strong Buy</div>
-                        <div class="data-value bullish">${rawData.analystRatingStrongBuy || '0'}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Buy</div>
-                        <div class="data-value bullish">${rawData.analystRatingBuy || '0'}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Hold</div>
-                        <div class="data-value neutral">${rawData.analystRatingHold || '0'}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Sell</div>
-                        <div class="data-value bearish">${rawData.analystRatingSell || '0'}</div>
-                    </div>
-                    <div class="data-row">
-                        <div class="data-label">Strong Sell</div>
-                        <div class="data-value bearish">${rawData.analystRatingStrongSell || '0'}</div>
-                    </div>
-                </div>
-
-                <!-- AI Analysis Summary -->
-                <div class="card full-width" style="background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);">
-                    <div class="card-title">
-                        <span class="icon">🤖</span>
-                        Claude AI Analysis Summary
-                    </div>
-                    <div style="line-height: 1.6; font-size: 14px; white-space: pre-wrap; color: #e2e8f0;">${data.research || 'Analysis not available'}</div>
-                </div>
-            `;
-        }
-
-        tickerInput.addEventListener('input', function(e) {
-            e.target.value = e.target.value.toUpperCase();
-        });
-    </script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
+
+<style>
+/* CSS RESET & BASICS */
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* INPUT SECTION */
+.search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.logo {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #fff;
+    white-space: nowrap;
+}
+input {
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    flex-grow: 1;
+    border-radius: 4px;
+    outline: none;
+}
+input:focus { border-color: #555; }
+
+button {
+    background: #00ff00;
+    color: #000;
+    border: none;
+    padding: 0 30px;
+    height: 50px;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+button:hover { background: #fff; }
+
+/* LAYOUT GRID */
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* 60% Chart, 40% Data */
+    gap: 20px;
+    height: 80vh; /* Fill most of screen */
+}
+
+/* ZONES */
+.zone-visual, .zone-vitals, .zone-pulse {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.zone-vitals { flex: 0 0 auto; } /* Fits content */
+.zone-pulse { flex: 1 1 auto; overflow-y: auto; } /* Takes remaining space */
+
+.zone-header {
+    font-size: 12px;
+    color: #666;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+}
+
+/* CHART */
+#tv-chart-container {
+    flex-grow: 1;
+    height: 100%;
+    min-height: 400px;
+}
+
+/* SIGNAL BOX (The Validator Result) */
+.signal-box {
+    background: #111;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #888;
+}
+.signal-box span {
+    display: block;
+    font-size: 24px;
+    margin-top: 5px;
+    color: #fff;
+    font-weight: 900;
+}
+
+/* VITALS GRID */
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+    gap: 10px;
+}
+.metric-box {
+    background: #000;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+.label { display: block; font-size: 10px; color: #666; margin-bottom: 4px; text-transform: uppercase; }
+.value { font-size: 16px; font-weight: bold; color: #fff; }
+
+/* NEWS FEED */
+.news-item {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+}
+.news-meta { font-size: 10px; color: #666; display: flex; justify-content: space-between; margin-bottom: 5px; }
+.news-title { font-size: 14px; color: #ddd; line-height: 1.4; text-decoration: none; display: block; }
+.news-title:hover { color: #00ff00; }
+.sentiment-tag { padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; }
+
+/* UTILS */
+.bullish { color: #00ff00 !important; }
+.bearish { color: #ff0055 !important; }
+.bg-bull { background: rgba(0, 255, 0, 0.1); color: #00ff00; }
+.bg-bear { background: rgba(255, 0, 85, 0.1); color: #ff0055; }
+.placeholder-text { color: #444; font-style: italic; text-align: center; margin-top: 20px; }
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .grid-layout { grid-template-columns: 1fr; height: auto; }
+    #tv-chart-container { min-height: 350px; }
+}
+</style>
+
+<script>
+// --- CONFIGURATION ---
+const API_KEY = "C9E1N388LHHS9E5O"; // NIC'S KEY
+
+// --- MAIN FUNCTION ---
+async function runAnalysis() {
+    const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
+    if(!ticker) return;
+
+    // Reset UI
+    document.getElementById('val-signal').innerText = "LOADING...";
+    document.getElementById('val-signal').className = "";
+
+    // 1. UPDATE CHART (TradingView)
+    updateChart(ticker);
+
+    // 2. FETCH DATA (Parallel Execution for Speed)
+    try {
+        await Promise.all([
+            fetchFundamentals(ticker),
+            fetchTechnicalLogic(ticker),
+            fetchNews(ticker)
+        ]);
+    } catch (error) {
+        console.error("API Error:", error);
+        document.getElementById('val-signal').innerText = "API ERROR";
+    }
+}
+
+function handleEnter(e) {
+    if(e.key === 'Enter') runAnalysis();
+}
+
+// --- TRADINGVIEW WIDGET ---
+function updateChart(ticker) {
+    document.getElementById('tv-chart-container').innerHTML = ""; 
+    new TradingView.widget({
+        "container_id": "tv-chart-container",
+        "autosize": true,
+        "symbol": ticker,
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1", // Candles
+        "locale": "en",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "allow_symbol_change": true,
+        "hide_top_toolbar": false,
+        "hide_volume": true
+    });
+}
+
+// --- ALPHA VANTAGE: FUNDAMENTALS (Overview) ---
+async function fetchFundamentals(ticker) {
+    const url = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if(data.Symbol) {
+        updateDOM('val-mktcap', formatNumber(data.MarketCapitalization));
+        updateDOM('val-pe', data.PERatio);
+        updateDOM('val-div', (data.DividendYield * 100).toFixed(2) + '%');
+        updateDOM('val-sales', data.QuarterlyRevenueGrowthYOY + '%');
+        updateDOM('val-eps', data.QuarterlyEarningsGrowthYOY + '%');
+    }
+}
+
+// --- ALPHA VANTAGE: LOGIC CORE (Price, RSI, Trend) ---
+async function fetchTechnicalLogic(ticker) {
+    // We need 3 endpoints for the full "Validator" logic: Global Quote, RSI, SMA.
+    
+    // A. PRICE
+    const urlPrice = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${API_KEY}`;
+    const resPrice = await fetch(urlPrice);
+    const jsonPrice = await resPrice.json();
+    const price = parseFloat(jsonPrice['Global Quote']['05. price']);
+    updateDOM('val-price', '$' + price.toFixed(2));
+
+    // B. RSI (14)
+    const urlRSI = `https://www.alphavantage.co/query?function=RSI&symbol=${ticker}&interval=daily&time_period=14&series_type=close&apikey=${API_KEY}`;
+    const resRSI = await fetch(urlRSI);
+    const jsonRSI = await resRSI.json();
+    const rsiData = jsonRSI['Technical Analysis: RSI'];
+    const latestDateRSI = Object.keys(rsiData)[0];
+    const rsi = parseFloat(rsiData[latestDateRSI]['RSI']);
+    
+    const rsiEl = document.getElementById('val-rsi');
+    rsiEl.innerText = rsi.toFixed(1);
+    rsiEl.className = "value " + (rsi > 70 ? "bearish" : rsi < 30 ? "bullish" : "");
+
+    // C. TREND (SMA 200)
+    const urlSMA = `https://www.alphavantage.co/query?function=SMA&symbol=${ticker}&interval=daily&time_period=200&series_type=close&apikey=${API_KEY}`;
+    const resSMA = await fetch(urlSMA);
+    const jsonSMA = await resSMA.json();
+    const smaData = jsonSMA['Technical Analysis: SMA'];
+    const latestDateSMA = Object.keys(smaData)[0];
+    const sma = parseFloat(smaData[latestDateSMA]['SMA']);
+    
+    const trend = price > sma ? "UP" : "DOWN";
+    const trendEl = document.getElementById('val-trend');
+    trendEl.innerText = trend;
+    trendEl.className = "value " + (trend === "UP" ? "bullish" : "bearish");
+
+    // D. FINAL SIGNAL LOGIC (Nic's Rules)
+    let signal = "⚠️ WAIT";
+    let signalClass = "";
+
+    if (rsi < 30 && trend === "UP") {
+        signal = "🔥 PERFECT BUY";
+        signalClass = "bullish";
+    } else if (rsi < 30 && trend === "DOWN") {
+        signal = "⚠️ RISKY DIP";
+        signalClass = "bearish";
+    } else if (rsi > 70) {
+        signal = "❌ SELL";
+        signalClass = "bearish";
+    }
+
+    const sigEl = document.getElementById('val-signal');
+    sigEl.innerText = signal;
+    sigEl.className = signalClass;
+}
+
+// --- ALPHA VANTAGE: NEWS SENTIMENT ---
+async function fetchNews(ticker) {
+    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${ticker}&limit=3&apikey=${API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    const feed = document.getElementById('news-feed');
+    feed.innerHTML = "";
+
+    if(data.feed) {
+        data.feed.forEach(item => {
+            const sentimentScore = parseFloat(item.overall_sentiment_score);
+            let sentClass = "bg-bull";
+            let sentText = "BULL";
+            
+            if(sentimentScore < -0.15) { sentClass = "bg-bear"; sentText = "BEAR"; }
+            else if(sentimentScore < 0.15) { sentClass = ""; sentText = "NEUTRAL"; }
+
+            feed.innerHTML += `
+                <div class="news-item">
+                    <div class="news-meta">
+                        <span>${item.source}</span>
+                        <span class="sentiment-tag ${sentClass}">${sentText}</span>
+                    </div>
+                    <a href="${item.url}" target="_blank" class="news-title">${item.title}</a>
+                </div>
+            `;
+        });
+    }
+}
+
+// --- HELPERS ---
+function updateDOM(id, val) {
+    const el = document.getElementById(id);
+    if(el && val && val !== 'undefined%') el.innerText = val;
+    else el.innerText = "--";
+}
+
+function formatNumber(num) {
+    if(!num) return "--";
+    if(num > 1000000000) return (num / 1000000000).toFixed(1) + 'B';
+    if(num > 1000000) return (num / 1000000).toFixed(1) + 'M';
+    return num;
+}
+</script>
