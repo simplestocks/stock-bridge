@@ -1,5 +1,5 @@
 // --- CONFIGURATION ---
-const API_KEY = "C9E1N388LHHS9E5O"; // YOUR KEY
+const API_KEY = "C9E1N388LHHS9E5O"; // NIC'S KEY
 
 // --- MAIN FUNCTION ---
 async function runAnalysis() {
@@ -59,24 +59,27 @@ async function fetchFundamentals(ticker) {
     if(data.Symbol) {
         updateDOM('val-mktcap', formatNumber(data.MarketCapitalization));
         updateDOM('val-pe', data.PERatio);
+        updateDOM('val-ps', data.PriceToSalesRatioTTM); // NEW: P/S
         updateDOM('val-div', (data.DividendYield * 100).toFixed(2) + '%');
+        
+        // Growth Metrics (YOY)
         updateDOM('val-sales', data.QuarterlyRevenueGrowthYOY + '%');
         updateDOM('val-eps', data.QuarterlyEarningsGrowthYOY + '%');
+
+        // Sector/Industry Context
+        updateDOM('val-sector', data.Sector);
+        updateDOM('val-industry', data.Industry);
     }
 }
 
 // --- ALPHA VANTAGE: LOGIC CORE (Price, RSI, Trend) ---
 async function fetchTechnicalLogic(ticker) {
-    // We need 3 endpoints for the full "Validator" logic: Global Quote, RSI, SMA.
-    
-    // A. PRICE
     const urlPrice = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${API_KEY}`;
     const resPrice = await fetch(urlPrice);
     const jsonPrice = await resPrice.json();
     const price = parseFloat(jsonPrice['Global Quote']['05. price']);
     updateDOM('val-price', '$' + price.toFixed(2));
 
-    // B. RSI (14)
     const urlRSI = `https://www.alphavantage.co/query?function=RSI&symbol=${ticker}&interval=daily&time_period=14&series_type=close&apikey=${API_KEY}`;
     const resRSI = await fetch(urlRSI);
     const jsonRSI = await resRSI.json();
@@ -88,7 +91,6 @@ async function fetchTechnicalLogic(ticker) {
     rsiEl.innerText = rsi.toFixed(1);
     rsiEl.className = "value " + (rsi > 70 ? "bearish" : rsi < 30 ? "bullish" : "");
 
-    // C. TREND (SMA 200)
     const urlSMA = `https://www.alphavantage.co/query?function=SMA&symbol=${ticker}&interval=daily&time_period=200&series_type=close&apikey=${API_KEY}`;
     const resSMA = await fetch(urlSMA);
     const jsonSMA = await resSMA.json();
@@ -101,7 +103,6 @@ async function fetchTechnicalLogic(ticker) {
     trendEl.innerText = trend;
     trendEl.className = "value " + (trend === "UP" ? "bullish" : "bearish");
 
-    // D. FINAL SIGNAL LOGIC (Nic's Rules)
     let signal = "⚠️ WAIT";
     let signalClass = "";
 
@@ -152,7 +153,6 @@ async function fetchNews(ticker) {
     }
 }
 
-// --- HELPERS ---
 function updateDOM(id, val) {
     const el = document.getElementById(id);
     if(el && val && val !== 'undefined%') el.innerText = val;
