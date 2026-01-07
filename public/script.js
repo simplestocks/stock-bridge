@@ -46,7 +46,18 @@ function updateChart(ticker) {
         "enable_publishing": false,
         "allow_symbol_change": true,
         "hide_top_toolbar": false,
-        "hide_volume": true
+        "hide_volume": true,
+        // ADDED: 100 MA and 200 MA
+        "studies": [
+            {
+                "id": "MASimple@tv-basicstudies",
+                "inputs": { "length": 100 }
+            },
+            {
+                "id": "MASimple@tv-basicstudies",
+                "inputs": { "length": 200 }
+            }
+        ]
     });
 }
 
@@ -59,14 +70,14 @@ async function fetchFundamentals(ticker) {
     if(data.Symbol) {
         updateDOM('val-mktcap', formatNumber(data.MarketCapitalization));
         updateDOM('val-pe', data.PERatio);
-        updateDOM('val-ps', data.PriceToSalesRatioTTM); // NEW: P/S
+        updateDOM('val-ps', data.PriceToSalesRatioTTM); // NEW: Price/Sales
         updateDOM('val-div', (data.DividendYield * 100).toFixed(2) + '%');
         
-        // Growth Metrics (YOY)
+        // Growth Metrics
         updateDOM('val-sales', data.QuarterlyRevenueGrowthYOY + '%');
         updateDOM('val-eps', data.QuarterlyEarningsGrowthYOY + '%');
 
-        // Sector/Industry Context
+        // Sector & Industry
         updateDOM('val-sector', data.Sector);
         updateDOM('val-industry', data.Industry);
     }
