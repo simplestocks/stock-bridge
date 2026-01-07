@@ -117,16 +117,21 @@ button:hover { background: #fff; }
     font-weight: 900;
 }
 
-/* SECTOR DISPLAY */
+/* SECTOR DISPLAY (NEW) */
 .sector-display {
+    text-align: center;
     font-size: 10px;
     color: #666;
     margin-bottom: 15px;
-    text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
 }
-.sector-display span { color: #aaa; font-weight: bold; }
+.sector-display span {
+    color: #ccc;
+    font-weight: bold;
+}
 
 /* VITALS GRID */
 .data-grid {
