@@ -97,7 +97,7 @@ button:hover { background: #fff; }
     min-height: 400px;
 }
 
-/* SIGNAL BOX (The Validator Result) */
+/* SIGNAL BOX */
 .signal-box {
     background: #111;
     padding: 15px;
@@ -116,6 +116,17 @@ button:hover { background: #fff; }
     color: #fff;
     font-weight: 900;
 }
+
+/* SECTOR DISPLAY */
+.sector-display {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.sector-display span { color: #aaa; font-weight: bold; }
 
 /* VITALS GRID */
 .data-grid {
