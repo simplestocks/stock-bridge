@@ -5,19 +5,15 @@ function switchTab(mode) {
     document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
     document.getElementById(`view-${mode}`).classList.add('active');
     
-    // Only auto-load if the chart is empty
     if (mode === 'radar') {
         const chartDiv = document.getElementById('radar-chart');
-        if (chartDiv.data === undefined || chartDiv.data.length === 0) {
-            loadRadar();
-        }
+        if (!chartDiv.data || chartDiv.data.length === 0) loadRadar();
     }
 }
 
-// --- RADAR LOGIC (DYNAMIC LISTS) ---
+// --- RADAR LOGIC ---
 let isScanning = false;
 
-// 1. The Hardcoded "Generals" Lists (Top 15-20 per sector)
 const SECTOR_LISTS = {
     'TECH': ["MSFT", "AAPL", "NVDA", "GOOGL", "AMZN", "META", "CRM", "ADBE", "CSCO", "ORCL", "IBM", "INTU", "NOW", "UBER", "ABNB"],
     'SEMIS': ["NVDA", "AMD", "AVGO", "INTC", "QCOM", "TXN", "MU", "ADI", "LRCX", "AMAT", "TSM", "ARM", "KLAC", "MRVL"],
@@ -28,7 +24,7 @@ const SECTOR_LISTS = {
 };
 
 async function loadRadar(isCustomRun = false) {
-    if (isScanning) return; // Prevent double clicking
+    if (isScanning) return;
     
     const selector = document.getElementById('sectorSelector');
     const customInput = document.getElementById('customTickerInput');
@@ -36,13 +32,11 @@ async function loadRadar(isCustomRun = false) {
     let selectedMode = selector.value;
     let tickers = [];
 
-    // UI Logic: Show/Hide Custom Input
+    // UI Logic
     if (selectedMode === 'CUSTOM') {
         customInput.style.display = 'inline-block';
         customBtn.style.display = 'inline-block';
-        if (!isCustomRun) return; // Wait for them to click RUN
-        
-        // Parse user input
+        if (!isCustomRun) return;
         const raw = customInput.value.trim().toUpperCase();
         if (!raw) return alert("Please enter tickers (e.g. NVDA, GME)");
         tickers = raw.split(',').map(t => t.trim()).filter(t => t.length > 0);
@@ -52,45 +46,56 @@ async function loadRadar(isCustomRun = false) {
         tickers = SECTOR_LISTS[selectedMode] || [];
     }
 
-    // Start Scan
     isScanning = true;
     const statusEl = document.getElementById('loading-radar');
     statusEl.style.display = 'block';
     
-    // Clear old chart or create new one
-    renderEmptyRadar();
+    renderEmptyRadar(); // Reset Chart
 
     for (let i = 0; i < tickers.length; i++) {
         const symbol = tickers[i];
         statusEl.innerHTML = `SCANNING ${symbol} (${i+1}/${tickers.length})...`;
-        
         try {
-            const res = await fetch(`/.netlify/functions/secure-bridge?mode=radar_single&symbol=${symbol}`);
-            const data = await res.json();
-
-            if (data.ticker) {
-                addDotToRadar(data);
-            }
-            
-            // Speed Limit Protection (200ms)
-            await new Promise(r => setTimeout(r, 200));
-
-        } catch (e) {
-            console.log(`Skipping ${symbol}`, e);
-        }
+            await fetchAndPlot(symbol);
+            await new Promise(r => setTimeout(r, 200)); // Rate limit
+        } catch (e) { console.log(`Skipped ${symbol}`); }
     }
     
     statusEl.innerHTML = "SCAN COMPLETE.";
     setTimeout(() => { statusEl.style.display = 'none'; isScanning = false; }, 2000);
 }
 
-// 2. Setup Empty Chart
+// --- NEW: ADD SINGLE TICKER TO EXISTING CHART ---
+async function addToRadar() {
+    const input = document.getElementById('quickTicker');
+    const ticker = input.value.trim().toUpperCase();
+    if (!ticker) return;
+
+    const statusEl = document.getElementById('loading-radar');
+    statusEl.innerText = `ADDING ${ticker}...`;
+    statusEl.style.display = 'block';
+
+    await fetchAndPlot(ticker);
+
+    statusEl.style.display = 'none';
+    input.value = ""; // Clear input
+}
+
+// --- CORE FETCH & PLOT ---
+async function fetchAndPlot(symbol) {
+    const res = await fetch(`/.netlify/functions/secure-bridge?mode=radar_single&symbol=${symbol}`);
+    const data = await res.json();
+    if (data.ticker) addDotToRadar(data);
+}
+
+// 2. Setup Chart (WITH RIGHT MARGIN FIX & WHITE TEXT)
 function renderEmptyRadar() {
     const layout = {
         title: { text: 'MARKET RADAR', font: { color: 'white', size: 16 } },
         paper_bgcolor: '#111',
         plot_bgcolor: '#111',
-        xaxis: { title: 'DEALER FEAR', range: [0, 100], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        // FIX: Range extended to 110 to prevent clipping
+        xaxis: { title: 'DEALER FEAR', range: [-2, 110], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
         yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'}, autorange: true },
         shapes: [
             { type: 'line', x0: 50, y0: 0, x1: 50, y1: 1, xref: 'x', yref: 'paper', line: {color: 'white', width: 1, dash:'dot'} },
@@ -103,6 +108,8 @@ function renderEmptyRadar() {
     
     Plotly.newPlot('radar-chart', [{
         x: [], y: [], text: [], mode: 'markers+text',
+        // FIX: Enforce white text color here
+        textfont: { color: 'white' },
         marker: { color: [], size: [] }, type: 'scatter'
     }], layout, {responsive: true, displayModeBar: false});
 }
@@ -114,19 +121,20 @@ function addDotToRadar(d) {
     if (d.trend > 0 && d.fear < 50) color = '#00cc00'; // Grinder
     if (d.trend > 0 && d.fear > 50) color = '#ff4d4d'; // Chaser
 
-    // Size = RSI / 2 (Linear Scale)
     const size = d.rsi / 2;
 
     Plotly.extendTraces('radar-chart', {
         x: [[d.fear]],
         y: [[d.trend]],
         text: [[`<b>${d.ticker}</b>`]],
+        // FIX: Ensure new dots inherit white text
+        textfont: { color: 'white' },
         'marker.color': [[color]],
         'marker.size': [[size]]
     }, [0]);
 }
 
-// --- STANDARD SCOUT LOGIC (Unchanged) ---
+// --- SCOUT LOGIC (Unchanged) ---
 async function runAnalysis() {
     const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
     if(!ticker) return;
