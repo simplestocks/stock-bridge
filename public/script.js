@@ -7,6 +7,7 @@ function switchTab(mode) {
     
     if (mode === 'radar') {
         const chartDiv = document.getElementById('radar-chart');
+        // Only load if chart is totally empty
         if (!chartDiv.data || chartDiv.data.length === 0) loadRadar();
     }
 }
@@ -71,6 +72,10 @@ async function addToRadar() {
     const ticker = input.value.trim().toUpperCase();
     if (!ticker) return;
 
+    // Ensure chart exists before adding
+    const chartDiv = document.getElementById('radar-chart');
+    if (!chartDiv.data) renderEmptyRadar();
+
     const statusEl = document.getElementById('loading-radar');
     statusEl.innerText = `ADDING ${ticker}...`;
     statusEl.style.display = 'block';
@@ -95,7 +100,7 @@ function renderEmptyRadar() {
         paper_bgcolor: '#111',
         plot_bgcolor: '#111',
         // FIX: Range extended to 110 to prevent clipping
-        xaxis: { title: 'DEALER FEAR', range: [-2, 110], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        xaxis: { title: 'DEALER FEAR', range: [-5, 115], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
         yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'}, autorange: true },
         shapes: [
             { type: 'line', x0: 50, y0: 0, x1: 50, y1: 1, xref: 'x', yref: 'paper', line: {color: 'white', width: 1, dash:'dot'} },
