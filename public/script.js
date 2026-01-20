@@ -14,8 +14,17 @@ async function loadRadar() {
     if (radarStarted) return;
     radarStarted = true;
     
-    // THE FULL LIST (Add as many as you want here)
-    const tickers = ["NVDA", "TSLA", "AAPL", "AMD", "NFLX", "META", "AMZN", "MSFT", "BA", "SMCI", "INTC", "DIS", "JPM", "GOOGL", "COST", "XOM", "CVX"];
+    // THE SECTOR LEADERS 50 (Optimized for your 75 calls/min limit)
+    const tickers = [
+        "NVDA", "MSFT", "AAPL", "AMZN", "META", "GOOGL", "TSLA", "AVGO", // Tech Giants
+        "AMD", "INTC", "QCOM", "TXN", "MU", "ADI", "LRCX", "AMAT", // Semis
+        "JPM", "BAC", "WFC", "C", "GS", "MS", "BLK", // Finance
+        "XOM", "CVX", "COP", "SLB", // Energy
+        "LLY", "JNJ", "UNH", "ABBV", "MRK", "PFE", "TMO", // Healthcare
+        "PG", "COST", "WMT", "KO", "PEP", "HD", "MCD", // Consumer
+        "BA", "CAT", "GE", "HON", "UNP", "UPS", // Industrial
+        "NFLX", "DIS", "CMCSA" // Media
+    ];
     
     // Initialize Empty Chart
     renderEmptyRadar();
@@ -33,11 +42,10 @@ async function loadRadar() {
             const data = await res.json();
 
             if (data.ticker) {
-                // Add dot to chart instantly
                 addDotToRadar(data);
             }
             
-            // Tiny pause to be safe, but much faster than before
+            // 200ms delay = ~5 calls per second max. Safe for Premium (75/min).
             await new Promise(r => setTimeout(r, 200));
 
         } catch (e) {
@@ -55,7 +63,7 @@ function renderEmptyRadar() {
         paper_bgcolor: '#111',
         plot_bgcolor: '#111',
         xaxis: { title: 'DEALER FEAR', range: [0, 100], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
-        yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'}, autorange: true },
         shapes: [
             { type: 'line', x0: 50, y0: 0, x1: 50, y1: 1, xref: 'x', yref: 'paper', line: {color: 'white', width: 1, dash:'dot'} },
             { type: 'line', x0: 0, y0: 0, x1: 1, y1: 0, xref: 'paper', yref: 'y', line: {color: 'white', width: 1, dash:'dot'} }
@@ -73,12 +81,14 @@ function renderEmptyRadar() {
 
 // 2. Add a Single Dot dynamically
 function addDotToRadar(d) {
-    let color = '#808080'; // Trap
-    if (d.trend < 0 && d.fear > 50) color = '#ffd700'; // Good Deal
-    if (d.trend > 0 && d.fear < 50) color = '#00cc00'; // Grinder
-    if (d.trend > 0 && d.fear > 50) color = '#ff4d4d'; // Chaser
+    let color = '#808080'; // Trap (Grey)
+    if (d.trend < 0 && d.fear > 50) color = '#ffd700'; // Good Deal (Gold)
+    if (d.trend > 0 && d.fear < 50) color = '#00cc00'; // Grinder (Green)
+    if (d.trend > 0 && d.fear > 50) color = '#ff4d4d'; // Chaser (Red)
 
-    const size = (Math.pow(d.rsi, 2) / 10) + 10;
+    // NEW SIZE FORMULA: Linear scale.
+    // RSI 70 = 35px. RSI 30 = 15px.
+    const size = d.rsi / 2;
 
     Plotly.extendTraces('radar-chart', {
         x: [[d.fear]],
