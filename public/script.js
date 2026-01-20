@@ -103,6 +103,7 @@ function renderEmptyRadar() {
     
     Plotly.newPlot('radar-chart', [{
         x: [], y: [], text: [], mode: 'markers+text',
+        textfont: { color: 'white' }, // <--- ADDED THIS TO MAKE FONT WHITE
         marker: { color: [], size: [] }, type: 'scatter'
     }], layout, {responsive: true, displayModeBar: false});
 }
