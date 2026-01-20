@@ -1,5 +1,5 @@
 // --- CONFIGURATION ---
-const API_KEY = "C9E1N388LHHS9E5O"; // NIC'S KEY
+// API Key is removed for security. It now lives in the secure backend.
 
 // --- MAIN FUNCTION ---
 async function runAnalysis() {
@@ -9,11 +9,12 @@ async function runAnalysis() {
     // Reset UI
     document.getElementById('val-signal').innerText = "LOADING...";
     document.getElementById('val-signal').className = "";
+    document.getElementById('news-feed').innerHTML = "";
 
     // 1. UPDATE CHART (TradingView)
     updateChart(ticker);
 
-    // 2. FETCH DATA (Parallel Execution for Speed)
+    // 2. FETCH DATA (Calls secure backend)
     try {
         await Promise.all([
             fetchFundamentals(ticker),
@@ -32,7 +33,7 @@ function handleEnter(e) {
 
 // --- TRADINGVIEW WIDGET ---
 function updateChart(ticker) {
-    document.getElementById('tv-chart-container').innerHTML = ""; 
+    document.getElementById('tv-chart-container').innerHTML = "";
     new TradingView.widget({
         "container_id": "tv-chart-container",
         "autosize": true,
@@ -47,83 +48,58 @@ function updateChart(ticker) {
         "allow_symbol_change": true,
         "hide_top_toolbar": false,
         "hide_volume": true,
-        // ADDED: 100 MA and 200 MA
         "studies": [
-            {
-                "id": "MASimple@tv-basicstudies",
-                "inputs": { "length": 100 }
-            },
-            {
-                "id": "MASimple@tv-basicstudies",
-                "inputs": { "length": 200 }
-            }
+            { "id": "MASimple@tv-basicstudies", "inputs": { "length": 100 } },
+            { "id": "MASimple@tv-basicstudies", "inputs": { "length": 200 } }
         ]
     });
 }
 
-// --- ALPHA VANTAGE: FUNDAMENTALS (Overview) ---
+// --- BACKEND FETCH: FUNDAMENTALS ---
 async function fetchFundamentals(ticker) {
-    const url = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${API_KEY}`;
-    const res = await fetch(url);
+    // Calls secure bridge instead of AlphaVantage directly
+    const res = await fetch(`/.netlify/functions/secure-bridge?mode=fundamentals&symbol=${ticker}`);
     const data = await res.json();
 
     if(data.Symbol) {
         updateDOM('val-mktcap', formatNumber(data.MarketCapitalization));
         updateDOM('val-pe', data.PERatio);
-        updateDOM('val-ps', data.PriceToSalesRatioTTM); // NEW: Price/Sales
+        updateDOM('val-ps', data.PriceToSalesRatioTTM);
         updateDOM('val-div', (data.DividendYield * 100).toFixed(2) + '%');
-        
-        // Growth Metrics
         updateDOM('val-sales', data.QuarterlyRevenueGrowthYOY + '%');
         updateDOM('val-eps', data.QuarterlyEarningsGrowthYOY + '%');
-
-        // Sector & Industry
         updateDOM('val-sector', data.Sector);
         updateDOM('val-industry', data.Industry);
     }
 }
 
-// --- ALPHA VANTAGE: LOGIC CORE (Price, RSI, Trend) ---
+// --- BACKEND FETCH: LOGIC CORE (Price, RSI, Trend) ---
 async function fetchTechnicalLogic(ticker) {
-    const urlPrice = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${API_KEY}`;
-    const resPrice = await fetch(urlPrice);
-    const jsonPrice = await resPrice.json();
-    const price = parseFloat(jsonPrice['Global Quote']['05. price']);
-    updateDOM('val-price', '$' + price.toFixed(2));
-
-    const urlRSI = `https://www.alphavantage.co/query?function=RSI&symbol=${ticker}&interval=daily&time_period=14&series_type=close&apikey=${API_KEY}`;
-    const resRSI = await fetch(urlRSI);
-    const jsonRSI = await resRSI.json();
-    const rsiData = jsonRSI['Technical Analysis: RSI'];
-    const latestDateRSI = Object.keys(rsiData)[0];
-    const rsi = parseFloat(rsiData[latestDateRSI]['RSI']);
+    const res = await fetch(`/.netlify/functions/secure-bridge?mode=technicals&symbol=${ticker}`);
+    const data = await res.json();
+    
+    updateDOM('val-price', '$' + data.price);
     
     const rsiEl = document.getElementById('val-rsi');
-    rsiEl.innerText = rsi.toFixed(1);
-    rsiEl.className = "value " + (rsi > 70 ? "bearish" : rsi < 30 ? "bullish" : "");
-
-    const urlSMA = `https://www.alphavantage.co/query?function=SMA&symbol=${ticker}&interval=daily&time_period=200&series_type=close&apikey=${API_KEY}`;
-    const resSMA = await fetch(urlSMA);
-    const jsonSMA = await resSMA.json();
-    const smaData = jsonSMA['Technical Analysis: SMA'];
-    const latestDateSMA = Object.keys(smaData)[0];
-    const sma = parseFloat(smaData[latestDateSMA]['SMA']);
+    rsiEl.innerText = data.rsi;
+    rsiEl.className = "value " + (data.rsi > 70 ? "bearish" : data.rsi < 30 ? "bullish" : "");
     
-    const trend = price > sma ? "UP" : "DOWN";
     const trendEl = document.getElementById('val-trend');
-    trendEl.innerText = trend;
-    trendEl.className = "value " + (trend === "UP" ? "bullish" : "bearish");
+    trendEl.innerText = data.trend;
+    trendEl.className = "value " + (data.trend === "UP" ? "bullish" : "bearish");
 
+    // Signal Logic
     let signal = "⚠️ WAIT";
     let signalClass = "";
+    const rsiVal = parseFloat(data.rsi);
 
-    if (rsi < 30 && trend === "UP") {
+    if (rsiVal < 30 && data.trend === "UP") {
         signal = "🔥 PERFECT BUY";
         signalClass = "bullish";
-    } else if (rsi < 30 && trend === "DOWN") {
+    } else if (rsiVal < 30 && data.trend === "DOWN") {
         signal = "⚠️ RISKY DIP";
         signalClass = "bearish";
-    } else if (rsi > 70) {
+    } else if (rsiVal > 70) {
         signal = "❌ SELL";
         signalClass = "bearish";
     }
@@ -133,15 +109,14 @@ async function fetchTechnicalLogic(ticker) {
     sigEl.className = signalClass;
 }
 
-// --- ALPHA VANTAGE: NEWS SENTIMENT ---
+// --- BACKEND FETCH: NEWS ---
 async function fetchNews(ticker) {
-    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${ticker}&limit=3&apikey=${API_KEY}`;
-    const res = await fetch(url);
+    const res = await fetch(`/.netlify/functions/secure-bridge?mode=news&symbol=${ticker}`);
     const data = await res.json();
     
     const feed = document.getElementById('news-feed');
     feed.innerHTML = "";
-
+    
     if(data.feed) {
         data.feed.forEach(item => {
             const sentimentScore = parseFloat(item.overall_sentiment_score);
@@ -166,8 +141,8 @@ async function fetchNews(ticker) {
 
 function updateDOM(id, val) {
     const el = document.getElementById(id);
-    if(el && val && val !== 'undefined%') el.innerText = val;
-    else el.innerText = "--";
+    if(el && val && val !== 'undefined%' && val !== 'undefined') el.innerText = val;
+    else if(el) el.innerText = "--";
 }
 
 function formatNumber(num) {
