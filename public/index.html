@@ -6,49 +6,76 @@
     <title>Trading Desk</title>
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* TAB STYLING */
+        .tab-container { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .tab-btn { background: transparent; border: 1px solid #333; color: #666; padding: 10px 20px; cursor: pointer; font-weight: bold; font-family: 'Roboto', sans-serif; text-transform: uppercase; }
+        .tab-btn.active { background: #00ff00; color: #000; border-color: #00ff00; }
+        .tab-btn:hover:not(.active) { border-color: #666; color: #fff; }
+
+        /* HIDE/SHOW LOGIC */
+        .view-section { display: none; animation: fadeIn 0.3s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* RADAR CHART STYLING */
+        #radar-chart { width: 100%; height: 600px; background: #111; border: 1px solid #333; }
+    </style>
 </head>
 <body>
 
-    <div class="top-bar" style="margin-bottom: 20px; display: flex; gap: 10px;">
-        <input type="text" id="tickerInput" class="ticker-box" placeholder="ENTER TICKER (e.g. NVDA)" onkeydown="handleEnter(event)">
-        <button class="action-btn" onclick="runAnalysis()">SCAN TICKER</button>
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('scout')">Ticker Scout</button>
+        <button class="tab-btn" onclick="switchTab('radar')">Market Radar</button>
     </div>
 
-    <div class="dashboard-grid">
-        
-        <div class="chart-section" style="height: 600px; background: #111; border: 1px solid #333;">
-            <div id="tv-chart-container" style="height: 100%; width: 100%;"></div>
+    <div id="view-scout" class="view-section active">
+        <div class="top-bar" style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <input type="text" id="tickerInput" class="ticker-box" placeholder="ENTER TICKER (e.g. NVDA)" onkeydown="handleEnter(event)">
+            <button class="action-btn" onclick="runAnalysis()">SCAN TICKER</button>
         </div>
 
-        <div class="data-section">
-            <div id="hunter-table-wrapper">
-                <table id="hunter-table" style="width:100%;">
-                    <tr>
-                        <th>METRIC</th>
-                        <th>VALUE</th>
-                    </tr>
-                    <tr><td>PRICE</td><td id="val-price" class="value">--</td></tr>
-                    <tr><td>SIGNAL</td><td id="val-signal" class="value">--</td></tr>
-                    <tr><td>TREND (200MA)</td><td id="val-trend" class="value">--</td></tr>
-                    <tr><td>RSI (14)</td><td id="val-rsi" class="value">--</td></tr>
-                    <tr><td colspan="2" style="border-bottom: 1px solid #444; padding: 5px 0;"></td></tr>
-                    <tr><td>MKT CAP</td><td id="val-mktcap" class="value">--</td></tr>
-                    <tr><td>DIV YIELD</td><td id="val-div" class="value">--</td></tr>
-                    <tr><td>P/E RATIO</td><td id="val-pe" class="value">--</td></tr>
-                    <tr><td>P/S RATIO</td><td id="val-ps" class="value">--</td></tr>
-                    <tr><td>SALES GROWTH</td><td id="val-sales" class="value">--</td></tr>
-                    <tr><td>EPS GROWTH</td><td id="val-eps" class="value">--</td></tr>
-                    <tr><td>SECTOR</td><td id="val-sector" class="value" style="font-size:10px;">--</td></tr>
-                    <tr><td>INDUSTRY</td><td id="val-industry" class="value" style="font-size:10px;">--</td></tr>
-                </table>
+        <div class="dashboard-grid">
+            <div class="chart-section" style="height: 600px; background: #111; border: 1px solid #333;">
+                <div id="tv-chart-container" style="height: 100%; width: 100%;"></div>
             </div>
 
-            <div class="news-container" style="margin-top: 20px; border-top: 1px solid #333; padding-top: 10px;">
-                <div class="section-label" style="color:#666; font-size:10px; font-weight:bold; margin-bottom:10px;">SENTIMENT NEWS</div>
-                <div id="news-feed"></div>
+            <div class="data-section">
+                <div id="hunter-table-wrapper">
+                    <table id="hunter-table" style="width:100%;">
+                        <tr><th>METRIC</th><th>VALUE</th></tr>
+                        <tr><td>PRICE</td><td id="val-price" class="value">--</td></tr>
+                        <tr><td>SIGNAL</td><td id="val-signal" class="value">--</td></tr>
+                        <tr><td>TREND (200MA)</td><td id="val-trend" class="value">--</td></tr>
+                        <tr><td>RSI (14)</td><td id="val-rsi" class="value">--</td></tr>
+                        <tr><td colspan="2" style="border-bottom: 1px solid #444; padding: 5px 0;"></td></tr>
+                        <tr><td>MKT CAP</td><td id="val-mktcap" class="value">--</td></tr>
+                        <tr><td>DIV YIELD</td><td id="val-div" class="value">--</td></tr>
+                        <tr><td>P/E RATIO</td><td id="val-pe" class="value">--</td></tr>
+                        <tr><td>P/S RATIO</td><td id="val-ps" class="value">--</td></tr>
+                        <tr><td>SALES GROWTH</td><td id="val-sales" class="value">--</td></tr>
+                        <tr><td>EPS GROWTH</td><td id="val-eps" class="value">--</td></tr>
+                        <tr><td>SECTOR</td><td id="val-sector" class="value" style="font-size:10px;">--</td></tr>
+                        <tr><td>INDUSTRY</td><td id="val-industry" class="value" style="font-size:10px;">--</td></tr>
+                    </table>
+                </div>
+                <div class="news-container" style="margin-top: 20px; border-top: 1px solid #333; padding-top: 10px;">
+                    <div class="section-label" style="color:#666; font-size:10px; font-weight:bold; margin-bottom:10px;">SENTIMENT NEWS</div>
+                    <div id="news-feed"></div>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div id="view-radar" class="view-section">
+        <div style="margin-bottom:15px; color:#888; font-size:12px;">
+            Scanning S&P 100 leaders for outliers. <span style="color:#00ff00">BIG DOT</span> = High RSI.
+        </div>
+        <div id="loading-radar" style="display:none; color:#00ff00; font-weight:bold;">SCANNING MARKET... (This takes ~10s)</div>
+        <div id="radar-chart"></div>
     </div>
 
     <script src="script.js"></script>
