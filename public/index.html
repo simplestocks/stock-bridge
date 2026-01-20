@@ -24,15 +24,10 @@
         /* RADAR CHART STYLING */
         #radar-chart { width: 100%; height: 600px; background: #111; border: 1px solid #333; }
         
-        /* NEW: RADAR CONTROLS */
+        /* RADAR CONTROLS */
         .radar-controls { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
         .sector-select { background: #222; color: white; border: 1px solid #444; padding: 8px; font-weight: bold; cursor: pointer; }
         
-        /* QUICK ADD INPUT */
-        .quick-add-input { background: #111; border: 1px solid #333; color: #00ff00; padding: 8px; width: 80px; text-transform: uppercase; font-weight: bold; text-align: center; }
-        .quick-add-btn { background: #333; color: #fff; border: 1px solid #555; padding: 8px 12px; cursor: pointer; font-weight: bold; }
-        .quick-add-btn:hover { background: #00ff00; color: #000; border-color: #00ff00; }
-
         /* Custom List (Hidden by default) */
         .custom-ticker-input { background: #111; border: 1px solid #333; color: #00ff00; padding: 8px; width: 200px; text-transform: uppercase; font-weight: bold; display:none; }
         .run-btn { background: #333; color: #fff; border: 1px solid #555; padding: 8px 15px; cursor: pointer; font-weight: bold; display:none; }
@@ -96,11 +91,6 @@
                 <option value="CUSTOM">Custom List...</option>
             </select>
             
-            <div style="border-left: 1px solid #444; padding-left: 10px; display:flex; gap:5px;">
-                <input type="text" id="quickTicker" class="quick-add-input" placeholder="+ TICKER">
-                <button class="quick-add-btn" onclick="addToRadar()">ADD</button>
-            </div>
-
             <input type="text" id="customTickerInput" class="custom-ticker-input" placeholder="NVDA, GME, PLTR...">
             <button id="runCustomBtn" class="run-btn" onclick="loadRadar(true)">RUN</button>
             
