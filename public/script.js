@@ -1,20 +1,85 @@
-// --- CONFIGURATION ---
-// API Key is removed for security. It now lives in the secure backend.
+// --- TAB SWITCHING ---
+function switchTab(mode) {
+    // 1. Update Buttons
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
 
-// --- MAIN FUNCTION ---
+    // 2. Hide/Show Views
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    document.getElementById(`view-${mode}`).classList.add('active');
+
+    // 3. Trigger Radar Load if needed
+    if (mode === 'radar') loadRadar();
+}
+
+// --- RADAR LOGIC ---
+let radarLoaded = false;
+async function loadRadar() {
+    if (radarLoaded) return; // Don't reload if already there
+    
+    document.getElementById('loading-radar').style.display = 'block';
+    
+    try {
+        const res = await fetch(`/.netlify/functions/secure-bridge?mode=radar`);
+        const data = await res.json();
+        
+        renderRadarChart(data);
+        radarLoaded = true;
+        document.getElementById('loading-radar').style.display = 'none';
+    } catch (e) {
+        document.getElementById('loading-radar').innerText = "ERROR LOADING RADAR";
+    }
+}
+
+function renderRadarChart(data) {
+    const colors = data.map(d => {
+        if (d.trend < 0 && d.fear > 50) return '#ffd700'; // Gold (Good Deal)
+        if (d.trend > 0 && d.fear < 50) return '#00cc00'; // Green (Grinder)
+        if (d.trend > 0 && d.fear > 50) return '#ff4d4d'; // Red (Chaser)
+        return '#808080'; // Grey (Trap)
+    });
+
+    const sizes = data.map(d => (Math.pow(d.rsi, 2) / 10) + 10); // Size = RSI
+
+    const trace = {
+        x: data.map(d => d.fear),
+        y: data.map(d => d.trend),
+        mode: 'markers+text',
+        text: data.map(d => `<b>${d.ticker}</b>`),
+        textposition: 'top center',
+        textfont: { family: 'Roboto', size: 11, color: 'white' },
+        marker: { color: colors, size: sizes, line: { color: 'white', width: 1 }, opacity: 0.9 },
+        type: 'scatter'
+    };
+
+    const layout = {
+        title: { text: 'MARKET RADAR (Size = RSI)', font: { color: 'white', size: 16 } },
+        paper_bgcolor: '#111',
+        plot_bgcolor: '#111',
+        xaxis: { title: 'DEALER FEAR', range: [0, 100], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        shapes: [
+            { type: 'line', x0: 50, y0: 0, x1: 50, y1: 1, xref: 'x', yref: 'paper', line: {color: 'white', width: 1, dash:'dot'} },
+            { type: 'line', x0: 0, y0: 0, x1: 1, y1: 0, xref: 'paper', yref: 'y', line: {color: 'white', width: 1, dash:'dot'} }
+        ],
+        margin: { l: 50, r: 20, t: 40, b: 50 },
+        hovermode: 'closest'
+    };
+
+    Plotly.newPlot('radar-chart', [trace], layout, {responsive: true, displayModeBar: false});
+}
+
+// --- EXISTING TICKER SCOUT LOGIC ---
 async function runAnalysis() {
     const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
     if(!ticker) return;
 
-    // Reset UI
     document.getElementById('val-signal').innerText = "LOADING...";
     document.getElementById('val-signal').className = "";
     document.getElementById('news-feed').innerHTML = "";
 
-    // 1. UPDATE CHART (TradingView)
     updateChart(ticker);
 
-    // 2. FETCH DATA (Calls secure backend)
     try {
         await Promise.all([
             fetchFundamentals(ticker),
@@ -27,11 +92,8 @@ async function runAnalysis() {
     }
 }
 
-function handleEnter(e) {
-    if(e.key === 'Enter') runAnalysis();
-}
+function handleEnter(e) { if(e.key === 'Enter') runAnalysis(); }
 
-// --- TRADINGVIEW WIDGET ---
 function updateChart(ticker) {
     document.getElementById('tv-chart-container').innerHTML = "";
     new TradingView.widget({
@@ -41,7 +103,7 @@ function updateChart(ticker) {
         "interval": "D",
         "timezone": "Etc/UTC",
         "theme": "dark",
-        "style": "1", // Candles
+        "style": "1",
         "locale": "en",
         "toolbar_bg": "#f1f3f6",
         "enable_publishing": false,
@@ -55,12 +117,9 @@ function updateChart(ticker) {
     });
 }
 
-// --- BACKEND FETCH: FUNDAMENTALS ---
 async function fetchFundamentals(ticker) {
-    // Calls secure bridge instead of AlphaVantage directly
     const res = await fetch(`/.netlify/functions/secure-bridge?mode=fundamentals&symbol=${ticker}`);
     const data = await res.json();
-
     if(data.Symbol) {
         updateDOM('val-mktcap', formatNumber(data.MarketCapitalization));
         updateDOM('val-pe', data.PERatio);
@@ -73,7 +132,6 @@ async function fetchFundamentals(ticker) {
     }
 }
 
-// --- BACKEND FETCH: LOGIC CORE (Price, RSI, Trend) ---
 async function fetchTechnicalLogic(ticker) {
     const res = await fetch(`/.netlify/functions/secure-bridge?mode=technicals&symbol=${ticker}`);
     const data = await res.json();
@@ -88,41 +146,28 @@ async function fetchTechnicalLogic(ticker) {
     trendEl.innerText = data.trend;
     trendEl.className = "value " + (data.trend === "UP" ? "bullish" : "bearish");
 
-    // Signal Logic
     let signal = "⚠️ WAIT";
     let signalClass = "";
     const rsiVal = parseFloat(data.rsi);
-
-    if (rsiVal < 30 && data.trend === "UP") {
-        signal = "🔥 PERFECT BUY";
-        signalClass = "bullish";
-    } else if (rsiVal < 30 && data.trend === "DOWN") {
-        signal = "⚠️ RISKY DIP";
-        signalClass = "bearish";
-    } else if (rsiVal > 70) {
-        signal = "❌ SELL";
-        signalClass = "bearish";
-    }
+    if (rsiVal < 30 && data.trend === "UP") { signal = "🔥 PERFECT BUY"; signalClass = "bullish"; }
+    else if (rsiVal < 30 && data.trend === "DOWN") { signal = "⚠️ RISKY DIP"; signalClass = "bearish"; }
+    else if (rsiVal > 70) { signal = "❌ SELL"; signalClass = "bearish"; }
 
     const sigEl = document.getElementById('val-signal');
     sigEl.innerText = signal;
     sigEl.className = signalClass;
 }
 
-// --- BACKEND FETCH: NEWS ---
 async function fetchNews(ticker) {
     const res = await fetch(`/.netlify/functions/secure-bridge?mode=news&symbol=${ticker}`);
     const data = await res.json();
-    
     const feed = document.getElementById('news-feed');
     feed.innerHTML = "";
-    
     if(data.feed) {
         data.feed.forEach(item => {
             const sentimentScore = parseFloat(item.overall_sentiment_score);
             let sentClass = "bg-bull";
             let sentText = "BULL";
-            
             if(sentimentScore < -0.15) { sentClass = "bg-bear"; sentText = "BEAR"; }
             else if(sentimentScore < 0.15) { sentClass = ""; sentText = "NEUTRAL"; }
 
@@ -133,8 +178,7 @@ async function fetchNews(ticker) {
                         <span class="sentiment-tag ${sentClass}">${sentText}</span>
                     </div>
                     <a href="${item.url}" target="_blank" class="news-title">${item.title}</a>
-                </div>
-            `;
+                </div>`;
         });
     }
 }
