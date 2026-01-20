@@ -90,7 +90,7 @@ function renderEmptyRadar() {
         title: { text: 'MARKET RADAR', font: { color: 'white', size: 16 } },
         paper_bgcolor: '#111',
         plot_bgcolor: '#111',
-        xaxis: { title: 'DEALER FEAR', range: [0, 100], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        xaxis: { title: 'DEALER FEAR', range: [-5, 125], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
         yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'}, autorange: true },
         shapes: [
             { type: 'line', x0: 50, y0: 0, x1: 50, y1: 1, xref: 'x', yref: 'paper', line: {color: 'white', width: 1, dash:'dot'} },
@@ -198,3 +198,4 @@ async function fetchNews(ticker) {
 }
 function updateDOM(id, val) { const el = document.getElementById(id); if(el && val && val !== 'undefined%' && val !== 'undefined') el.innerText = val; else if(el) el.innerText = "--"; }
 function formatNumber(num) { if(!num) return "--"; if(num > 1000000000) return (num / 1000000000).toFixed(1) + 'B'; if(num > 1000000) return (num / 1000000).toFixed(1) + 'M'; return num; }
+
