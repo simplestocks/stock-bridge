@@ -4,40 +4,67 @@ function switchTab(mode) {
     event.target.classList.add('active');
     document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
     document.getElementById(`view-${mode}`).classList.add('active');
-    if (mode === 'radar') loadRadar();
+    
+    // Only auto-load if the chart is empty
+    if (mode === 'radar') {
+        const chartDiv = document.getElementById('radar-chart');
+        if (chartDiv.data === undefined || chartDiv.data.length === 0) {
+            loadRadar();
+        }
+    }
 }
 
-// --- RADAR LOGIC (LIVE SCANNER) ---
-let radarStarted = false;
+// --- RADAR LOGIC (DYNAMIC LISTS) ---
+let isScanning = false;
 
-async function loadRadar() {
-    if (radarStarted) return;
-    radarStarted = true;
+// 1. The Hardcoded "Generals" Lists (Top 15-20 per sector)
+const SECTOR_LISTS = {
+    'TECH': ["MSFT", "AAPL", "NVDA", "GOOGL", "AMZN", "META", "CRM", "ADBE", "CSCO", "ORCL", "IBM", "INTU", "NOW", "UBER", "ABNB"],
+    'SEMIS': ["NVDA", "AMD", "AVGO", "INTC", "QCOM", "TXN", "MU", "ADI", "LRCX", "AMAT", "TSM", "ARM", "KLAC", "MRVL"],
+    'FINANCE': ["JPM", "BAC", "WFC", "C", "GS", "MS", "BLK", "AXP", "V", "MA", "PYPL", "COF", "USB", "SCHW"],
+    'ENERGY': ["XOM", "CVX", "COP", "SLB", "EOG", "MPC", "PSX", "VLO", "OXY", "KMI", "WMB", "HES", "HAL", "BKR"],
+    'HEALTH': ["LLY", "UNH", "JNJ", "ABBV", "MRK", "PFE", "TMO", "DHR", "BMY", "AMGN", "GILD", "CVS", "CI", "ISRG"],
+    'CONSUMER': ["WMT", "COST", "PG", "KO", "PEP", "HD", "MCD", "NKE", "SBUX", "TGT", "LOW", "TJX", "EL", "CL"],
+};
+
+async function loadRadar(isCustomRun = false) {
+    if (isScanning) return; // Prevent double clicking
     
-    // THE SECTOR LEADERS 50 (Optimized for your 75 calls/min limit)
-    const tickers = [
-        "NVDA", "MSFT", "AAPL", "AMZN", "META", "GOOGL", "TSLA", "AVGO", // Tech Giants
-        "AMD", "INTC", "QCOM", "TXN", "MU", "ADI", "LRCX", "AMAT", // Semis
-        "JPM", "BAC", "WFC", "C", "GS", "MS", "BLK", // Finance
-        "XOM", "CVX", "COP", "SLB", // Energy
-        "LLY", "JNJ", "UNH", "ABBV", "MRK", "PFE", "TMO", // Healthcare
-        "PG", "COST", "WMT", "KO", "PEP", "HD", "MCD", // Consumer
-        "BA", "CAT", "GE", "HON", "UNP", "UPS", // Industrial
-        "NFLX", "DIS", "CMCSA" // Media
-    ];
-    
-    // Initialize Empty Chart
-    renderEmptyRadar();
-    
+    const selector = document.getElementById('sectorSelector');
+    const customInput = document.getElementById('customTickerInput');
+    const customBtn = document.getElementById('runCustomBtn');
+    let selectedMode = selector.value;
+    let tickers = [];
+
+    // UI Logic: Show/Hide Custom Input
+    if (selectedMode === 'CUSTOM') {
+        customInput.style.display = 'inline-block';
+        customBtn.style.display = 'inline-block';
+        if (!isCustomRun) return; // Wait for them to click RUN
+        
+        // Parse user input
+        const raw = customInput.value.trim().toUpperCase();
+        if (!raw) return alert("Please enter tickers (e.g. NVDA, GME)");
+        tickers = raw.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    } else {
+        customInput.style.display = 'none';
+        customBtn.style.display = 'none';
+        tickers = SECTOR_LISTS[selectedMode] || [];
+    }
+
+    // Start Scan
+    isScanning = true;
     const statusEl = document.getElementById('loading-radar');
     statusEl.style.display = 'block';
+    
+    // Clear old chart or create new one
+    renderEmptyRadar();
 
     for (let i = 0; i < tickers.length; i++) {
         const symbol = tickers[i];
         statusEl.innerHTML = `SCANNING ${symbol} (${i+1}/${tickers.length})...`;
         
         try {
-            // Fetch ONE stock
             const res = await fetch(`/.netlify/functions/secure-bridge?mode=radar_single&symbol=${symbol}`);
             const data = await res.json();
 
@@ -45,21 +72,22 @@ async function loadRadar() {
                 addDotToRadar(data);
             }
             
-            // 200ms delay = ~5 calls per second max. Safe for Premium (75/min).
+            // Speed Limit Protection (200ms)
             await new Promise(r => setTimeout(r, 200));
 
         } catch (e) {
-            console.log(`Skipping ${symbol}:`, e);
+            console.log(`Skipping ${symbol}`, e);
         }
     }
+    
     statusEl.innerHTML = "SCAN COMPLETE.";
-    setTimeout(() => { statusEl.style.display = 'none'; }, 2000);
+    setTimeout(() => { statusEl.style.display = 'none'; isScanning = false; }, 2000);
 }
 
-// 1. Setup the Chart Board
+// 2. Setup Empty Chart
 function renderEmptyRadar() {
     const layout = {
-        title: { text: 'MARKET RADAR (Live Feed)', font: { color: 'white', size: 16 } },
+        title: { text: 'MARKET RADAR', font: { color: 'white', size: 16 } },
         paper_bgcolor: '#111',
         plot_bgcolor: '#111',
         xaxis: { title: 'DEALER FEAR', range: [0, 100], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
@@ -79,15 +107,14 @@ function renderEmptyRadar() {
     }], layout, {responsive: true, displayModeBar: false});
 }
 
-// 2. Add a Single Dot dynamically
+// 3. Add Single Dot
 function addDotToRadar(d) {
-    let color = '#808080'; // Trap (Grey)
-    if (d.trend < 0 && d.fear > 50) color = '#ffd700'; // Good Deal (Gold)
-    if (d.trend > 0 && d.fear < 50) color = '#00cc00'; // Grinder (Green)
-    if (d.trend > 0 && d.fear > 50) color = '#ff4d4d'; // Chaser (Red)
+    let color = '#808080'; // Trap
+    if (d.trend < 0 && d.fear > 50) color = '#ffd700'; // Good Deal
+    if (d.trend > 0 && d.fear < 50) color = '#00cc00'; // Grinder
+    if (d.trend > 0 && d.fear > 50) color = '#ff4d4d'; // Chaser
 
-    // NEW SIZE FORMULA: Linear scale.
-    // RSI 70 = 35px. RSI 30 = 15px.
+    // Size = RSI / 2 (Linear Scale)
     const size = d.rsi / 2;
 
     Plotly.extendTraces('radar-chart', {
