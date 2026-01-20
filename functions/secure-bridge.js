@@ -18,6 +18,9 @@ exports.handler = async function(event, context) {
         });
     };
 
+    // HELPER: Sleep function to prevent Speeding Tickets (Rate Limits)
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     try {
         let responseData = {};
 
@@ -29,6 +32,7 @@ exports.handler = async function(event, context) {
         
         // === MODE 2: TECHNICALS ===
         else if (mode === 'technicals') {
+            // Fetch concurrent is fine for 3 items
             const [priceData, rsiData, smaData] = await Promise.all([
                 fetchData(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`),
                 fetchData(`https://www.alphavantage.co/query?function=RSI&symbol=${symbol}&interval=daily&time_period=14&series_type=close&apikey=${API_KEY}`),
@@ -49,47 +53,49 @@ exports.handler = async function(event, context) {
             responseData = await fetchData(`https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&limit=3&apikey=${API_KEY}`);
         }
 
-        // === MODE 4: RADAR (The New Scanner) ===
+        // === MODE 4: RADAR (The Fix: Sequential Loading) ===
         else if (mode === 'radar') {
-            // Hardcoded list of liquid leaders to scan
             const tickers = ["NVDA", "TSLA", "AAPL", "AMD", "NFLX", "META", "AMZN", "MSFT", "BA", "SMCI", "INTC", "DIS", "JPM", "GOOGL", "COST"];
-            
-            const fetchTickerRadar = async (t) => {
+            const results = [];
+
+            // We loop ONE BY ONE instead of all at once
+            for (const t of tickers) {
                 const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${t}&outputsize=compact&apikey=${API_KEY}`;
                 const data = await fetchData(url);
                 const ts = data["Time Series (Daily)"];
-                if(!ts) return null;
-
-                const dates = Object.keys(ts);
-                const prices = dates.map(d => parseFloat(ts[d]["4. close"]));
                 
-                // Trend (vs 50 SMA)
-                const current = prices[0];
-                const sma50 = prices.slice(0, 50).reduce((a,b)=>a+b,0)/50;
-                const trend = ((current - sma50)/sma50) * 100;
+                if (ts) {
+                    const dates = Object.keys(ts);
+                    const prices = dates.map(d => parseFloat(ts[d]["4. close"]));
+                    
+                    // Trend
+                    const current = prices[0];
+                    const sma50 = prices.slice(0, 50).reduce((a,b)=>a+b,0)/50;
+                    const trend = ((current - sma50)/sma50) * 100;
 
-                // Fear (IV Proxy)
-                const logs = [];
-                for(let i=0; i<dates.length-1; i++) logs.push(Math.log(prices[i]/prices[i+1]));
-                const vol = (arr) => Math.sqrt(arr.reduce((a,b)=>a+Math.pow(b-(arr.reduce((x,y)=>x+y,0)/arr.length),2),0)/arr.length) * Math.sqrt(252)*100;
-                
-                const curVol = vol(logs.slice(0,30));
-                // Simplified rank estimation for speed
-                const fear = Math.min(Math.max((curVol - 15) / (60 - 15) * 100, 0), 100); 
+                    // Fear
+                    const logs = [];
+                    for(let i=0; i<dates.length-1; i++) logs.push(Math.log(prices[i]/prices[i+1]));
+                    const vol = (arr) => Math.sqrt(arr.reduce((a,b)=>a+Math.pow(b-(arr.reduce((x,y)=>x+y,0)/arr.length),2),0)/arr.length) * Math.sqrt(252)*100;
+                    const curVol = vol(logs.slice(0,30));
+                    const fear = Math.min(Math.max((curVol - 15) / (60 - 15) * 100, 0), 100); 
 
-                // RSI
-                let gains=0, losses=0;
-                for(let i=0; i<14; i++){
-                    let d = prices[i]-prices[i+1];
-                    if(d>0) gains+=d; else losses-=d;
+                    // RSI
+                    let gains=0, losses=0;
+                    for(let i=0; i<14; i++){
+                        let d = prices[i]-prices[i+1];
+                        if(d>0) gains+=d; else losses-=d;
+                    }
+                    const rsi = 100 - (100/(1+((gains/14)/(losses/14))));
+
+                    results.push({ ticker: t, trend, fear, rsi });
                 }
-                const rsi = 100 - (100/(1+((gains/14)/(losses/14))));
-
-                return { ticker: t, trend, fear, rsi };
-            };
-
-            const results = await Promise.all(tickers.map(t => fetchTickerRadar(t)));
-            responseData = results.filter(r => r !== null);
+                
+                // WAIT 150ms before the next one to avoid hitting the wall
+                await delay(150);
+            }
+            
+            responseData = results;
         }
 
         return {
