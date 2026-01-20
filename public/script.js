@@ -84,14 +84,13 @@ async function loadRadar(isCustomRun = false) {
     setTimeout(() => { statusEl.style.display = 'none'; isScanning = false; }, 2000);
 }
 
-// 2. Setup Empty Chart (WITH VISUAL FIXES)
+// 2. Setup Empty Chart
 function renderEmptyRadar() {
     const layout = {
         title: { text: 'MARKET RADAR', font: { color: 'white', size: 16 } },
         paper_bgcolor: '#111',
         plot_bgcolor: '#111',
-        // VISUAL FIX: Extended range for right margin
-        xaxis: { title: 'DEALER FEAR', range: [-5, 115], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
+        xaxis: { title: 'DEALER FEAR', range: [0, 100], gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'} },
         yaxis: { title: 'TREND (% vs 50SMA)', gridcolor: '#333', zerolinecolor: '#666', tickfont: {color:'#ccc'}, titlefont: {color:'#ccc'}, autorange: true },
         shapes: [
             { type: 'line', x0: 50, y0: 0, x1: 50, y1: 1, xref: 'x', yref: 'paper', line: {color: 'white', width: 1, dash:'dot'} },
@@ -104,8 +103,6 @@ function renderEmptyRadar() {
     
     Plotly.newPlot('radar-chart', [{
         x: [], y: [], text: [], mode: 'markers+text',
-        // VISUAL FIX: White Text
-        textfont: { color: 'white' },
         marker: { color: [], size: [] }, type: 'scatter'
     }], layout, {responsive: true, displayModeBar: false});
 }
@@ -124,8 +121,6 @@ function addDotToRadar(d) {
         x: [[d.fear]],
         y: [[d.trend]],
         text: [[`<b>${d.ticker}</b>`]],
-        // VISUAL FIX: White Text
-        textfont: { color: 'white' },
         'marker.color': [[color]],
         'marker.size': [[size]]
     }, [0]);
