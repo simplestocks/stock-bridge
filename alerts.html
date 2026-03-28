@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimpleStocks Alert Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0a; --surface: #111111; --border: #222222;
+    --bull: #c8ff00; --bear: #ff4444; --morn: #00b4ff;
+    --discord: #5865F2; --slack: #4A154B;
+    --text: #e8e8e8; --muted: #555555;
+    --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; min-height: 100vh; padding: 24px 16px; }
+  .container { max-width: 780px; margin: 0 auto; }
+
+  header { border-bottom: 1px solid var(--border); padding-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .logo { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.2em; color: var(--bull); text-transform: uppercase; }
+  .tagline { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+  .tabs { display: flex; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .tab-btn { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 14px; background: transparent; border: none; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.morn.active { color: var(--morn); border-bottom-color: var(--morn); }
+  .tab-btn.bull.active { color: var(--bull); border-bottom-color: var(--bull); }
+  .tab-btn.bear.active { color: var(--bear); border-bottom-color: var(--bear); }
+  .tab-btn.sun.active  { color: var(--bull); border-bottom-color: var(--bull); }
+
+  .tab-panel { display: none; padding-top: 22px; }
+  .tab-panel.active { display: block; }
+
+  .id-display { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 18px; }
+  .id-morn { color: var(--morn); } .id-bull { color: var(--bull); } .id-bear { color: var(--bear); }
+
+  .section-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; margin: 18px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+  .sl-morn { color: var(--morn); } .sl-bull { color: var(--bull); } .sl-bear { color: var(--bear); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .form-grid.four  { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .form-grid.full  { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+
+  label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+
+  input, select, textarea { background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--sans); font-size: 13px; padding: 9px 11px; border-radius: 3px; outline: none; transition: border-color 0.15s; width: 100%; }
+  .tab-morn input:focus, .tab-morn select:focus, .tab-morn textarea:focus { border-color: var(--morn); }
+  .tab-bull input:focus, .tab-bull select:focus, .tab-bull textarea:focus { border-color: var(--bull); }
+  .tab-bear input:focus, .tab-bear select:focus, .tab-bear textarea:focus { border-color: var(--bear); }
+  .tab-sun  input:focus, .tab-sun  select:focus, .tab-sun  textarea:focus { border-color: var(--bull); }
+  input::placeholder, textarea::placeholder { color: var(--muted); font-size: 12px; }
+  textarea { resize: vertical; min-height: 68px; line-height: 1.5; }
+  select option { background: #111; }
+
+  .link-pair { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-bottom: 8px; align-items: end; }
+  .trend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .trend-item { display: flex; flex-direction: column; gap: 3px; }
+
+  .price-row { display: flex; gap: 6px; align-items: stretch; }
+  .price-row input { flex: 1; }
+  .fetch-btn { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 10px; background: var(--surface); border-radius: 3px; cursor: pointer; white-space: nowrap; transition: all 0.15s; border: 1px solid; }
+  .fb-bull { border-color: var(--bull); color: var(--bull); } .fb-bull:hover { background: var(--bull); color: #000; }
+  .fb-bear { border-color: var(--bear); color: var(--bear); } .fb-bear:hover { background: var(--bear); color: #fff; }
+  .fetch-btn.loading { opacity: 0.5; cursor: wait; }
+
+  .setup-block { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 12px; margin-bottom: 8px; }
+  .setup-title { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .st-bull { color: var(--bull); } .st-bear { color: var(--bear); } .st-morn { color: var(--morn); }
+
+  .warning-box { background: rgba(255,68,68,0.08); border: 1px solid var(--bear); border-radius: 4px; padding: 9px 12px; margin-bottom: 10px; font-family: var(--mono); font-size: 10px; color: var(--bear); line-height: 1.6; }
+  .info-box { background: rgba(0,180,255,0.06); border: 1px solid var(--morn); border-radius: 4px; padding: 8px 12px; margin-bottom: 10px; font-family: var(--mono); font-size: 10px; color: var(--morn); }
+
+  /* Levels boxes */
+  .levels-group { margin-bottom: 10px; }
+  .levels-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .levels-inputs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .levels-inputs input { width: 80px; flex: none; text-align: center; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  button { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 11px 18px; border: none; border-radius: 3px; cursor: pointer; transition: all 0.15s; }
+  .btn-morn { background: var(--morn); color: #000; flex: 2; } .btn-morn:hover { background: #33c3ff; }
+  .btn-bull { background: var(--bull); color: #000; flex: 2; } .btn-bull:hover { background: #d4ff20; }
+  .btn-bear { background: var(--bear); color: #fff; flex: 2; } .btn-bear:hover { background: #ff6666; }
+  .btn-clear { background: var(--surface); color: var(--muted); border: 1px solid var(--border); flex: 1; } .btn-clear:hover { color: var(--text); }
+  .btn-discord { background: var(--discord); color: #fff; flex: 1; } .btn-discord:hover { background: #6875f5; }
+  .btn-slack   { background: var(--slack);   color: #fff; flex: 1; } .btn-slack:hover   { background: #611f69; }
+  .btn-discord:disabled, .btn-slack:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .send-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .send-status { font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 6px 0; width: 100%; }
+  .send-status.ok { color: var(--bull); }
+  .send-status.err { color: var(--bear); }
+
+  .output-section { margin-top: 28px; display: none; }
+  .output-section.visible { display: block; }
+  .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .output-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+  .ol-morn { color: var(--morn); } .ol-bull { color: var(--bull); } .ol-bear { color: var(--bear); }
+
+  .copy-btn { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; background: transparent; border-radius: 3px; cursor: pointer; transition: all 0.15s; border: 1px solid; }
+  .cb-morn { border-color: var(--morn); color: var(--morn); } .cb-morn:hover, .cb-morn.copied { background: var(--morn); color: #000; }
+  .cb-bull { border-color: var(--bull); color: var(--bull); } .cb-bull:hover, .cb-bull.copied { background: var(--bull); color: #000; }
+  .cb-bear { border-color: var(--bear); color: var(--bear); } .cb-bear:hover, .cb-bear.copied { background: var(--bear); color: #fff; }
+
+  .output-doc { background: #fff; color: #1a1a1a; padding: 28px 32px; border-radius: 4px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.65; }
+  .doc-meta { font-size: 11px; color: #aaa; font-family: 'Courier New', monospace; margin-bottom: 8px; }
+  .doc-head { font-size: 14px; font-weight: bold; color: #000; margin-bottom: 2px; }
+  .doc-sub  { font-size: 13px; color: #666; margin-bottom: 14px; }
+  .doc-body p { font-size: 14px; margin-bottom: 10px; line-height: 1.65; }
+  .doc-body .b { font-weight: bold; }
+  .doc-body a { color: #000; text-decoration: underline; }
+  .doc-body .ph { color: #cc0000; font-weight: bold; }
+  .doc-body .disc { color: #cc0000; font-size: 13px; font-style: italic; }
+  .doc-sig { margin-top: 14px; font-weight: bold; font-size: 14px; }
+
+  .meta-strip { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 9px 12px; margin-top: 8px; display: flex; gap: 18px; flex-wrap: wrap; }
+  .meta-item { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .meta-item span { color: var(--text); }
+
+  .optional-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .optional-toggle input[type=checkbox] { width: auto; cursor: pointer; }
+  .optional-content { display: none; }
+  .optional-content.show { display: block; }
+
+  @media (max-width: 580px) { .form-grid, .form-grid.three, .form-grid.four, .trend-grid { grid-template-columns: 1fr 1fr; } .link-pair { grid-template-columns: 1fr; } .levels-inputs input { width: 70px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">SimpleStocks</div>
+    <div class="tagline">// alert generator</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn morn active" onclick="switchTab('morn',this)">☀ Morning Note</button>
+    <button class="tab-btn bull" onclick="switchTab('bull',this)">▲ Bullish Alert</button>
+    <button class="tab-btn bear" onclick="switchTab('bear',this)">▼ Bearish Alert</button>
+    <button class="tab-btn sun"  onclick="switchTab('sun',this)">Sunday Session</button>
+  </div>
+
+  <!-- ===== MORNING NOTE ===== -->
+  <div class="tab-panel tab-morn active" id="tab-morn">
+    <div class="id-display">NOTE ID: <span class="id-morn" id="mornId">—</span></div>
+
+    <div class="section-label sl-morn">Market Pulse</div>
+    <div class="form-grid full">
+      <div class="field"><label>Market Pulse Text</label>
+        <textarea id="m_pulse" rows="3" placeholder="After another sold-into rally, I expect an attempt to rally again today. However, VIX levels are too high..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-label sl-morn">SPX Tracker</div>
+    <div class="form-grid full">
+      <div class="field"><label>SPX Tracker Text</label>
+        <textarea id="m_spx" rows="3" placeholder="The S&P is now at 3/23 lows. Losing this today would create a target 3% lower."></textarea>
+      </div>
+    </div>
+
+    <!-- RESISTANCE LEVELS -->
+    <div class="levels-group">
+      <div class="levels-label">Resistance Levels (fill in order, leave blank to skip)</div>
+      <div class="levels-inputs">
+        <input type="text" id="m_r1" placeholder="6530">
+        <input type="text" id="m_r2" placeholder="6560">
+        <input type="text" id="m_r3" placeholder="6600">
+        <input type="text" id="m_r4" placeholder="6634">
+        <input type="text" id="m_r5" placeholder="">
+        <input type="text" id="m_r6" placeholder="">
+      </div>
+    </div>
+
+    <!-- SUPPORT LEVELS -->
+    <div class="levels-group">
+      <div class="levels-label">Support Levels (fill in order, leave blank to skip)</div>
+      <div class="levels-inputs">
+        <input type="text" id="m_s1" placeholder="6395">
+        <input type="text" id="m_s2" placeholder="6358">
+        <input type="text" id="m_s3" placeholder="6311">
+        <input type="text" id="m_s4" placeholder="6240">
+        <input type="text" id="m_s5" placeholder="">
+        <input type="text" id="m_s6" placeholder="">
+      </div>
+    </div>
+
+    <!-- SPX SHORT TERM LINKS -->
+    <div class="info-box">Short term line links — label + URL</div>
+    <div class="link-pair">
+      <div class="field"><label>Link 1 Label</label><input type="text" id="m_spx_l1_label" value="ES_F"></div>
+      <div class="field"><label>Link 1 URL</label><input type="text" id="m_spx_l1_url" placeholder="https://www.tradingview.com/..."></div>
+    </div>
+    <div class="link-pair">
+      <div class="field"><label>Link 2 Label</label><input type="text" id="m_spx_l2_label" value="SPX"></div>
+      <div class="field"><label>Link 2 URL</label><input type="text" id="m_spx_l2_url" placeholder="https://www.tradingview.com/..."></div>
+    </div>
+    <div class="link-pair">
+      <div class="field"><label>Link 3 Label (optional)</label><input type="text" id="m_spx_l3_label" placeholder=""></div>
+      <div class="field"><label>Link 3 URL</label><input type="text" id="m_spx_l3_url" placeholder=""></div>
+    </div>
+
+    <div class="section-label sl-morn">Trends Update</div>
+    <div class="info-box">Label + TradingView URL. Leave blank to skip.</div>
+    <div class="trend-grid">
+      <div class="trend-item"><label>Label</label><input type="text" id="m_t1_label" value="SPY"><label style="margin-top:4px">URL</label><input type="text" id="m_t1_url" placeholder="https://..."></div>
+      <div class="trend-item"><label>Label</label><input type="text" id="m_t2_label" value="QQQ"><label style="margin-top:4px">URL</label><input type="text" id="m_t2_url" placeholder="https://..."></div>
+      <div class="trend-item"><label>Label</label><input type="text" id="m_t3_label" value="IWM"><label style="margin-top:4px">URL</label><input type="text" id="m_t3_url" placeholder="https://..."></div>
+      <div class="trend-item"><label>Label</label><input type="text" id="m_t4_label" value="VIX"><label style="margin-top:4px">URL</label><input type="text" id="m_t4_url" placeholder="https://..."></div>
+      <div class="trend-item"><label>Label</label><input type="text" id="m_t5_label" value="OIL"><label style="margin-top:4px">URL</label><input type="text" id="m_t5_url" placeholder="https://..."></div>
+      <div class="trend-item"><label>Label</label><input type="text" id="m_t6_label" value="GOLD"><label style="margin-top:4px">URL</label><input type="text" id="m_t6_url" placeholder="https://..."></div>
+    </div>
+
+    <div class="section-label sl-morn">Key Talking Points</div>
+    <div class="form-grid full">
+      <div class="field"><label>Talking Points (one per line)</label>
+        <textarea id="m_ktp" rows="4" placeholder="Every day: Potential war headlines (stay nimble).&#10;Today: Michigan Sentiment Reports."></textarea>
+      </div>
+    </div>
+
+    <div class="section-label sl-morn">Live Discussion</div>
+    <div class="form-grid">
+      <div class="field"><label>Password</label><input type="text" id="m_pw" placeholder="771133"></div>
+      <div class="field"><label>Live Room URL</label><input type="text" id="m_liveurl" value="https://join.freeconferencecall.com/simplestocks"></div>
+    </div>
+
+    <!-- OPTIONAL: Key Short Term ETF Levels -->
+    <div class="section-label sl-morn" style="margin-top:18px">
+      <label class="optional-toggle"><input type="checkbox" id="m_etf_toggle" onchange="toggleSection('m_etf_toggle','m_etf_section')"><span>Key Short Term ETF Levels (optional)</span></label>
+    </div>
+    <div class="optional-content" id="m_etf_section">
+      <div class="trend-grid">
+        <div class="trend-item"><label>Label</label><input type="text" id="m_etf1_label" value="SPY"><label style="margin-top:4px">URL</label><input type="text" id="m_etf1_url" placeholder="https://..."></div>
+        <div class="trend-item"><label>Label</label><input type="text" id="m_etf2_label" value="QQQ"><label style="margin-top:4px">URL</label><input type="text" id="m_etf2_url" placeholder="https://..."></div>
+        <div class="trend-item"><label>Label</label><input type="text" id="m_etf3_label" value="IWM"><label style="margin-top:4px">URL</label><input type="text" id="m_etf3_url" placeholder="https://..."></div>
+        <div class="trend-item"><label>Label</label><input type="text" id="m_etf4_label" placeholder=""><label style="margin-top:4px">URL</label><input type="text" id="m_etf4_url" placeholder=""></div>
+      </div>
+    </div>
+
+    <!-- OPTIONAL: Earnings -->
+    <div class="section-label sl-morn" style="margin-top:18px">
+      <label class="optional-toggle"><input type="checkbox" id="m_earn_toggle" onchange="toggleSection('m_earn_toggle','m_earn_section')"><span>Earnings Table (optional)</span></label>
+    </div>
+    <div class="optional-content" id="m_earn_section">
+      <div class="link-pair">
+        <div class="field"><label>Label</label><input type="text" id="m_earn_label" value="TABLE"></div>
+        <div class="field"><label>URL</label><input type="text" id="m_earn_url" placeholder="https://..."></div>
+      </div>
+    </div>
+
+    <!-- OPTIONAL: Extra -->
+    <div class="section-label sl-morn" style="margin-top:18px">
+      <label class="optional-toggle"><input type="checkbox" id="m_extra_toggle" onchange="toggleSection('m_extra_toggle','m_extra_section')"><span>Extra Section (optional)</span></label>
+    </div>
+    <div class="optional-content" id="m_extra_section">
+      <div class="form-grid">
+        <div class="field"><label>Section Label</label><input type="text" id="m_extra_label" placeholder="e.g. Options Watch"></div>
+        <div class="field"><label>Link Label (optional)</label><input type="text" id="m_extra_link_label" placeholder="HERE"></div>
+      </div>
+      <div class="form-grid full"><div class="field"><label>Content</label><textarea id="m_extra_text" placeholder="Additional content..."></textarea></div></div>
+      <div class="form-grid full"><div class="field"><label>Link URL (optional)</label><input type="text" id="m_extra_url" placeholder="https://..."></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-morn" onclick="generateMorn()">Generate Morning Note</button>
+      <button class="btn-clear" onclick="clearMorn()">Clear</button>
+    </div>
+
+    <div class="output-section" id="mornOutput">
+      <div class="output-header">
+        <div class="output-label ol-morn">Generated Morning Note</div>
+        <button class="copy-btn cb-morn" id="mornCopyBtn" onclick="copyOutput('mornDoc','mornCopyBtn')">Copy All</button>
+      </div>
+      <div class="output-doc" id="mornDoc"></div>
+      <div class="meta-strip" id="mornMeta"></div>
+      <div class="send-row">
+        <button class="btn-discord" onclick="sendToDiscord('mornDoc')">Send to Discord</button>
+        <button class="btn-slack"   onclick="sendToSlack('mornDoc')">Send to Slack</button>
+      </div>
+      <div class="send-status" id="mornSendStatus"></div>
+    </div>
+  </div>
+
+  <!-- ===== BULLISH TAB ===== -->
+  <div class="tab-panel tab-bull" id="tab-bull">
+    <div class="id-display">TRADE ID: <span class="id-bull" id="bullId">—</span></div>
+    <div class="section-label sl-bull">Core Info</div>
+    <div class="form-grid three">
+      <div class="field"><label>Ticker</label><input type="text" id="b_ticker" placeholder="DASH" maxlength="8" oninput="this.value=this.value.toUpperCase()"></div>
+      <div class="field"><label>Bias</label><input type="text" id="b_bias" value="Bullish / Neutral"></div>
+      <div class="field"><label>Current Price</label>
+        <div class="price-row"><input type="text" id="b_price" placeholder="$XXX"><button class="fetch-btn fb-bull" onclick="fetchPrice('b_ticker','b_price','bFetchBtn')" id="bFetchBtn">Get $</button></div>
+      </div>
+    </div>
+    <div class="form-grid full"><div class="field"><label>Subtitle / Alert Type</label><input type="text" id="b_subtitle" placeholder="Mid Day Market Update"></div></div>
+    <div class="form-grid full"><div class="field"><label>Market Context</label><textarea id="b_context" placeholder="Markets are down 1% and sentiment remains sour..."></textarea></div></div>
+    <div class="form-grid full"><div class="field"><label>Trade Thesis</label><textarea id="b_thesis" placeholder="DASH is falling into a support zone..."></textarea></div></div>
+    <div class="section-label sl-bull">Setups</div>
+    <div class="setup-block">
+      <div class="setup-title st-bull">Setup 1 — Investment / Safest</div>
+      <div class="form-grid"><div class="field"><label>Type</label><select id="b_s1type"><option value="shares">Buy Shares</option><option value="skip">Skip</option></select></div><div class="field"><label>Entry Price</label><input type="text" id="b_s1price" placeholder="$XXX"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="b_s1note" placeholder="Starter position, leave room to add"></div>
+    </div>
+    <div class="setup-block">
+      <div class="setup-title st-bull">Setup 2 — Active</div>
+      <div class="form-grid three"><div class="field"><label>Strategy</label><select id="b_s2type"><option value="cps">Credit Put Spread</option><option value="naked_put">Naked Put</option><option value="dcs">Debit Call Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="b_s2exp" placeholder="April 17th"></div><div class="field"><label>Credit / Debit</label><input type="text" id="b_s2credit" placeholder="$0.50 ($50/contract)"></div></div>
+      <div class="form-grid"><div class="field"><label>Short Strike (Sell)</label><input type="text" id="b_s2short" placeholder="$XXX"></div><div class="field"><label>Long Strike (Buy)</label><input type="text" id="b_s2long" placeholder="$XXX"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="b_s2note" placeholder="Active trade, monitor every 1-2 days"></div>
+    </div>
+    <div class="setup-block">
+      <div class="setup-title st-bull">Setup 3 — Slower / Passive</div>
+      <div class="form-grid three"><div class="field"><label>Strategy</label><select id="b_s3type"><option value="naked_put">Naked Put</option><option value="cps">Credit Put Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="b_s3exp" placeholder="Sept 18th"></div><div class="field"><label>Credit</label><input type="text" id="b_s3credit" placeholder="$3.40 ($340/contract)"></div></div>
+      <div class="form-grid"><div class="field"><label>Strike</label><input type="text" id="b_s3strike" placeholder="$XXX"></div><div class="field"><label>Breakeven</label><input type="text" id="b_s3be" placeholder="$XXX"></div></div>
+      <div class="form-grid"><div class="field"><label>Margin Required</label><input type="text" id="b_s3margin" placeholder="~$1,300"></div><div class="field"><label>Notes (optional)</label><input type="text" id="b_s3note" placeholder="Can be modified into a spread for smaller accounts"></div></div>
+    </div>
+    <div class="setup-block">
+      <div class="setup-title st-bull">Setup 4 — Long Call / Debit Call Spread</div>
+      <div class="form-grid three"><div class="field"><label>Structure</label><select id="b_s4type"><option value="vertical">Vertical (same expiry)</option><option value="diagonal">Diagonal (diff expiry)</option><option value="calendar">Calendar (same strike)</option><option value="single_call">Single Call</option><option value="skip">Skip</option></select></div><div class="field"><label>Buy Expiration</label><input type="text" id="b_s4exp_buy" placeholder="June 20th"></div><div class="field"><label>Sell Expiration</label><input type="text" id="b_s4exp_sell" placeholder="April 17th (diag/cal)"></div></div>
+      <div class="form-grid three"><div class="field"><label>Buy Strike</label><input type="text" id="b_s4strike_buy" placeholder="$XXX"></div><div class="field"><label>Sell Strike</label><input type="text" id="b_s4strike_sell" placeholder="$XXX (spread only)"></div><div class="field"><label>Cost / Debit</label><input type="text" id="b_s4cost" placeholder="$XXX ($XXX/contract)"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="b_s4note" placeholder="Defined risk bullish play targeting the upside move"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-bull" onclick="generateBull()">Generate Bullish Alert</button>
+      <button class="btn-clear" onclick="clearBull()">Clear</button>
+    </div>
+    <div class="output-section" id="bullOutput">
+      <div class="output-header"><div class="output-label ol-bull">Generated Alert — Bullish</div><button class="copy-btn cb-bull" id="bullCopyBtn" onclick="copyOutput('bullDoc','bullCopyBtn')">Copy All</button></div>
+      <div class="output-doc" id="bullDoc"></div>
+      <div class="meta-strip" id="bullMeta"></div>
+      <div class="send-row">
+        <button class="btn-discord" onclick="sendToDiscord('bullDoc')">Send to Discord</button>
+        <button class="btn-slack"   onclick="sendToSlack('bullDoc')">Send to Slack</button>
+      </div>
+      <div class="send-status" id="bullSendStatus"></div>
+    </div>
+  </div>
+
+  <!-- ===== BEARISH TAB ===== -->
+  <div class="tab-panel tab-bear" id="tab-bear">
+    <div class="id-display">TRADE ID: <span class="id-bear" id="bearId">—</span></div>
+    <div class="section-label sl-bear">Core Info</div>
+    <div class="form-grid three">
+      <div class="field"><label>Ticker</label><input type="text" id="r_ticker" placeholder="DASH" maxlength="8" oninput="this.value=this.value.toUpperCase()"></div>
+      <div class="field"><label>Bias</label><input type="text" id="r_bias" value="Bearish / Neutral"></div>
+      <div class="field"><label>Current Price</label>
+        <div class="price-row"><input type="text" id="r_price" placeholder="$XXX"><button class="fetch-btn fb-bear" onclick="fetchPrice('r_ticker','r_price','rFetchBtn')" id="rFetchBtn">Get $</button></div>
+      </div>
+    </div>
+    <div class="form-grid full"><div class="field"><label>Subtitle / Alert Type</label><input type="text" id="r_subtitle" placeholder="Mid Day Market Update"></div></div>
+    <div class="form-grid full"><div class="field"><label>Market Context</label><textarea id="r_context" placeholder="Markets are rallying into resistance..."></textarea></div></div>
+    <div class="form-grid full"><div class="field"><label>Trade Thesis</label><textarea id="r_thesis" placeholder="DASH is rallying into overhead resistance..."></textarea></div></div>
+    <div class="section-label sl-bear">Setups</div>
+    <div class="setup-block">
+      <div class="setup-title st-bear">Setup 1 — Short Shares</div>
+      <div class="warning-box">* Shorting stock carries unlimited risk and should not be taken lightly. Only appropriate for experienced traders with defined risk management.</div>
+      <div class="form-grid"><div class="field"><label>Type</label><select id="r_s1type"><option value="short">Short Shares</option><option value="skip">Skip</option></select></div><div class="field"><label>Entry Price (Short)</label><input type="text" id="r_s1price" placeholder="$XXX"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="r_s1note" placeholder="Starter short, leave room to add on rips"></div>
+    </div>
+    <div class="setup-block">
+      <div class="setup-title st-bear">Setup 2 — Active</div>
+      <div class="form-grid three"><div class="field"><label>Strategy</label><select id="r_s2type"><option value="ccs">Credit Call Spread</option><option value="dps">Debit Put Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="r_s2exp" placeholder="April 17th"></div><div class="field"><label>Credit / Debit</label><input type="text" id="r_s2credit" placeholder="$0.36 ($36/contract)"></div></div>
+      <div class="form-grid"><div class="field"><label>Short Strike (Sell)</label><input type="text" id="r_s2short" placeholder="$XXX"></div><div class="field"><label>Long Strike (Buy)</label><input type="text" id="r_s2long" placeholder="$XXX"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="r_s2note" placeholder="Defined risk bearish setup, monitor every 1-2 days"></div>
+    </div>
+    <div class="setup-block">
+      <div class="setup-title st-bear">Setup 3 — Slower / Passive</div>
+      <div class="warning-box">* Selling naked calls carries unlimited risk and should not be taken lightly. Only appropriate for experienced traders with defined risk management.</div>
+      <div class="form-grid three"><div class="field"><label>Strategy</label><select id="r_s3type"><option value="naked_call">Naked Call</option><option value="ccs">Credit Call Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="r_s3exp" placeholder="May 1st"></div><div class="field"><label>Credit</label><input type="text" id="r_s3credit" placeholder="$0.50 ($50/contract)"></div></div>
+      <div class="form-grid"><div class="field"><label>Strike</label><input type="text" id="r_s3strike" placeholder="$XXX"></div><div class="field"><label>Margin Required</label><input type="text" id="r_s3margin" placeholder="~$XXX"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="r_s3note" placeholder="Win as long as stock stays below short strike at expiration"></div>
+    </div>
+    <div class="setup-block">
+      <div class="setup-title st-bear">Setup 4 — Long Put / Debit Put Spread</div>
+      <div class="form-grid three"><div class="field"><label>Structure</label><select id="r_s4type"><option value="vertical_put">Vertical Put Spread</option><option value="diagonal_put">Diagonal Put Spread</option><option value="single_put">Single Put</option><option value="skip">Skip</option></select></div><div class="field"><label>Buy Expiration</label><input type="text" id="r_s4exp_buy" placeholder="June 20th"></div><div class="field"><label>Sell Expiration</label><input type="text" id="r_s4exp_sell" placeholder="April 17th (diag only)"></div></div>
+      <div class="form-grid three"><div class="field"><label>Buy Strike</label><input type="text" id="r_s4strike_buy" placeholder="$XXX"></div><div class="field"><label>Sell Strike</label><input type="text" id="r_s4strike_sell" placeholder="$XXX (spread only)"></div><div class="field"><label>Cost / Debit</label><input type="text" id="r_s4cost" placeholder="$XXX ($XXX/contract)"></div></div>
+      <div class="field"><label>Notes (optional)</label><input type="text" id="r_s4note" placeholder="Defined risk bearish play targeting the downside move"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-bear" onclick="generateBear()">Generate Bearish Alert</button>
+      <button class="btn-clear" onclick="clearBear()">Clear</button>
+    </div>
+    <div class="output-section" id="bearOutput">
+      <div class="output-header"><div class="output-label ol-bear">Generated Alert — Bearish</div><button class="copy-btn cb-bear" id="bearCopyBtn" onclick="copyOutput('bearDoc','bearCopyBtn')">Copy All</button></div>
+      <div class="output-doc" id="bearDoc"></div>
+      <div class="meta-strip" id="bearMeta"></div>
+      <div class="send-row">
+        <button class="btn-discord" onclick="sendToDiscord('bearDoc')">Send to Discord</button>
+        <button class="btn-slack"   onclick="sendToSlack('bearDoc')">Send to Slack</button>
+      </div>
+      <div class="send-status" id="bearSendStatus"></div>
+    </div>
+  </div>
+
+  <!-- ===== SUNDAY TAB ===== -->
+  <div class="tab-panel tab-sun" id="tab-sun">
+    <div class="id-display">SESSION ID: <span class="id-bull" id="sunId">—</span></div>
+    <div class="section-label sl-bull">Session Details</div>
+    <div class="form-grid"><div class="field"><label>Session Date</label><input type="text" id="s_date"></div><div class="field"><label>Time</label><input type="text" id="s_time" value="10am Eastern"></div></div>
+    <div class="form-grid"><div class="field"><label>Live Room Password</label><input type="text" id="s_pw" placeholder="Enter weekly password"></div><div class="field"><label>Session Type</label><select id="s_type"><option>Sunday Charting Session</option><option>Sunday Market Prep</option><option>Sunday Live Room</option><option>Special Session</option></select></div></div>
+    <div class="form-grid full"><div class="field"><label>Additional Notes (optional)</label><textarea id="s_notes" placeholder="Topics, what to bring, etc."></textarea></div></div>
+    <div class="btn-row">
+      <button class="btn-bull" onclick="generateSunday()">Generate Announcement</button>
+      <button class="btn-clear" onclick="clearSunday()">Clear</button>
+    </div>
+    <div class="output-section" id="sunOutput">
+      <div class="output-header"><div class="output-label ol-bull">Generated Announcement</div><button class="copy-btn cb-bull" id="sunCopyBtn" onclick="copyOutput('sunDoc','sunCopyBtn')">Copy All</button></div>
+      <div class="output-doc" id="sunDoc"></div>
+      <div class="meta-strip" id="sunMeta"></div>
+      <div class="send-row">
+        <button class="btn-discord" onclick="sendToDiscord('sunDoc')">Send to Discord</button>
+        <button class="btn-slack"   onclick="sendToSlack('sunDoc')">Send to Slack</button>
+      </div>
+      <div class="send-status" id="sunSendStatus"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+  const LIVE_ROOM    = 'https://join.freeconferencecall.com/simplestocks';
+  const TICKERS_FORM = 'http://forms.gle/tEHEEMDJ3W3btSDy7';
+  const AV_KEY       = 'YOUR_ALPHA_VANTAGE_KEY';
+  const DISCORD_URL  = 'https://discord.com/api/webhooks/1487502867832111115/UzZlRxhLDDgZGyS_AAxslyjcvdqslCd_N6wsx-_KYI9xRHI1w3432OpLynfxBxU9oTXm';
+  const DISCORD_THREAD = '1483104531247140955';
+  const SLACK_URL    = '/.netlify/functions/slack-proxy';
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function pad(n){return String(n).padStart(2,'0');}
+  function ordinal(n){if(n>3&&n<21)return 'th';switch(n%10){case 1:return 'st';case 2:return 'nd';case 3:return 'rd';default:return 'th';}}
+  function getNextSunday(){const now=new Date(),day=now.getDay(),daysUntil=day===0?7:7-day,next=new Date(now);next.setDate(now.getDate()+daysUntil);return `Sunday ${MONTHS[next.getMonth()]} ${next.getDate()}${ordinal(next.getDate())}`;}
+  function generateId(){const d=new Date();return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}`;}
+  function updateIds(){const id=generateId();['mornId','bullId','bearId','sunId'].forEach(x=>{const el=document.getElementById(x);if(el)el.textContent=id;});}
+  window.onload=function(){document.getElementById('s_date').value=getNextSunday();updateIds();};
+  setInterval(updateIds,30000);
+
+  function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
+  function toggleSection(checkId,sectionId){document.getElementById(sectionId).classList.toggle('show',document.getElementById(checkId).checked);}
+  function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+  function ph(val,fb){return val||`<span class="ph">${fb}</span>`;}
+
+  async function fetchPrice(tickerId,priceId,btnId){
+    const ticker=document.getElementById(tickerId).value.trim().toUpperCase();
+    if(!ticker){alert('Enter a ticker first.');return;}
+    if(AV_KEY==='YOUR_ALPHA_VANTAGE_KEY'){alert('Add your Alpha Vantage API key to the app.');return;}
+    const btn=document.getElementById(btnId);btn.textContent='...';btn.classList.add('loading');
+    try{const res=await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${AV_KEY}`);const data=await res.json();const quote=data['Global Quote'];if(quote&&quote['05. price']){document.getElementById(priceId).value=`$${parseFloat(quote['05. price']).toFixed(2)}`;}else{alert('Could not fetch price.');}}catch(e){alert('Price fetch failed.');}
+    btn.textContent='Get $';btn.classList.remove('loading');
+  }
+
+  function lnk(label,url){if(!label)return '';if(url)return `<a href="${url}" target="_blank">${label}</a>`;return label;}
+
+  // Build levels sentence
+  function buildLevels(){
+    const res=[v('m_r1'),v('m_r2'),v('m_r3'),v('m_r4'),v('m_r5'),v('m_r6')].filter(x=>x);
+    const sup=[v('m_s1'),v('m_s2'),v('m_s3'),v('m_s4'),v('m_s5'),v('m_s6')].filter(x=>x);
+    if(!res.length&&!sup.length)return '';
+    let sentence='Levels: ';
+    if(res.length){
+      const last=res.pop();
+      sentence+=`Resistance at ${res.length?res.join(', ')+', and '+last:last}. `;
+    }
+    if(sup.length){
+      const last=sup.pop();
+      sentence+=`Support at ${sup.length?sup.join(', ')+', and '+last:last}.`;
+    }
+    return sentence.trim();
+  }
+
+  // Get plain text from a doc element
+  function getDiscordText(docId){
+    const el=document.getElementById(docId);
+    if(!el)return '';
+    const clone=el.cloneNode(true);
+    clone.querySelectorAll('a').forEach(a=>{
+      const label=a.textContent.trim();
+      const url=a.getAttribute('href');
+      const span=document.createElement('span');
+      span.textContent=url?`[${label}](${url})`:label;
+      a.replaceWith(span);
+    });
+    clone.querySelectorAll('br').forEach(br=>{
+      br.replaceWith(document.createTextNode('\n'));
+    });
+    let lines=[];
+    clone.querySelectorAll('p, .doc-head, .doc-sub, .doc-sig').forEach(p=>{
+      const t=(p.innerText||p.textContent||'').trim();
+      if(t) lines.push(t);
+    });
+    return lines.join('\n\n');
+  }
+
+  function getPlainText(docId){
+    const el=document.getElementById(docId);
+    if(!el)return '';
+    let text=el.innerText||el.textContent||'';
+    return text.trim();
+  }
+
+  // ---- DISCORD SEND ----
+  async function sendToDiscord(docId){
+    const text=getDiscordText(docId);
+    if(!text){alert('Generate the content first.');return;}
+    const statusId=docId.replace('Doc','SendStatus');
+    const statusEl=document.getElementById(statusId);
+    if(statusEl){statusEl.textContent='Sending to Discord...';statusEl.className='send-status';}
+    try{
+      const url=`${DISCORD_URL}?thread_id=${DISCORD_THREAD}`;
+      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
+      if(res.ok||res.status===204){if(statusEl){statusEl.textContent='✓ Sent to Discord successfully.';statusEl.className='send-status ok';}}
+      else{throw new Error(`HTTP ${res.status}`);}
+    }catch(e){if(statusEl){statusEl.textContent=`✗ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
+    setTimeout(()=>{if(statusEl)statusEl.textContent='';},5000);
+  }
+
+  // ---- SLACK SEND ----
+  async function sendToSlack(docId){
+    const text=getPlainText(docId);
+    if(!text){alert('Generate the content first.');return;}
+    const statusId=docId.replace('Doc','SendStatus');
+    const statusEl=document.getElementById(statusId);
+    if(statusEl){statusEl.textContent='Sending to Slack...';statusEl.className='send-status';}
+    try{
+      const res=await fetch(SLACK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.substring(0,3000)})});
+      if(res.ok){if(statusEl){statusEl.textContent='✓ Sent to Slack successfully.';statusEl.className='send-status ok';}}
+      else{const errText=await res.text();throw new Error(errText||`HTTP ${res.status}`);}
+    }catch(e){
+      // Slack webhooks block from browser due to CORS — offer fallback
+      if(statusEl){statusEl.textContent='✗ Slack blocked by browser CORS. Use the Copy button and paste into Slack instead.';statusEl.className='send-status err';}
+    }
+    setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
+  }
+
+  // ---- GENERATE MORNING NOTE ----
+  function generateMorn(){
+    const id=generateId(),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    const pulse=v('m_pulse'),spx=v('m_spx'),ktp=v('m_ktp'),pw=v('m_pw')||'XXXXXX';
+    const liveurl=v('m_liveurl')||LIVE_ROOM;
+    const levels=buildLevels();
+    const spxLinks=[];for(let i=1;i<=3;i++){const lbl=v(`m_spx_l${i}_label`),url=v(`m_spx_l${i}_url`);if(lbl)spxLinks.push(lnk(lbl,url));}
+    const spxLinksHtml=spxLinks.length?`<br>- Short term lines: ${spxLinks.join(' | ')}`:'';
+    const trends=[];for(let i=1;i<=6;i++){const lbl=v(`m_t${i}_label`),url=v(`m_t${i}_url`);if(lbl)trends.push(lnk(lbl,url));}
+    const trendsHtml=trends.length?`<p><span class="b">+ Trends update:</span> ${trends.join(' | ')}.</p>`:'';
+    let ktpHtml='';if(ktp){const lines=ktp.split('\n').filter(l=>l.trim());ktpHtml=`<p><span class="b">+ Key Talking Point:</span><br>${lines.join('<br>')}</p>`;}
+    let etfHtml='';
+    if(document.getElementById('m_etf_toggle').checked){const etfs=[];for(let i=1;i<=4;i++){const lbl=v(`m_etf${i}_label`),url=v(`m_etf${i}_url`);if(lbl)etfs.push(lnk(lbl,url));}if(etfs.length)etfHtml=`<p><span class="b">+ Key Short Term ETF Levels:</span><br>${etfs.join(' | ')}</p>`;}
+    let earnHtml='';if(document.getElementById('m_earn_toggle').checked){const elbl=v('m_earn_label'),eurl=v('m_earn_url');if(elbl)earnHtml=`<p><span class="b">+ Earnings</span> ${lnk(elbl,eurl)}</p>`;}
+    let extraHtml='';
+    if(document.getElementById('m_extra_toggle').checked){const xlabel=v('m_extra_label'),xtext=v('m_extra_text'),xlinklabel=v('m_extra_link_label'),xurl=v('m_extra_url');if(xlabel||xtext){let line=xlabel?`<span class="b">+ ${xlabel}:</span> `:'';line+=xtext||'';if(xlinklabel&&xurl)line+=` ${lnk(xlinklabel,xurl)}`;extraHtml=`<p>${line}</p>`;}}
+
+    // Build SPX block
+    let spxBlock='';
+    if(spx||levels){
+      spxBlock=`<p><span class="b">+ SPX tracker:</span> ${spx||''}${levels?'<br>'+levels:''}${spxLinksHtml}</p>`;
+    }
+
+    document.getElementById('mornDoc').innerHTML=`
+      <div class="doc-meta">NOTE ID: ${id}</div>
+      <div class="doc-head">Morning Note — ${mmdd}</div>
+      <div class="doc-body">
+        <p>Good morning traders.</p>
+        ${pulse?`<p><span class="b">+ Market Pulse:</span> ${pulse}</p>`:''}
+        ${spxBlock}
+        ${trendsHtml}${ktpHtml}${etfHtml}${earnHtml}${extraHtml}
+        <p><span class="b">+ Live discussion</span>, available <a href="${liveurl}" target="_blank">HERE</a> (PW: ${pw})</p>
+        <div class="doc-sig">Nic</div>
+      </div>`;
+    document.getElementById('mornMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Morning Note ${mmdd} — ${id}</span></div>`;
+    document.getElementById('mornOutput').classList.add('visible');
+    document.getElementById('mornOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  // ---- BULLISH HELPERS ----
+  function bullS2(type,short,long,exp,credit){
+    const E=exp||'<span class="ph">XXX Exp</span>',C=credit||'<span class="ph">$XXX credit</span>',S=short||'<span class="ph">$XXX</span>',L=long||'<span class="ph">$XXX</span>';
+    if(type==='cps')return `Sell the ${E} ${S}/${L} credit put spread for a ${C}. This catches the falling knife while leaving lines of support to play out.`;
+    if(type==='naked_put')return `Sell to open the ${E} ${S} Put for a ${C}. If assigned, you own shares below current levels.`;
+    if(type==='dcs')return `Buy the ${E} ${S}/${L} debit call spread for ${C}. Captures the expected upside with defined risk.`;
+    return '';
+  }
+  function bullS4(){
+    const type=v('b_s4type');if(type==='skip')return '';
+    const bExp=v('b_s4exp_buy')||'<span class="ph">XXX Exp</span>',sExp=v('b_s4exp_sell')||'<span class="ph">XXX Exp</span>';
+    const bSt=v('b_s4strike_buy')||'<span class="ph">$XXX</span>',sSt=v('b_s4strike_sell')||'<span class="ph">$XXX</span>';
+    const cost=v('b_s4cost')||'<span class="ph">$XXX debit</span>',note=v('b_s4note')||'Defined risk bullish play targeting the expected upside move.';
+    let line='';
+    if(type==='vertical')line=`Buy to open the ${bExp} ${bSt} Call / Sell to open the ${bExp} ${sSt} Call (vertical debit call spread) for ${cost}.`;
+    else if(type==='diagonal')line=`Buy to open the ${bExp} ${bSt} Call / Sell to open the ${sExp} ${sSt} Call (diagonal spread) for ${cost}.`;
+    else if(type==='calendar')line=`Buy to open the ${bExp} ${bSt} Call / Sell to open the ${sExp} ${bSt} Call (calendar spread) for ${cost}.`;
+    else if(type==='single_call')line=`Buy to open the ${bExp} ${bSt} Call for ${cost}. Defined risk, unlimited upside.`;
+    return `<p><span class="b">+ Setup 4 (Long Call/Debit Call Spread):</span> ${line} Note: ${note}</p>`;
+  }
+
+  function generateBull(){
+    const ticker=v('b_ticker')||'XXX',bias=v('b_bias')||'Bullish / Neutral',price=v('b_price');
+    const subtitle=v('b_subtitle')||'Mid Day Market Update',context=v('b_context'),thesis=v('b_thesis');
+    const id=generateId(),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    let setups='';
+    if(v('b_s1type')!=='skip'){const note=v('b_s1note')||'Size this as a starter position and leave plenty of dry powder to add over time.';setups+=`<p><span class="b">+ Setup 1 (Investment/Safest):</span> Buy ${ticker} shares at ${ph(v('b_s1price'),'$XXX')}. ${note}</p>`;}
+    if(v('b_s2type')!=='skip'){const note=v('b_s2note')||'This is an active trade that requires monitoring every 1 to 2 days.';setups+=`<p><span class="b">+ Setup 2 (Active):</span> ${bullS2(v('b_s2type'),v('b_s2short'),v('b_s2long'),v('b_s2exp'),v('b_s2credit'))} Note: ${note}</p>`;}
+    if(v('b_s3type')!=='skip'){
+      const note=v('b_s3note')||'Can be modified into a credit put spread for smaller accounts.';
+      const exp=v('b_s3exp')||'<span class="ph">XXX Exp</span>',st=v('b_s3strike')||'<span class="ph">$XXX</span>',cr=v('b_s3credit')||'<span class="ph">$XXX credit</span>',be=v('b_s3be')||'<span class="ph">$XXX</span>',mg=v('b_s3margin')||'<span class="ph">$XXX</span>';
+      let line=v('b_s3type')==='naked_put'?`Sell the ${exp} ${st} Put for a ${cr}. This slower approach leaves more room for error. It commits you to owning shares at ${st} with a breakeven of ${be}. Requires roughly ${mg} in margin to hold.`:`Sell the ${exp} ${st} credit put spread for a ${cr}.`;
+      setups+=`<p><span class="b">+ Setup 3 (Slower/Passive):</span> ${line} Note: ${note}</p>`;
+    }
+    setups+=bullS4();
+    const ctxHtml=context?`<p>${context}</p>`:`<p><span class="ph">[Market context]</span></p>`;
+    const thHtml=thesis?`<p>${thesis}</p>`:`<p><span class="ph">[Trade thesis]</span></p>`;
+    document.getElementById('bullDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} ${mmdd}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already long ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
+    document.getElementById('bullMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
+    document.getElementById('bullOutput').classList.add('visible');document.getElementById('bullOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  // ---- BEARISH HELPERS ----
+  function bearS4(){
+    const type=v('r_s4type');if(type==='skip')return '';
+    const bExp=v('r_s4exp_buy')||'<span class="ph">XXX Exp</span>',sExp=v('r_s4exp_sell')||'<span class="ph">XXX Exp</span>';
+    const bSt=v('r_s4strike_buy')||'<span class="ph">$XXX</span>',sSt=v('r_s4strike_sell')||'<span class="ph">$XXX</span>';
+    const cost=v('r_s4cost')||'<span class="ph">$XXX debit</span>',note=v('r_s4note')||'Defined risk bearish play targeting the expected downside move.';
+    let line='';
+    if(type==='vertical_put')line=`Buy to open the ${bExp} ${bSt} Put / Sell to open the ${bExp} ${sSt} Put (vertical debit put spread) for ${cost}.`;
+    else if(type==='diagonal_put')line=`Buy to open the ${bExp} ${bSt} Put / Sell to open the ${sExp} ${sSt} Put (diagonal put spread) for ${cost}.`;
+    else if(type==='single_put')line=`Buy to open the ${bExp} ${bSt} Put for ${cost}. Defined risk, profits from downside move.`;
+    return `<p><span class="b">+ Setup 4 (Long Put/Debit Put Spread):</span> ${line} Note: ${note}</p>`;
+  }
+
+  function generateBear(){
+    const ticker=v('r_ticker')||'XXX',bias=v('r_bias')||'Bearish / Neutral',price=v('r_price');
+    const subtitle=v('r_subtitle')||'Mid Day Market Update',context=v('r_context'),thesis=v('r_thesis');
+    const id=generateId(),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    let setups='';
+    if(v('r_s1type')!=='skip'){const note=v('r_s1note')||'Size this as a starter short. Leave room to add on rips into resistance.';setups+=`<p><span class="b">+ Setup 1 (Short Shares):</span> Sell short ${ticker} shares at ${ph(v('r_s1price'),'$XXX')}. ${note}</p><p><span class="disc">* Shorting stock carries unlimited risk and should not be taken lightly.</span></p>`;}
+    if(v('r_s2type')!=='skip'){
+      const note=v('r_s2note')||'Defined risk bearish setup. Monitor every 1 to 2 days.';
+      const E=v('r_s2exp')||'<span class="ph">XXX Exp</span>',C=v('r_s2credit')||'<span class="ph">$XXX credit</span>',S=v('r_s2short')||'<span class="ph">$XXX</span>',L=v('r_s2long')||'<span class="ph">$XXX</span>';
+      let line=v('r_s2type')==='ccs'?`Sell the ${E} ${S}/${L} credit call spread for a ${C}. Stock needs to stay below ${S} at expiration.`:`Buy the ${E} ${S}/${L} debit put spread for ${C}. Defined risk bearish play.`;
+      setups+=`<p><span class="b">+ Setup 2 (Active):</span> ${line} Note: ${note}</p>`;
+    }
+    if(v('r_s3type')!=='skip'){
+      const note=v('r_s3note')||'Win as long as stock stays below the short strike at expiration.';
+      const E=v('r_s3exp')||'<span class="ph">XXX Exp</span>',ST=v('r_s3strike')||'<span class="ph">$XXX</span>',CR=v('r_s3credit')||'<span class="ph">$XXX credit</span>',MG=v('r_s3margin')||'<span class="ph">$XXX</span>';
+      if(v('r_s3type')==='naked_call'){setups+=`<p><span class="b">+ Setup 3 (Slower/Passive):</span> Sell to open the ${E} ${ST} Call for a ${CR}. Requires roughly ${MG} in margin to hold. Note: ${note}</p><p><span class="disc">* Selling naked calls carries unlimited risk and should not be taken lightly.</span></p>`;}
+      else{setups+=`<p><span class="b">+ Setup 3 (Slower/Passive):</span> Sell the ${E} ${ST} credit call spread for a ${CR}. Note: ${note}</p>`;}
+    }
+    setups+=bearS4();
+    const ctxHtml=context?`<p>${context}</p>`:`<p><span class="ph">[Market context]</span></p>`;
+    const thHtml=thesis?`<p>${thesis}</p>`:`<p><span class="ph">[Trade thesis]</span></p>`;
+    document.getElementById('bearDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} ${mmdd}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already short ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
+    document.getElementById('bearMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
+    document.getElementById('bearOutput').classList.add('visible');document.getElementById('bearOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  // ---- GENERATE SUNDAY ----
+  function generateSunday(){
+    const id=generateId(),date=v('s_date')||getNextSunday(),time=v('s_time')||'10am Eastern';
+    const pw=v('s_pw')||'<span class="ph">XXXXXX</span>',type=v('s_type')||'Sunday Charting Session';
+    const notes=v('s_notes'),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    const notesHtml=notes?`<p>${notes}</p>`:'';
+    document.getElementById('sunDoc').innerHTML=`<div class="doc-meta">SESSION ID: ${id}</div><div class="doc-head">${type}</div><div class="doc-sub">${date} at ${time}</div><div class="doc-body">${notesHtml}<p><span class="b">+ ${type}:</span> We will hold our live session ${date} at ${time}. <a href="${LIVE_ROOM}" target="_blank">HERE</a> (pw ${pw}). Submit tickers for review <a href="${TICKERS_FORM}" target="_blank">HERE</a>.</p><div class="doc-sig">Nic</div></div>`;
+    document.getElementById('sunMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${type} ${mmdd} — ${id}</span></div><div class="meta-item">DATE: <span>${date} ${time}</span></div>`;
+    document.getElementById('sunOutput').classList.add('visible');document.getElementById('sunOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  // ---- COPY ----
+  function copyOutput(docId,btnId){
+    const doc=document.getElementById(docId),range=document.createRange();range.selectNodeContents(doc);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);document.execCommand('copy');sel.removeAllRanges();
+    const btn=document.getElementById(btnId);btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy All';btn.classList.remove('copied');},2000);
+  }
+
+  // ---- CLEAR ----
+  function clearMorn(){
+    ['m_pulse','m_spx','m_r1','m_r2','m_r3','m_r4','m_r5','m_r6','m_s1','m_s2','m_s3','m_s4','m_s5','m_s6',
+     'm_spx_l1_url','m_spx_l2_url','m_spx_l3_label','m_spx_l3_url',
+     'm_t1_url','m_t2_url','m_t3_url','m_t4_url','m_t5_url','m_t6_url',
+     'm_ktp','m_pw','m_etf1_url','m_etf2_url','m_etf3_url','m_etf4_label','m_etf4_url',
+     'm_earn_url','m_extra_label','m_extra_text','m_extra_link_label','m_extra_url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['m_etf_toggle','m_earn_toggle','m_extra_toggle'].forEach(id=>{document.getElementById(id).checked=false;});
+    ['m_etf_section','m_earn_section','m_extra_section'].forEach(id=>{document.getElementById(id).classList.remove('show');});
+    document.getElementById('m_liveurl').value=LIVE_ROOM;
+    document.getElementById('mornOutput').classList.remove('visible');updateIds();
+  }
+  function clearBull(){['b_ticker','b_price','b_subtitle','b_context','b_thesis','b_s1price','b_s1note','b_s2exp','b_s2credit','b_s2short','b_s2long','b_s2note','b_s3exp','b_s3credit','b_s3strike','b_s3be','b_s3margin','b_s3note','b_s4exp_buy','b_s4exp_sell','b_s4strike_buy','b_s4strike_sell','b_s4cost','b_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bullOutput').classList.remove('visible');updateIds();}
+  function clearBear(){['r_ticker','r_price','r_subtitle','r_context','r_thesis','r_s1price','r_s1note','r_s2exp','r_s2credit','r_s2short','r_s2long','r_s2note','r_s3exp','r_s3credit','r_s3strike','r_s3margin','r_s3note','r_s4exp_buy','r_s4exp_sell','r_s4strike_buy','r_s4strike_sell','r_s4cost','r_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bearOutput').classList.remove('visible');updateIds();}
+  function clearSunday(){document.getElementById('s_date').value=getNextSunday();document.getElementById('s_time').value='10am Eastern';document.getElementById('s_pw').value='';document.getElementById('s_notes').value='';document.getElementById('s_type').selectedIndex=0;document.getElementById('sunOutput').classList.remove('visible');updateIds();}
+</script>
+</body>
+</html>
