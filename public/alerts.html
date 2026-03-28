@@ -9,7 +9,7 @@
 
   :root {
     --bg: #0a0a0a; --surface: #111111; --border: #222222;
-    --bull: #c8ff00; --bear: #ff4444; --morn: #00b4ff;
+    --bull: #c8ff00; --bear: #ff4444; --morn: #00b4ff; --vid: #ff8c00;
     --discord: #5865F2; --slack: #4A154B;
     --text: #e8e8e8; --muted: #555555;
     --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
@@ -30,6 +30,7 @@
   .tab-btn.bull.active { color: var(--bull); border-bottom-color: var(--bull); }
   .tab-btn.bear.active { color: var(--bear); border-bottom-color: var(--bear); }
   .tab-btn.sun.active  { color: var(--bull); border-bottom-color: var(--bull); }
+  .tab-btn.vid.active  { color: var(--vid); border-bottom-color: var(--vid); }
 
   .tab-panel { display: none; padding-top: 22px; }
   .tab-panel.active { display: block; }
@@ -86,12 +87,14 @@
   .btn-morn { background: var(--morn); color: #000; flex: 2; } .btn-morn:hover { background: #33c3ff; }
   .btn-bull { background: var(--bull); color: #000; flex: 2; } .btn-bull:hover { background: #d4ff20; }
   .btn-bear { background: var(--bear); color: #fff; flex: 2; } .btn-bear:hover { background: #ff6666; }
+  .btn-vid  { background: var(--vid);  color: #000; flex: 2; } .btn-vid:hover  { background: #ffa040; }
   .btn-clear { background: var(--surface); color: var(--muted); border: 1px solid var(--border); flex: 1; } .btn-clear:hover { color: var(--text); }
   .btn-discord { background: var(--discord); color: #fff; flex: 1; } .btn-discord:hover { background: #6875f5; }
   .btn-slack   { background: var(--slack);   color: #fff; flex: 1; } .btn-slack:hover   { background: #611f69; }
   .btn-discord:disabled, .btn-slack:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .send-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn-copy-html { flex: 1; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 11px 18px; border-radius: 3px; cursor: pointer; transition: all 0.15s; background: var(--surface); border: 1px solid; }
   .send-status { font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 6px 0; width: 100%; }
   .send-status.ok { color: var(--bull); }
   .send-status.err { color: var(--bear); }
@@ -106,6 +109,7 @@
   .cb-morn { border-color: var(--morn); color: var(--morn); } .cb-morn:hover, .cb-morn.copied { background: var(--morn); color: #000; }
   .cb-bull { border-color: var(--bull); color: var(--bull); } .cb-bull:hover, .cb-bull.copied { background: var(--bull); color: #000; }
   .cb-bear { border-color: var(--bear); color: var(--bear); } .cb-bear:hover, .cb-bear.copied { background: var(--bear); color: #fff; }
+  .cb-vid  { border-color: var(--vid);  color: var(--vid);  } .cb-vid:hover,  .cb-vid.copied  { background: var(--vid);  color: #000; }
 
   .output-doc { background: #fff; color: #1a1a1a; padding: 28px 32px; border-radius: 4px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.65; }
   .doc-meta { font-size: 11px; color: #aaa; font-family: 'Courier New', monospace; margin-bottom: 8px; }
@@ -142,6 +146,7 @@
     <button class="tab-btn bull" onclick="switchTab('bull',this)">▲ Bullish Alert</button>
     <button class="tab-btn bear" onclick="switchTab('bear',this)">▼ Bearish Alert</button>
     <button class="tab-btn sun"  onclick="switchTab('sun',this)">Sunday Session</button>
+    <button class="tab-btn vid"  onclick="switchTab('vid',this)">📹 Sunday Videos</button>
   </div>
 
   <!-- ===== MORNING NOTE ===== -->
@@ -242,9 +247,9 @@
 
     <!-- OPTIONAL: Earnings -->
     <div class="section-label sl-morn" style="margin-top:18px">
-      <label class="optional-toggle"><input type="checkbox" id="m_earn_toggle" onchange="toggleSection('m_earn_toggle','m_earn_section')"><span>Earnings Table (optional)</span></label>
+      <label class="optional-toggle"><input type="checkbox" id="m_earn_toggle" onchange="toggleSection('m_earn_toggle','m_earn_section')" checked><span>Earnings Table (optional)</span></label>
     </div>
-    <div class="optional-content" id="m_earn_section">
+    <div class="optional-content show" id="m_earn_section">
       <div class="link-pair">
         <div class="field"><label>Label</label><input type="text" id="m_earn_label" value="TABLE"></div>
         <div class="field"><label>URL</label><input type="text" id="m_earn_url" placeholder="https://..."></div>
@@ -279,6 +284,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('mornDoc')">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('mornDoc')">Send to Slack</button>
+        <button class="btn-copy-html cb-morn" onclick="copyHTML('mornDoc','mornHtmlBtn')" id="mornHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="mornSendStatus"></div>
     </div>
@@ -333,6 +339,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('bullDoc')">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bullDoc')">Send to Slack</button>
+        <button class="btn-copy-html cb-bull" onclick="copyHTML('bullDoc','bullHtmlBtn')" id="bullHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="bullSendStatus"></div>
     </div>
@@ -389,8 +396,83 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('bearDoc')">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bearDoc')">Send to Slack</button>
+        <button class="btn-copy-html cb-bear" onclick="copyHTML('bearDoc','bearHtmlBtn')" id="bearHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="bearSendStatus"></div>
+    </div>
+  </div>
+
+  <!-- ===== SUNDAY VIDEOS TAB ===== -->
+  <div class="tab-panel tab-vid" id="tab-vid">
+    <div class="id-display">NOTE ID: <span style="color:var(--vid)" id="vidId">—</span></div>
+
+    <div class="section-label sl-vid">Session Info</div>
+    <div class="form-grid">
+      <div class="field"><label>Session Date</label><input type="text" id="v_date"></div>
+      <div class="field"><label>Live Room Password</label><input type="text" id="v_pw" placeholder="771133"></div>
+    </div>
+    <div class="form-grid full">
+      <div class="field"><label>Intro Text (optional)</label>
+        <textarea id="v_intro" rows="2" placeholder="We just wrapped another great Sunday session reviewing YOUR tickers of the week..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-label sl-vid">Videos (up to 4 — leave blank to skip)</div>
+
+    <div class="setup-block">
+      <div class="setup-title" style="color:var(--vid)">Video 1</div>
+      <div class="form-grid">
+        <div class="field"><label>Video URL</label><input type="text" id="v1_url" placeholder="https://..."></div>
+        <div class="field"><label>Label</label><input type="text" id="v1_label" value="Video 1 HERE"></div>
+      </div>
+      <div class="field"><label>Tickers Covered</label><input type="text" id="v1_tickers" placeholder="$AAPL, $NVDA, $MSFT, $TSLA..."></div>
+    </div>
+
+    <div class="setup-block">
+      <div class="setup-title" style="color:var(--vid)">Video 2</div>
+      <div class="form-grid">
+        <div class="field"><label>Video URL</label><input type="text" id="v2_url" placeholder="https://..."></div>
+        <div class="field"><label>Label</label><input type="text" id="v2_label" value="Video 2 HERE"></div>
+      </div>
+      <div class="field"><label>Tickers Covered</label><input type="text" id="v2_tickers" placeholder="$KMB, $LITE, $META..."></div>
+    </div>
+
+    <div class="setup-block">
+      <div class="setup-title" style="color:var(--vid)">Video 3 (optional)</div>
+      <div class="form-grid">
+        <div class="field"><label>Video URL</label><input type="text" id="v3_url" placeholder="https://..."></div>
+        <div class="field"><label>Label</label><input type="text" id="v3_label" value="Video 3 HERE"></div>
+      </div>
+      <div class="field"><label>Tickers Covered</label><input type="text" id="v3_tickers" placeholder=""></div>
+    </div>
+
+    <div class="setup-block">
+      <div class="setup-title" style="color:var(--vid)">Video 4 (optional)</div>
+      <div class="form-grid">
+        <div class="field"><label>Video URL</label><input type="text" id="v4_url" placeholder="https://..."></div>
+        <div class="field"><label>Label</label><input type="text" id="v4_label" value="Video 4 HERE"></div>
+      </div>
+      <div class="field"><label>Tickers Covered</label><input type="text" id="v4_tickers" placeholder=""></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-vid" onclick="generateVideos()">Generate Sunday Videos</button>
+      <button class="btn-clear" onclick="clearVideos()">Clear</button>
+    </div>
+
+    <div class="output-section" id="vidOutput">
+      <div class="output-header">
+        <div class="output-label ol-vid">Generated Sunday Videos</div>
+        <button class="copy-btn cb-vid" id="vidCopyBtn" onclick="copyOutput('vidDoc','vidCopyBtn')">Copy All</button>
+      </div>
+      <div class="output-doc" id="vidDoc"></div>
+      <div class="meta-strip" id="vidMeta"></div>
+      <div class="send-row">
+        <button class="btn-discord" onclick="sendToDiscord('vidDoc')">Send to Discord</button>
+        <button class="btn-slack"   onclick="sendToSlack('vidDoc')">Send to Slack</button>
+        <button class="btn-copy-html cb-vid" onclick="copyHTML('vidDoc','vidHtmlBtn')" id="vidHtmlBtn">Copy HTML</button>
+      </div>
+      <div class="send-status" id="vidSendStatus"></div>
     </div>
   </div>
 
@@ -412,6 +494,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('sunDoc')">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('sunDoc')">Send to Slack</button>
+        <button class="btn-copy-html cb-bull" onclick="copyHTML('sunDoc','sunHtmlBtn')" id="sunHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="sunSendStatus"></div>
     </div>
@@ -422,8 +505,13 @@
   const LIVE_ROOM    = 'https://join.freeconferencecall.com/simplestocks';
   const TICKERS_FORM = 'http://forms.gle/tEHEEMDJ3W3btSDy7';
   const AV_KEY       = 'YOUR_ALPHA_VANTAGE_KEY';
-  const DISCORD_URL  = 'https://discord.com/api/webhooks/1487502867832111115/UzZlRxhLDDgZGyS_AAxslyjcvdqslCd_N6wsx-_KYI9xRHI1w3432OpLynfxBxU9oTXm';
-  const DISCORD_THREAD = '1483104531247140955';
+  // ---- CONFIGURABLE DESTINATIONS ----
+  // To change Discord channel/thread, update these values:
+  let DISCORD_DESTINATIONS = [
+    { url: 'https://discord.com/api/webhooks/1487502867832111115/UzZlRxhLDDgZGyS_AAxslyjcvdqslCd_N6wsx-_KYI9xRHI1w3432OpLynfxBxU9oTXm', thread: '1483104531247140955', label: 'Main Channel' },
+    // Add second channel below — uncomment and fill in:
+    // { url: 'https://discord.com/api/webhooks/XXXXX/XXXXX', thread: 'XXXXX', label: 'Second Channel' },
+  ];
   const SLACK_URL    = '/.netlify/functions/slack-proxy';
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -431,8 +519,25 @@
   function ordinal(n){if(n>3&&n<21)return 'th';switch(n%10){case 1:return 'st';case 2:return 'nd';case 3:return 'rd';default:return 'th';}}
   function getNextSunday(){const now=new Date(),day=now.getDay(),daysUntil=day===0?7:7-day,next=new Date(now);next.setDate(now.getDate()+daysUntil);return `Sunday ${MONTHS[next.getMonth()]} ${next.getDate()}${ordinal(next.getDate())}`;}
   function generateId(){const d=new Date();return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}`;}
-  function updateIds(){const id=generateId();['mornId','bullId','bearId','sunId'].forEach(x=>{const el=document.getElementById(x);if(el)el.textContent=id;});}
-  window.onload=function(){document.getElementById('s_date').value=getNextSunday();updateIds();};
+  function updateIds(){const id=generateId();['mornId','bullId','bearId','sunId','vidId'].forEach(x=>{const el=document.getElementById(x);if(el)el.textContent=id;});}
+  window.onload=function(){
+    document.getElementById('s_date').value=getNextSunday();
+    document.getElementById('v_date').value=getNextSunday();
+    updateIds();
+    // Restore saved values
+    const savedPw=localStorage.getItem('ss_live_pw');
+    if(savedPw)document.getElementById('m_pw').value=savedPw;
+    const savedEarnUrl=localStorage.getItem('ss_earn_url');
+    if(savedEarnUrl)document.getElementById('m_earn_url').value=savedEarnUrl;
+    const savedEarnLabel=localStorage.getItem('ss_earn_label');
+    if(savedEarnLabel)document.getElementById('m_earn_label').value=savedEarnLabel;
+  };
+  // Auto-save PW and earnings URL on change
+  document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('m_pw').addEventListener('input',function(){localStorage.setItem('ss_live_pw',this.value);});
+    document.getElementById('m_earn_url').addEventListener('input',function(){localStorage.setItem('ss_earn_url',this.value);});
+    document.getElementById('m_earn_label').addEventListener('input',function(){localStorage.setItem('ss_earn_label',this.value);});
+  });
   setInterval(updateIds,30000);
 
   function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
@@ -506,17 +611,20 @@
     const statusEl=document.getElementById(statusId);
     if(statusEl){statusEl.textContent='Sending to Discord...';statusEl.className='send-status';}
     try{
-      const url=`${DISCORD_URL}?thread_id=${DISCORD_THREAD}`;
-      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
-      if(res.ok||res.status===204){if(statusEl){statusEl.textContent='✓ Sent to Discord successfully.';statusEl.className='send-status ok';}}
-      else{throw new Error(`HTTP ${res.status}`);}
+      let allOk=true;
+      for(const dest of DISCORD_DESTINATIONS){
+        const url=dest.thread?`${dest.url}?thread_id=${dest.thread}`:dest.url;
+        const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
+        if(!res.ok&&res.status!==204)allOk=false;
+      }
+      if(statusEl){statusEl.textContent=allOk?'✓ Sent to Discord successfully.':'✗ One or more Discord sends failed.';statusEl.className=allOk?'send-status ok':'send-status err';}
     }catch(e){if(statusEl){statusEl.textContent=`✗ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},5000);
   }
 
   // ---- SLACK SEND ----
   async function sendToSlack(docId){
-    const text=getPlainText(docId);
+    const text=getDiscordText(docId);
     if(!text){alert('Generate the content first.');return;}
     const statusId=docId.replace('Doc','SendStatus');
     const statusEl=document.getElementById(statusId);
@@ -664,6 +772,23 @@
   }
 
   // ---- COPY ----
+  function copyHTML(docId,btnId){
+    const doc=document.getElementById(docId);
+    if(!doc){alert('Generate content first.');return;}
+    const html=doc.innerHTML;
+    navigator.clipboard.writeText(html).then(()=>{
+      const btn=document.getElementById(btnId);
+      btn.textContent='Copied!';
+      setTimeout(()=>{btn.textContent='Copy HTML';},2000);
+    }).catch(()=>{
+      // fallback
+      const ta=document.createElement('textarea');
+      ta.value=doc.innerHTML;
+      document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+      const btn=document.getElementById(btnId);btn.textContent='Copied!';setTimeout(()=>{btn.textContent='Copy HTML';},2000);
+    });
+  }
+
   function copyOutput(docId,btnId){
     const doc=document.getElementById(docId),range=document.createRange();range.selectNodeContents(doc);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);document.execCommand('copy');sel.removeAllRanges();
     const btn=document.getElementById(btnId);btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy All';btn.classList.remove('copied');},2000);
@@ -681,6 +806,42 @@
     document.getElementById('m_liveurl').value=LIVE_ROOM;
     document.getElementById('mornOutput').classList.remove('visible');updateIds();
   }
+  function generateVideos(){
+    const id=generateId(),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    const date=v('v_date')||getNextSunday(),pw=v('v_pw')||'XXXXXX';
+    const intro=v('v_intro')||'We just wrapped another great Sunday session reviewing YOUR tickers of the week, starting with the SPX and the state of the markets in general.';
+    const liveurl='https://join.freeconferencecall.com/simplestocks';
+    let videos='';
+    for(let i=1;i<=4;i++){
+      const url=v(`v${i}_url`),label=v(`v${i}_label`)||`Video ${i} HERE`,tickers=v(`v${i}_tickers`);
+      if(!url&&!tickers)continue;
+      const linkHtml=url?`<a href="${url}" target="_blank">${label}</a>`:label;
+      videos+=`<p><span class="b">+ ${linkHtml}.</span><br>`;
+      if(tickers)videos+=`Tickers: ${tickers}`;
+      videos+=`</p>`;
+    }
+    if(!videos){videos=`<p><span class="ph">[Add at least one video URL and tickers]</span></p>`;}
+    document.getElementById('vidDoc').innerHTML=`
+      <div class="doc-meta">NOTE ID: ${id}</div>
+      <div class="doc-head">Sunday Videos — ${date}</div>
+      <div class="doc-body">
+        <p>Tomorrow's link to the live room <a href="${liveurl}" target="_blank">HERE</a>. (pw:${pw})</p>
+        <p>${intro}</p>
+        <p><span class="b">Nic.</span></p>
+        ${videos}
+      </div>`;
+    document.getElementById('vidMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Sunday Videos ${mmdd} — ${id}</span></div>`;
+    document.getElementById('vidOutput').classList.add('visible');
+    document.getElementById('vidOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function clearVideos(){
+    ['v_date','v_pw','v_intro','v1_url','v1_tickers','v2_url','v2_tickers','v3_url','v3_label','v3_tickers','v4_url','v4_label','v4_tickers'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('v1_label').value='Video 1 HERE';
+    document.getElementById('v2_label').value='Video 2 HERE';
+    document.getElementById('vidOutput').classList.remove('visible');updateIds();
+  }
+
   function clearBull(){['b_ticker','b_price','b_subtitle','b_context','b_thesis','b_s1price','b_s1note','b_s2exp','b_s2credit','b_s2short','b_s2long','b_s2note','b_s3exp','b_s3credit','b_s3strike','b_s3be','b_s3margin','b_s3note','b_s4exp_buy','b_s4exp_sell','b_s4strike_buy','b_s4strike_sell','b_s4cost','b_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bullOutput').classList.remove('visible');updateIds();}
   function clearBear(){['r_ticker','r_price','r_subtitle','r_context','r_thesis','r_s1price','r_s1note','r_s2exp','r_s2credit','r_s2short','r_s2long','r_s2note','r_s3exp','r_s3credit','r_s3strike','r_s3margin','r_s3note','r_s4exp_buy','r_s4exp_sell','r_s4strike_buy','r_s4strike_sell','r_s4cost','r_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bearOutput').classList.remove('visible');updateIds();}
   function clearSunday(){document.getElementById('s_date').value=getNextSunday();document.getElementById('s_time').value='10am Eastern';document.getElementById('s_pw').value='';document.getElementById('s_notes').value='';document.getElementById('s_type').selectedIndex=0;document.getElementById('sunOutput').classList.remove('visible');updateIds();}
