@@ -173,6 +173,7 @@
   .trade-log-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
   .trade-log-table th { font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
   .trade-log-table td { font-family: var(--mono); font-size: 11px; color: var(--text); padding: 7px 8px; border-bottom: 1px solid #1a1a1a; white-space: nowrap; }
+  .trade-log-table td:last-child, .trade-log-table th:last-child { position: sticky; right: 0; background: var(--surface); border-left: 1px solid var(--border); }
   .trade-log-table tr:hover td { background: var(--surface); }
   .status-open { color: var(--morn); }
   .status-closed-win { color: var(--bull); }
@@ -667,7 +668,7 @@
         <div class="section-label sl-trd" style="margin:0;border:none;">Logged Trades</div>
         <a href="https://docs.google.com/spreadsheets/d/1pyUwZDGJuQv49KNe0rpaZImcxxKILJD7d3UZ45e5Ifo/edit" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--morn);text-decoration:none;">Open Sheet ↗</a>
       </div>
-      <div style="overflow-x:auto;">
+      <div style="overflow-x:auto;max-height:300px;overflow-y:auto;">
         <table class="trade-log-table" id="trd_table">
           <thead>
             <tr>
@@ -1194,7 +1195,7 @@
     }
     const el=document.getElementById('trd_maxrisk');
     if(maxRisk!==null){
-      el.textContent=`$${maxRisk.toFixed(0)}/contract`;
+      el.textContent=`$${maxRisk.toFixed(0)}/ea`;
       el.className='calc-display';
     } else {
       el.textContent='—';
@@ -1221,7 +1222,7 @@
     }
     const pEl=document.getElementById('trd_pnl_dollars');
     const pPct=document.getElementById('trd_pnl_pct');
-    pEl.textContent=(pnlDollars>=0?'+':'')+`$${pnlDollars.toFixed(0)}/contract`;
+    pEl.textContent=(pnlDollars>=0?'+':'')+`$${pnlDollars.toFixed(0)}/ea`;
     pEl.className='calc-display '+(pnlDollars>=0?'pnl-positive':'pnl-negative');
     if(maxRisk){
       const pct=(pnlDollars/maxRisk)*100;
@@ -1332,7 +1333,7 @@
     const isBuy=(t.type==='Buy Call'||t.type==='Buy Put');
     const pnlPer=isBuy?(closeF-credit):(credit-closeF);
     const pnlDollars=pnlPer*100;
-    t.pnl_dollars=(pnlDollars>=0?'+':'')+`$${pnlDollars.toFixed(0)}/contract`;
+    t.pnl_dollars=(pnlDollars>=0?'+':'')+`$${pnlDollars.toFixed(0)}/ea`;
     // Max risk for pct calc
     let maxRiskNum=null;
     if(isBuy){maxRiskNum=credit*100;}
