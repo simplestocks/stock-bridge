@@ -158,16 +158,6 @@
     <div class="tagline">// alert generator</div>
   </header>
 
-  <!-- SETTINGS PANEL -->
-  <div style="margin:14px 0 0;border:1px solid #222;border-radius:4px;background:#111;">
-    <div id="sToggle" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#555;user-select:none;">
-      <span>⚙ Discord Webhook Settings</span><span id="sLbl" style="font-size:9px">(click to expand)</span>
-    </div>
-    <div id="sBody" style="display:none;padding:0 14px 14px;border-top:1px solid #1a1a1a;">
-      <div id="discordSettingsContainer"></div>
-    </div>
-  </div>
-
   <div class="tabs">
     <button class="tab-btn morn active" onclick="switchTab('morn',this)">☀ Morning Note</button>
     <button class="tab-btn bull" onclick="switchTab('bull',this)">▲ Bullish Alert</button>
@@ -331,7 +321,7 @@
       <div class="output-doc" id="mornDoc"></div>
       <div class="meta-strip" id="mornMeta"></div>
       <div class="send-row">
-        <button class="btn-discord" onclick="sendToDiscord('mornDoc','dc1')">Send to Discord</button>
+        <button class="btn-discord" onclick="sendToDiscord('mornDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('mornDoc')">Send to Slack</button>
         <button class="btn-copy-html cb-morn" onclick="copyHTML('mornDoc','mornHtmlBtn')" id="mornHtmlBtn">Copy HTML</button>
       </div>
@@ -386,7 +376,7 @@
       <div class="output-doc" id="bullDoc"></div>
       <div class="meta-strip" id="bullMeta"></div>
       <div class="send-row">
-        <button class="btn-discord" onclick="sendToDiscord('bullDoc','dc1')">Send to Discord</button>
+        <button class="btn-discord" onclick="sendToDiscord('bullDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bullDoc')">Send to Slack</button>
         <button class="btn-copy-html cb-bull" onclick="copyHTML('bullDoc','bullHtmlBtn')" id="bullHtmlBtn">Copy HTML</button>
       </div>
@@ -443,7 +433,7 @@
       <div class="output-doc" id="bearDoc"></div>
       <div class="meta-strip" id="bearMeta"></div>
       <div class="send-row">
-        <button class="btn-discord" onclick="sendToDiscord('bearDoc','dc1')">Send to Discord</button>
+        <button class="btn-discord" onclick="sendToDiscord('bearDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bearDoc')">Send to Slack</button>
         <button class="btn-copy-html cb-bear" onclick="copyHTML('bearDoc','bearHtmlBtn')" id="bearHtmlBtn">Copy HTML</button>
       </div>
@@ -517,7 +507,7 @@
       <div class="output-doc" id="vidDoc"></div>
       <div class="meta-strip" id="vidMeta"></div>
       <div class="send-row">
-        <button class="btn-discord" onclick="sendToDiscord('vidDoc','dc2')">Send to Discord</button>
+        <button class="btn-discord" onclick="sendToDiscord('vidDoc',true)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('vidDoc')">Send to Slack</button>
         <button class="btn-copy-html cb-vid" onclick="copyHTML('vidDoc','vidHtmlBtn')" id="vidHtmlBtn">Copy HTML</button>
       </div>
@@ -541,7 +531,7 @@
       <div class="output-doc" id="sunDoc"></div>
       <div class="meta-strip" id="sunMeta"></div>
       <div class="send-row">
-        <button class="btn-discord" onclick="sendToDiscord('sunDoc','dc1')">Send to Discord</button>
+        <button class="btn-discord" onclick="sendToDiscord('sunDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('sunDoc')">Send to Slack</button>
         <button class="btn-copy-html cb-bull" onclick="copyHTML('sunDoc','sunHtmlBtn')" id="sunHtmlBtn">Copy HTML</button>
       </div>
@@ -554,12 +544,10 @@
   const LIVE_ROOM    = 'https://join.freeconferencecall.com/simplestocks';
   const TICKERS_FORM = 'http://forms.gle/tEHEEMDJ3W3btSDy7';
   const AV_KEY       = 'YOUR_ALPHA_VANTAGE_KEY';
-  // ---- CONFIGURABLE DESTINATIONS ----
-  let DISCORD_DESTINATIONS = [
-    { id: 'dc1', label: 'Main (Writeups)', url: 'https://discord.com/api/webhooks/1487502867832111115/UzZlRxhLDDgZGyS_AAxslyjcvdqslCd_N6wsx-_KYI9xRHI1w3432OpLynfxBxU9oTXm', thread: '1483104531247140955' },
-    { id: 'dc2', label: 'Sunday Videos', url: 'https://discord.com/api/webhooks/1487891731474288780/zJQR_hv1Vd_G8RMhPy6LMTkRJia60oVNkkmZBetZtA7YihtxzmuI1D2xtO5Mb_yV6i8q', thread: '' },
-  ];
-  const SLACK_URL    = '/.netlify/functions/slack-proxy';
+  const DISCORD_MAIN_URL = 'https://discord.com/api/webhooks/1487502867832111115/UzZlRxhLDDgZGyS_AAxslyjcvdqslCd_N6wsx-_KYI9xRHI1w3432OpLynfxBxU9oTXm';
+  const DISCORD_MAIN_THREAD = '1483104531247140955';
+  const DISCORD_VID_URL = 'https://discord.com/api/webhooks/1487891731474288780/zJQR_hv1Vd_G8RMhPy6LMTkRJia60oVNkkmZBetZtA7YihtxzmuI1D2xtO5Mb_yV6i8q';
+  const SLACK_URL = '/.netlify/functions/slack-proxy';
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   function pad(n){return String(n).padStart(2,'0');}
@@ -646,22 +634,17 @@
   }
 
   // ---- DISCORD SEND ----
-  async function sendToDiscord(docId, destId){
+  async function sendToDiscord(docId, useVidChannel){
     const text=getDiscordText(docId);
     if(!text){alert('Generate the content first.');return;}
     const statusId=docId.replace('Doc','SendStatus');
     const statusEl=document.getElementById(statusId);
     if(statusEl){statusEl.textContent='Sending to Discord...';statusEl.className='send-status';}
     try{
-      // Use specific dest if provided, otherwise send to all
-      const dests=destId?DISCORD_DESTINATIONS.filter(d=>d.id===destId):DISCORD_DESTINATIONS;
-      let allOk=true;
-      for(const dest of dests){
-        const url=dest.thread?`${dest.url}?thread_id=${dest.thread}`:dest.url;
-        const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
-        if(!res.ok&&res.status!==204)allOk=false;
-      }
-      if(statusEl){statusEl.textContent=allOk?'✓ Sent to Discord successfully.':'✗ Discord send failed.';statusEl.className=allOk?'send-status ok':'send-status err';}
+      const url=useVidChannel?DISCORD_VID_URL:`${DISCORD_MAIN_URL}?thread_id=${DISCORD_MAIN_THREAD}`;
+      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
+      const ok=res.ok||res.status===204;
+      if(statusEl){statusEl.textContent=ok?'✓ Sent to Discord successfully.':'✗ Discord send failed.';statusEl.className=ok?'send-status ok':'send-status err';}
     }catch(e){if(statusEl){statusEl.textContent=`✗ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},5000);
   }
