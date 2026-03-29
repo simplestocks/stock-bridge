@@ -673,13 +673,30 @@
             <tr>
               <th>ID</th><th>Date</th><th>Time</th><th>Ticker</th><th>Type</th>
               <th>S1</th><th>S2</th><th>S3</th><th>S4</th>
-              <th>Credit</th><th>Max Risk</th><th>Close</th><th>P&L$</th><th>P&L%</th><th>Notes</th>
+              <th>Credit</th><th>Max Risk</th><th>Close</th><th>P&L$</th><th>P&L%</th><th>Notes</th><th></th>
             </tr>
           </thead>
           <tbody id="trd_tbody"></tbody>
         </table>
       </div>
     </div>
+
+    <!-- EXIT FORM PANEL -->
+    <div id="exitFormPanel" style="display:none;margin-top:16px;background:var(--surface);border:1px solid var(--bear);border-radius:4px;padding:14px;">
+      <div style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--bear);margin-bottom:10px;">Exit Trade</div>
+      <input type="hidden" id="exit_trade_idx">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px;">ID: <span id="exit_trade_id" style="color:var(--text)"></span></div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;"><span id="exit_ticker" style="color:var(--text)"></span> — <span id="exit_credit"></span></div>
+      <div class="form-grid">
+        <div class="field"><label>Close Price</label><input type="number" id="exit_close" placeholder="0.05" step="0.05"></div>
+        <div class="field"><label>Notes (optional)</label><input type="text" id="exit_notes" placeholder="Closed for profit at resistance"></div>
+      </div>
+      <div class="btn-row" style="margin-top:10px;">
+        <button class="btn-bear" onclick="submitExit()">Log Exit</button>
+        <button class="btn-clear" onclick="document.getElementById('exitFormPanel').style.display='none'">Cancel</button>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -1165,13 +1182,12 @@
   function calcRisk(){
     const credit=parseFloat(document.getElementById('trd_credit').value)||0;
     let maxRisk=null;
-    if(currentType==='CPS'||currentType==='CCS'){
+    if(currentType==='Buy Call'||currentType==='Buy Put'){
+      if(credit>0)maxRisk=credit*100;
+    } else if(currentType==='CPS'||currentType==='CCS'){
       const s1=parseFloat(document.getElementById('trd_s1').value)||0;
       const s2=parseFloat(document.getElementById('trd_s2').value)||0;
-      if(s1&&s2){
-        const width=Math.abs(s1-s2);
-        maxRisk=(width-credit)*100;
-      }
+      if(s1&&s2){const width=Math.abs(s1-s2);maxRisk=(width-credit)*100;}
     } else if(currentType==='IB'){
       const width=parseFloat(document.getElementById('trd_width').value)||0;
       if(width){maxRisk=(width-credit)*100;}
@@ -1190,7 +1206,9 @@
     const credit=parseFloat(document.getElementById('trd_credit').value)||0;
     const close=parseFloat(document.getElementById('trd_close').value);
     if(isNaN(close)||!credit)return;
-    const pnlPer=credit-close;
+    // For Buy Call/Put: profit = close - open. For credits: profit = open - close
+    const isBuy=(currentType==='Buy Call'||currentType==='Buy Put');
+    const pnlPer=isBuy?(close-credit):(credit-close);
     const pnlDollars=pnlPer*100;
     let maxRisk=null;
     if(currentType==='CPS'||currentType==='CCS'){
@@ -1218,7 +1236,7 @@
     const now=new Date();
     const id=generateId();
     const timeStr=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
-    const dateStr=`${MONTHS[now.getMonth()]} ${now.getDate()}${ordinal(now.getDate())}`;
+    const dateStr=`${pad(now.getMonth()+1)}${pad(now.getDate())}`;
     const credit=document.getElementById('trd_credit').value;
     const close=document.getElementById('trd_close').value;
     const maxRiskEl=document.getElementById('trd_maxrisk').textContent;
@@ -1254,18 +1272,88 @@
     setTimeout(()=>{statusEl.textContent='';},4000);
   }
 
+  let sessionTrades=[];
+
   function addTradeToTable(t){
+    sessionTrades.unshift(t);
     document.getElementById('trd_log_section').style.display='block';
+    rebuildTable();
+  }
+
+  function rebuildTable(){
     const tbody=document.getElementById('trd_tbody');
-    const tr=document.createElement('tr');
-    const pnlClass=t.pnl_dollars.includes('-')?'status-closed-loss':(t.pnl_dollars==='—'?'status-open':'status-closed-win');
-    tr.innerHTML=`<td>${t.trade_id}</td><td>${t.date}</td><td>${t.time}</td>
-      <td>${t.ticker}</td><td>${t.type}</td>
-      <td>${t.strike1}</td><td>${t.strike2}</td><td>${t.strike3}</td><td>${t.strike4}</td>
-      <td>${t.credit}</td><td>${t.max_risk}</td><td>${t.close_price||'open'}</td>
-      <td class="${pnlClass}">${t.pnl_dollars}</td><td class="${pnlClass}">${t.pnl_percent}</td>
-      <td>${t.notes}</td>`;
-    tbody.insertBefore(tr,tbody.firstChild);
+    tbody.innerHTML='';
+    sessionTrades.forEach((t,i)=>{
+      const isOpen=!t.close_price;
+      const pnlClass=isOpen?'status-open':(t.pnl_dollars&&t.pnl_dollars.includes('-')?'status-closed-loss':'status-closed-win');
+      const tr=document.createElement('tr');
+      tr.style.cursor='pointer';
+      tr.title='Click to exit this trade';
+      tr.innerHTML=`<td>${t.trade_id}</td><td>${t.date}</td><td>${t.time}</td>
+        <td>${t.ticker}</td><td>${t.type}</td>
+        <td>${t.strike1}</td><td>${t.strike2||''}</td><td>${t.strike3||''}</td><td>${t.strike4||''}</td>
+        <td>${t.credit}</td><td>${t.max_risk}</td>
+        <td class="${isOpen?'status-open':''}">${t.close_price||'<b>OPEN</b>'}</td>
+        <td class="${pnlClass}">${t.pnl_dollars||'—'}</td>
+        <td class="${pnlClass}">${t.pnl_percent||'—'}</td>
+        <td>${t.notes}</td>
+        <td><button class="type-btn" style="font-size:9px;padding:4px 8px;" onclick="openExitForm(${i},event)">Exit</button></td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function openExitForm(idx, e){
+    e.stopPropagation();
+    const t=sessionTrades[idx];
+    document.getElementById('exit_trade_idx').value=idx;
+    document.getElementById('exit_trade_id').textContent=t.trade_id;
+    document.getElementById('exit_ticker').textContent=`${t.ticker} ${t.type}`;
+    document.getElementById('exit_credit').textContent=`Opened at ${t.credit} | Max Risk: ${t.max_risk}`;
+    document.getElementById('exit_close').value=t.close_price||'';
+    document.getElementById('exit_notes').value=t.notes||'';
+    document.getElementById('exitFormPanel').style.display='block';
+    document.getElementById('exitFormPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  async function submitExit(){
+    const idx=parseInt(document.getElementById('exit_trade_idx').value);
+    const close=document.getElementById('exit_close').value;
+    const notes=document.getElementById('exit_notes').value;
+    if(!close){alert('Enter a close price.');return;}
+    const t=sessionTrades[idx];
+    const now=new Date();
+    t.close_price=close;
+    t.exit_date=`${pad(now.getMonth()+1)}${pad(now.getDate())}`;
+    t.exit_time=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    t.notes=notes;
+    // Recalc P&L
+    const credit=parseFloat(t.credit)||0;
+    const closeF=parseFloat(close)||0;
+    const isBuy=(t.type==='Buy Call'||t.type==='Buy Put');
+    const pnlPer=isBuy?(closeF-credit):(credit-closeF);
+    const pnlDollars=pnlPer*100;
+    t.pnl_dollars=(pnlDollars>=0?'+':'')+`$${pnlDollars.toFixed(0)}/contract`;
+    // Max risk for pct calc
+    let maxRiskNum=null;
+    if(isBuy){maxRiskNum=credit*100;}
+    else{
+      const s1=parseFloat(t.strike1)||0,s2=parseFloat(t.strike2)||0;
+      if(s1&&s2){const w=Math.abs(s1-s2);maxRiskNum=(w-credit)*100;}
+      else{const w=parseFloat(t.width)||0;if(w)maxRiskNum=(w-credit)*100;}
+    }
+    if(maxRiskNum){const pct=(pnlDollars/maxRiskNum)*100;t.pnl_percent=(pct>=0?'+':'')+pct.toFixed(1)+'%';}
+    // Send update to sheet
+    const statusEl=document.getElementById('trdLogStatus');
+    statusEl.textContent='Updating sheet...';statusEl.className='send-status';
+    try{
+      if(TRADE_LOG_URL){
+        await fetch(TRADE_LOG_URL,{method:'POST',body:JSON.stringify({...t,action:'update'})});
+      }
+      statusEl.textContent='✓ Exit logged.';statusEl.className='send-status ok';
+    }catch(e){statusEl.textContent='✗ Update failed: '+e.message;statusEl.className='send-status err';}
+    setTimeout(()=>{statusEl.textContent='';},3000);
+    document.getElementById('exitFormPanel').style.display='none';
+    rebuildTable();
   }
 
   function clearTrade(){
