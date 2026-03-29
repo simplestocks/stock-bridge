@@ -160,10 +160,10 @@
 
   <!-- SETTINGS PANEL -->
   <div style="margin:14px 0 0;border:1px solid #222;border-radius:4px;background:#111;">
-    <div id="settingsToggle" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#555;">
-      <span>⚙ Discord Webhook Settings</span><span id="settingsToggleLabel" style="font-size:9px">(click to expand)</span>
+    <div onclick="var b=document.getElementById('sBody');var l=document.getElementById('sLbl');if(b.style.display==='block'){b.style.display='none';l.textContent='(click to expand)';}else{b.style.display='block';l.textContent='(click to collapse)';}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#555;user-select:none;">
+      <span>⚙ Discord Webhook Settings</span><span id="sLbl" style="font-size:9px">(click to expand)</span>
     </div>
-    <div id="settingsBody" style="display:none;padding:0 14px 14px;border-top:1px solid #1a1a1a;">
+    <div id="sBody" style="display:none;padding:0 14px 14px;border-top:1px solid #1a1a1a;">
       <div id="discordSettingsContainer"></div>
     </div>
   </div>
