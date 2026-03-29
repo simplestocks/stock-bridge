@@ -9,7 +9,7 @@
 
   :root {
     --bg: #0a0a0a; --surface: #111111; --border: #222222;
-    --bull: #c8ff00; --bear: #ff4444; --morn: #00b4ff; --vid: #ff8c00;
+    --bull: #c8ff00; --bear: #ff4444; --morn: #00b4ff; --vid: #ff8c00; --trade: #ffffff;
     --discord: #5865F2; --slack: #4A154B;
     --text: #e8e8e8; --muted: #555555;
     --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
@@ -31,6 +31,7 @@
   .tab-btn.bear.active { color: var(--bear); border-bottom-color: var(--bear); }
   .tab-btn.sun.active  { color: var(--bull); border-bottom-color: var(--bull); }
   .tab-btn.vid.active  { color: var(--vid); border-bottom-color: var(--vid); }
+  .tab-btn.trd.active  { color: var(--trade); border-bottom-color: var(--trade); }
 
   .tab-panel { display: none; padding-top: 22px; }
   .tab-panel.active { display: block; }
@@ -88,6 +89,7 @@
   .btn-bull { background: var(--bull); color: #000; flex: 2; } .btn-bull:hover { background: #d4ff20; }
   .btn-bear { background: var(--bear); color: #fff; flex: 2; } .btn-bear:hover { background: #ff6666; }
   .btn-vid  { background: var(--vid);  color: #000; flex: 2; } .btn-vid:hover  { background: #ffa040; }
+  .btn-trd  { background: var(--trade); color: #000; flex: 2; } .btn-trd:hover { background: #dddddd; }
   .btn-clear { background: var(--surface); color: var(--muted); border: 1px solid var(--border); flex: 1; } .btn-clear:hover { color: var(--text); }
   .btn-discord { background: var(--discord); color: #fff; flex: 1; } .btn-discord:hover { background: #6875f5; }
   .btn-slack   { background: var(--slack);   color: #fff; flex: 1; } .btn-slack:hover   { background: #611f69; }
@@ -127,6 +129,7 @@
   .cb-bull { border-color: var(--bull); color: var(--bull); } .cb-bull:hover, .cb-bull.copied { background: var(--bull); color: #000; }
   .cb-bear { border-color: var(--bear); color: var(--bear); } .cb-bear:hover, .cb-bear.copied { background: var(--bear); color: #fff; }
   .cb-vid  { border-color: var(--vid);  color: var(--vid);  } .cb-vid:hover,  .cb-vid.copied  { background: var(--vid);  color: #000; }
+  .cb-trd  { border-color: var(--trade); color: var(--trade); } .cb-trd:hover, .cb-trd.copied { background: var(--trade); color: #000; }
 
   .output-doc { background: #fff; color: #1a1a1a; padding: 28px 32px; border-radius: 4px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.65; }
   .doc-meta { font-size: 11px; color: #aaa; font-family: 'Courier New', monospace; margin-bottom: 8px; }
@@ -148,6 +151,33 @@
   .optional-content { display: none; }
   .optional-content.show { display: block; }
 
+  /* TRADE LOG */
+  .ticker-btn-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .ticker-btn { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 3px; cursor: pointer; transition: all 0.15s; }
+  .ticker-btn:hover { color: var(--text); border-color: #444; }
+  .ticker-btn.active-spx { background: #1a2a1a; border-color: var(--bull); color: var(--bull); }
+  .ticker-btn.active-spy { background: #1a2a1a; border-color: var(--bull); color: var(--bull); }
+  .ticker-btn.active-qqq { background: #1a1a2a; border-color: var(--morn); color: var(--morn); }
+  .ticker-btn.active-iwm { background: #1a1a2a; border-color: var(--morn); color: var(--morn); }
+  .ticker-btn.active-rut { background: #1a2a1a; border-color: var(--bull); color: var(--bull); }
+  .ticker-btn.active-xsp { background: #1a2a1a; border-color: var(--bull); color: var(--bull); }
+  .type-btn { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 3px; cursor: pointer; transition: all 0.15s; }
+  .type-btn:hover { color: var(--text); }
+  .type-btn.active { background: #2a2a1a; border-color: #ffcc00; color: #ffcc00; }
+  .trade-row { display: grid; grid-template-columns: 80px 80px 80px 80px 90px 90px 90px 90px 80px 1fr; gap: 6px; margin-bottom: 6px; align-items: end; }
+  .trade-row .field label { font-size: 9px; }
+  .trade-row input { font-size: 12px; padding: 7px 8px; }
+  .calc-display { font-family: var(--mono); font-size: 11px; color: var(--muted); padding: 8px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; }
+  .pnl-positive { color: var(--bull); }
+  .pnl-negative { color: var(--bear); }
+  .trade-log-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .trade-log-table th { font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  .trade-log-table td { font-family: var(--mono); font-size: 11px; color: var(--text); padding: 7px 8px; border-bottom: 1px solid #1a1a1a; white-space: nowrap; }
+  .trade-log-table tr:hover td { background: var(--surface); }
+  .status-open { color: var(--morn); }
+  .status-closed-win { color: var(--bull); }
+  .status-closed-loss { color: var(--bear); }
+
   @media (max-width: 580px) { .form-grid, .form-grid.three, .form-grid.four, .trend-grid { grid-template-columns: 1fr 1fr; } .link-pair { grid-template-columns: 1fr; } .levels-inputs input { width: 70px; } }
 </style>
 </head>
@@ -164,6 +194,7 @@
     <button class="tab-btn bear" onclick="switchTab('bear',this)">▼ Bearish Alert</button>
     <button class="tab-btn sun"  onclick="switchTab('sun',this)">Sunday Session</button>
     <button class="tab-btn vid"  onclick="switchTab('vid',this)">📹 Sunday Videos</button>
+    <button class="tab-btn trd"  onclick="switchTab('trd',this)">📊 Trade Log</button>
   </div>
 
   <!-- ===== MORNING NOTE ===== -->
@@ -539,6 +570,118 @@
     </div>
   </div>
 
+
+  <!-- ===== TRADE LOG TAB ===== -->
+  <div class="tab-panel tab-trd" id="tab-trd">
+    <div class="id-display">TRADE ID: <span style="color:var(--trade)" id="trdId">—</span></div>
+
+    <div class="section-label sl-trd">Ticker</div>
+    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">SPX / SPY GROUP</div>
+    <div class="ticker-btn-group" id="trd_ticker_btns">
+      <button class="ticker-btn" onclick="selectTicker('SPX',this)">SPX</button>
+      <button class="ticker-btn" onclick="selectTicker('SPY',this)">SPY</button>
+    </div>
+    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">OTHER</div>
+    <div class="ticker-btn-group">
+      <button class="ticker-btn" onclick="selectTicker('QQQ',this)">QQQ</button>
+      <button class="ticker-btn" onclick="selectTicker('IWM',this)">IWM</button>
+      <button class="ticker-btn" onclick="selectTicker('RUT',this)">RUT</button>
+      <button class="ticker-btn" onclick="selectTicker('XSP',this)">XSP</button>
+    </div>
+
+    <div class="section-label sl-trd">Trade Type</div>
+    <div class="ticker-btn-group" id="trd_type_btns">
+      <button class="type-btn" id="ttype_bc" onclick="selectType('Buy Call',this)">Buy Call</button>
+      <button class="type-btn" id="ttype_bp" onclick="selectType('Buy Put',this)">Buy Put</button>
+      <button class="type-btn" id="ttype_cps" onclick="selectType('CPS',this)">CPS</button>
+      <button class="type-btn" id="ttype_ccs" onclick="selectType('CCS',this)">CCS</button>
+      <button class="type-btn" id="ttype_ib" onclick="selectType('IB',this)">IB</button>
+    </div>
+
+    <div class="section-label sl-trd">Trade Entry</div>
+    <div class="form-grid" id="trd_strike_section">
+      <div class="field" id="trd_s1_field">
+        <label id="trd_s1_label">Strike 1</label>
+        <input type="number" id="trd_s1" placeholder="e.g. 5740" step="5" oninput="autoFillStrikes()">
+      </div>
+      <div class="field" id="trd_s2_field" style="display:none;">
+        <label id="trd_s2_label">Strike 2 (auto)</label>
+        <input type="number" id="trd_s2" placeholder="auto" step="5">
+      </div>
+      <div class="field" id="trd_s3_field" style="display:none;">
+        <label id="trd_s3_label">Strike 3</label>
+        <input type="number" id="trd_s3" placeholder="auto" step="5">
+      </div>
+      <div class="field" id="trd_s4_field" style="display:none;">
+        <label id="trd_s4_label">Strike 4 (auto)</label>
+        <input type="number" id="trd_s4" placeholder="auto" step="5">
+      </div>
+    </div>
+    <div class="form-grid three">
+      <div class="field">
+        <label>Credit / Debit Collected</label>
+        <input type="number" id="trd_credit" placeholder="0.50" step="0.05" oninput="calcRisk()">
+      </div>
+      <div class="field">
+        <label>Max Risk (auto)</label>
+        <div class="calc-display" id="trd_maxrisk">—</div>
+      </div>
+      <div class="field">
+        <label>Width (IB only)</label>
+        <input type="number" id="trd_width" placeholder="15" step="5" oninput="autoFillIB()" style="display:none;" id="trd_width_field">
+      </div>
+    </div>
+
+    <div class="section-label sl-trd">Close Trade (update later)</div>
+    <div class="form-grid three">
+      <div class="field">
+        <label>Close Price</label>
+        <input type="number" id="trd_close" placeholder="0.20" step="0.05" oninput="calcPnL()">
+      </div>
+      <div class="field">
+        <label>P&L $</label>
+        <div class="calc-display" id="trd_pnl_dollars">—</div>
+      </div>
+      <div class="field">
+        <label>P&L %</label>
+        <div class="calc-display" id="trd_pnl_pct">—</div>
+      </div>
+    </div>
+
+    <div class="form-grid full">
+      <div class="field">
+        <label>Notes</label>
+        <input type="text" id="trd_notes" placeholder="e.g. Opened on bounce off support, VIX spiking">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-trd" onclick="logTrade()">Log Trade</button>
+      <button class="btn-clear" onclick="clearTrade()">Clear</button>
+    </div>
+    <div class="send-status" id="trdLogStatus"></div>
+
+    <!-- TRADE LOG TABLE -->
+    <div style="margin-top:24px;" id="trd_log_section" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div class="section-label sl-trd" style="margin:0;border:none;">Logged Trades</div>
+        <a href="https://docs.google.com/spreadsheets/d/1pyUwZDGJuQv49KNe0rpaZImcxxKILJD7d3UZ45e5Ifo/edit" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--morn);text-decoration:none;">Open Sheet ↗</a>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="trade-log-table" id="trd_table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Date</th><th>Time</th><th>Ticker</th><th>Type</th>
+              <th>S1</th><th>S2</th><th>S3</th><th>S4</th>
+              <th>Credit</th><th>Max Risk</th><th>Close</th><th>P&L$</th><th>P&L%</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="trd_tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script>
   const LIVE_ROOM    = 'https://join.freeconferencecall.com/simplestocks';
@@ -554,7 +697,7 @@
   function ordinal(n){if(n>3&&n<21)return 'th';switch(n%10){case 1:return 'st';case 2:return 'nd';case 3:return 'rd';default:return 'th';}}
   function getNextSunday(){const now=new Date(),day=now.getDay(),daysUntil=day===0?7:7-day,next=new Date(now);next.setDate(now.getDate()+daysUntil);return `Sunday ${MONTHS[next.getMonth()]} ${next.getDate()}${ordinal(next.getDate())}`;}
   function generateId(){const d=new Date();return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}`;}
-  function updateIds(){const id=generateId();['mornId','bullId','bearId','sunId','vidId'].forEach(x=>{const el=document.getElementById(x);if(el)el.textContent=id;});}
+  function updateIds(){const id=generateId();['mornId','bullId','bearId','sunId','vidId','trdId'].forEach(x=>{const el=document.getElementById(x);if(el)el.textContent=id;});}
   window.onload=function(){
     const todayD=new Date();
     const todayStr=`${MONTHS[todayD.getMonth()]} ${todayD.getDate()}${ordinal(todayD.getDate())}`;
@@ -925,6 +1068,218 @@
     document.getElementById('v1_label').value='Video 1 HERE';
     document.getElementById('v2_label').value='Video 2 HERE';
     document.getElementById('vidOutput').classList.remove('visible');updateIds();
+  }
+
+  // ---- TRADE LOG ----
+  let TRADE_LOG_URL = ''; // Paste your Apps Script URL here after deploying
+  let currentTicker = '';
+  let currentType = '';
+
+  function selectTicker(ticker, btn){
+    currentTicker = ticker;
+    document.querySelectorAll('.ticker-btn').forEach(b=>{
+      b.className='ticker-btn';
+    });
+    btn.classList.add('active-'+ticker.toLowerCase());
+    updateTypeButtons(ticker);
+    document.getElementById('trd_width').style.display='none';
+    clearStrikes();
+  }
+
+  function updateTypeButtons(ticker){
+    const isSPYlike = ['SPY','IWM','QQQ'].includes(ticker);
+    const isSPXlike = ['SPX','RUT','XSP'].includes(ticker);
+    // Show/hide based on ticker type — all show all buttons but highlight relevant ones
+    // SPY/IWM/QQQ: Buy Call + Buy Put primarily, but can also do spreads
+    // SPX/RUT/XSP: CPS, CCS, IB primarily, but can also buy
+    clearType();
+  }
+
+  function selectType(type, btn){
+    currentType = type;
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    // Show/hide strike fields based on type
+    const s2 = document.getElementById('trd_s2_field');
+    const s3 = document.getElementById('trd_s3_field');
+    const s4 = document.getElementById('trd_s4_field');
+    const widthField = document.getElementById('trd_width');
+    s2.style.display='none'; s3.style.display='none'; s4.style.display='none';
+    widthField.style.display='none';
+    if(type==='CPS'||type==='CCS'){
+      s2.style.display='flex';
+      document.getElementById('trd_s1_label').textContent = type==='CPS'?'Short Put (Sell)':'Short Call (Sell)';
+      document.getElementById('trd_s2_label').textContent = type==='CPS'?'Long Put (Buy) auto':'Long Call (Buy) auto';
+    } else if(type==='IB'){
+      s2.style.display='flex'; s3.style.display='flex'; s4.style.display='flex';
+      widthField.style.display='block';
+      document.getElementById('trd_s1_label').textContent='Middle Strike';
+      document.getElementById('trd_s2_label').textContent='Short Put (auto)';
+      document.getElementById('trd_s3_label').textContent='Long Call (auto)';
+      document.getElementById('trd_s4_label').textContent='Long Put (auto)';
+    } else {
+      document.getElementById('trd_s1_label').textContent='Strike';
+    }
+    clearStrikes();
+    calcRisk();
+  }
+
+  function clearStrikes(){
+    ['trd_s1','trd_s2','trd_s3','trd_s4'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('trd_maxrisk').textContent='—';
+    document.getElementById('trd_pnl_dollars').textContent='—';
+    document.getElementById('trd_pnl_pct').textContent='—';
+  }
+
+  function clearType(){
+    currentType='';
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+    ['trd_s2_field','trd_s3_field','trd_s4_field'].forEach(id=>{document.getElementById(id).style.display='none';});
+    document.getElementById('trd_width').style.display='none';
+    clearStrikes();
+  }
+
+  function autoFillStrikes(){
+    const s1=parseFloat(document.getElementById('trd_s1').value);
+    if(isNaN(s1))return;
+    if(currentType==='CPS'){
+      document.getElementById('trd_s2').value=s1-5;
+    } else if(currentType==='CCS'){
+      document.getElementById('trd_s2').value=s1+5;
+    }
+    calcRisk();
+  }
+
+  function autoFillIB(){
+    const mid=parseFloat(document.getElementById('trd_s1').value);
+    const width=parseFloat(document.getElementById('trd_width').value);
+    if(isNaN(mid)||isNaN(width))return;
+    document.getElementById('trd_s2').value=mid; // Short Put = middle
+    document.getElementById('trd_s3').value=mid; // Short Call = middle
+    document.getElementById('trd_s4').value=mid-width; // Long Put
+    // We repurpose s3 for Long Call
+    document.getElementById('trd_s3').value=mid+width;
+    calcRisk();
+  }
+
+  function calcRisk(){
+    const credit=parseFloat(document.getElementById('trd_credit').value)||0;
+    let maxRisk=null;
+    if(currentType==='CPS'||currentType==='CCS'){
+      const s1=parseFloat(document.getElementById('trd_s1').value)||0;
+      const s2=parseFloat(document.getElementById('trd_s2').value)||0;
+      if(s1&&s2){
+        const width=Math.abs(s1-s2);
+        maxRisk=(width-credit)*100;
+      }
+    } else if(currentType==='IB'){
+      const width=parseFloat(document.getElementById('trd_width').value)||0;
+      if(width){maxRisk=(width-credit)*100;}
+    }
+    const el=document.getElementById('trd_maxrisk');
+    if(maxRisk!==null){
+      el.textContent=`$${maxRisk.toFixed(0)}/contract`;
+      el.className='calc-display';
+    } else {
+      el.textContent='—';
+    }
+    calcPnL();
+  }
+
+  function calcPnL(){
+    const credit=parseFloat(document.getElementById('trd_credit').value)||0;
+    const close=parseFloat(document.getElementById('trd_close').value);
+    if(isNaN(close)||!credit)return;
+    const pnlPer=credit-close;
+    const pnlDollars=pnlPer*100;
+    let maxRisk=null;
+    if(currentType==='CPS'||currentType==='CCS'){
+      const s1=parseFloat(document.getElementById('trd_s1').value)||0;
+      const s2=parseFloat(document.getElementById('trd_s2').value)||0;
+      if(s1&&s2){const width=Math.abs(s1-s2);maxRisk=(width-credit)*100;}
+    } else if(currentType==='IB'){
+      const width=parseFloat(document.getElementById('trd_width').value)||0;
+      if(width){maxRisk=(width-credit)*100;}
+    }
+    const pEl=document.getElementById('trd_pnl_dollars');
+    const pPct=document.getElementById('trd_pnl_pct');
+    pEl.textContent=(pnlDollars>=0?'+':'')+`$${pnlDollars.toFixed(0)}/contract`;
+    pEl.className='calc-display '+(pnlDollars>=0?'pnl-positive':'pnl-negative');
+    if(maxRisk){
+      const pct=(pnlDollars/maxRisk)*100;
+      pPct.textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%';
+      pPct.className='calc-display '+(pct>=0?'pnl-positive':'pnl-negative');
+    }
+  }
+
+  async function logTrade(){
+    if(!currentTicker){alert('Select a ticker first.');return;}
+    if(!currentType){alert('Select a trade type first.');return;}
+    const now=new Date();
+    const id=generateId();
+    const timeStr=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const dateStr=`${MONTHS[now.getMonth()]} ${now.getDate()}${ordinal(now.getDate())}`;
+    const credit=document.getElementById('trd_credit').value;
+    const close=document.getElementById('trd_close').value;
+    const maxRiskEl=document.getElementById('trd_maxrisk').textContent;
+    const pnlD=document.getElementById('trd_pnl_dollars').textContent;
+    const pnlP=document.getElementById('trd_pnl_pct').textContent;
+    const trade={
+      trade_id:id, date:dateStr, time:timeStr,
+      ticker:currentTicker, type:currentType,
+      strike1:document.getElementById('trd_s1').value||'',
+      strike2:document.getElementById('trd_s2').value||'',
+      strike3:document.getElementById('trd_s3').value||'',
+      strike4:document.getElementById('trd_s4').value||'',
+      credit:credit, max_risk:maxRiskEl,
+      close_price:close, pnl_dollars:pnlD, pnl_percent:pnlP,
+      notes:document.getElementById('trd_notes').value
+    };
+    const statusEl=document.getElementById('trdLogStatus');
+    if(!TRADE_LOG_URL){
+      statusEl.textContent='⚠ Apps Script URL not set. Trade saved locally only.';
+      statusEl.className='send-status err';
+      addTradeToTable(trade);
+      setTimeout(()=>{statusEl.textContent='';},4000);
+      return;
+    }
+    statusEl.textContent='Logging trade...';statusEl.className='send-status';
+    try{
+      await fetch(TRADE_LOG_URL,{method:'POST',body:JSON.stringify(trade)});
+      statusEl.textContent='✓ Trade logged to Google Sheets.';statusEl.className='send-status ok';
+      addTradeToTable(trade);
+    }catch(e){
+      statusEl.textContent='✗ Log failed: '+e.message;statusEl.className='send-status err';
+    }
+    setTimeout(()=>{statusEl.textContent='';},4000);
+  }
+
+  function addTradeToTable(t){
+    document.getElementById('trd_log_section').style.display='block';
+    const tbody=document.getElementById('trd_tbody');
+    const tr=document.createElement('tr');
+    const pnlClass=t.pnl_dollars.includes('-')?'status-closed-loss':(t.pnl_dollars==='—'?'status-open':'status-closed-win');
+    tr.innerHTML=`<td>${t.trade_id}</td><td>${t.date}</td><td>${t.time}</td>
+      <td>${t.ticker}</td><td>${t.type}</td>
+      <td>${t.strike1}</td><td>${t.strike2}</td><td>${t.strike3}</td><td>${t.strike4}</td>
+      <td>${t.credit}</td><td>${t.max_risk}</td><td>${t.close_price||'open'}</td>
+      <td class="${pnlClass}">${t.pnl_dollars}</td><td class="${pnlClass}">${t.pnl_percent}</td>
+      <td>${t.notes}</td>`;
+    tbody.insertBefore(tr,tbody.firstChild);
+  }
+
+  function clearTrade(){
+    currentTicker='';currentType='';
+    document.querySelectorAll('.ticker-btn').forEach(b=>{b.className='ticker-btn';});
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+    ['trd_s1','trd_s2','trd_s3','trd_s4','trd_credit','trd_close','trd_notes','trd_width'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['trd_s2_field','trd_s3_field','trd_s4_field'].forEach(id=>{document.getElementById(id).style.display='none';});
+    document.getElementById('trd_width').style.display='none';
+    document.getElementById('trd_maxrisk').textContent='—';
+    document.getElementById('trd_pnl_dollars').textContent='—';
+    document.getElementById('trd_pnl_pct').textContent='—';
+    document.getElementById('trd_s1_label').textContent='Strike 1';
+    updateIds();
   }
 
   function clearBull(){['b_ticker','b_price','b_subtitle','b_context','b_thesis','b_s1price','b_s1note','b_s2exp','b_s2credit','b_s2short','b_s2long','b_s2note','b_s3exp','b_s3credit','b_s3strike','b_s3be','b_s3margin','b_s3note','b_s4exp_buy','b_s4exp_sell','b_s4strike_buy','b_s4strike_sell','b_s4cost','b_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bullOutput').classList.remove('visible');updateIds();}
