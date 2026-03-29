@@ -32,7 +32,7 @@ exports.handler = async function(event) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQVNiDuo9OhRmHcQfyDSv5HqtlMo3o0Y14D-8aD0IbWUn7cDsxrGjCHyNGCsveK_M-/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpvluhJiyGs_nZ-jTtizlSnU4UsHs_oRXlA2ZUC1v1skBJ8EMb1ZniahxRtOfSAsGa/exec';
 
   const debugLog = [];
 
