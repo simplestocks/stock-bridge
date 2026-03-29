@@ -160,11 +160,10 @@
 
   <!-- SETTINGS PANEL -->
   <div style="margin:14px 0 0;border:1px solid #222;border-radius:4px;background:#111;">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#555;" onclick="document.getElementById('settingsBody').style.display=document.getElementById('settingsBody').style.display==='none'?'block':'none'">
-      ⚙ Discord Webhook Settings <span style="font-size:9px">(click to expand)</span>
+    <div id="settingsToggle" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#555;">
+      <span>⚙ Discord Webhook Settings</span><span id="settingsToggleLabel" style="font-size:9px">(click to expand)</span>
     </div>
-    <div id="settingsBody" style="display:none;padding:0 14px 14px;">
-      <div style="font-family:var(--mono);font-size:10px;color:#555;margin-bottom:10px;">Changes apply immediately — no save needed. These reset when you reload the page.</div>
+    <div id="settingsBody" style="display:none;padding:0 14px 14px;border-top:1px solid #1a1a1a;">
       <div id="discordSettingsContainer"></div>
     </div>
   </div>
