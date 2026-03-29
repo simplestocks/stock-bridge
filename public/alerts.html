@@ -94,6 +94,23 @@
   .btn-discord:disabled, .btn-slack:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .send-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .assess-panel { background: var(--surface); border: 1px solid var(--morn); border-radius: 4px; padding: 16px; margin-top: 16px; display: none; }
+  .assess-panel.visible { display: block; }
+  .assess-section { margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
+  .assess-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .assess-section-title { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--morn); margin-bottom: 8px; }
+  .assess-bias { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .assess-bias.flagged { color: #ffaa00; }
+  .assess-verdict { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .verdict-good { color: var(--bull); }
+  .verdict-minor { color: #ffaa00; }
+  .verdict-needs { color: var(--bear); }
+  .assess-suggestion { background: #0a1a0a; border: 1px solid #1a3a1a; border-radius: 3px; padding: 10px 12px; font-size: 13px; color: #ccc; line-height: 1.6; margin-bottom: 8px; }
+  .btn-accept { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; background: transparent; border: 1px solid var(--bull); color: var(--bull); border-radius: 3px; cursor: pointer; transition: all 0.15s; }
+  .btn-accept:hover { background: var(--bull); color: #000; }
+  .btn-assess { background: transparent; border: 1px solid var(--morn); color: var(--morn); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 11px 18px; border-radius: 3px; cursor: pointer; transition: all 0.15s; flex: 1; }
+  .btn-assess:hover { background: var(--morn); color: #000; }
+  .btn-assess:disabled { opacity: 0.4; cursor: wait; }
   .btn-copy-html { flex: 1; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 11px 18px; border-radius: 3px; cursor: pointer; transition: all 0.15s; background: var(--surface); border: 1px solid; }
   .send-status { font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 6px 0; width: 100%; }
   .send-status.ok { color: var(--bull); }
@@ -271,7 +288,29 @@
 
     <div class="btn-row">
       <button class="btn-morn" onclick="generateMorn()">Generate Morning Note</button>
+      <button class="btn-assess" id="assessBtn" onclick="assessNote()" disabled>Assess with AI</button>
       <button class="btn-clear" onclick="clearMorn()">Clear</button>
+    </div>
+
+    <!-- ASSESS PANEL -->
+    <div class="assess-panel" id="assessPanel">
+      <div style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--morn);margin-bottom:14px;">AI Assessment</div>
+
+      <div class="assess-section">
+        <div class="assess-section-title">Market Pulse</div>
+        <div class="assess-bias" id="mp_bias">—</div>
+        <div class="assess-verdict" id="mp_verdict"></div>
+        <div class="assess-suggestion" id="mp_suggestion"></div>
+        <button class="btn-accept" onclick="acceptSuggestion('m_pulse','mp_suggestion')">Accept → Populate Field</button>
+      </div>
+
+      <div class="assess-section">
+        <div class="assess-section-title">SPX Tracker</div>
+        <div class="assess-bias" id="spx_bias">—</div>
+        <div class="assess-verdict" id="spx_verdict"></div>
+        <div class="assess-suggestion" id="spx_suggestion"></div>
+        <button class="btn-accept" onclick="acceptSuggestion('m_spx','spx_suggestion')">Accept → Populate Field</button>
+      </div>
     </div>
 
     <div class="output-section" id="mornOutput">
@@ -677,6 +716,59 @@
     document.getElementById('mornMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Morning Note ${mmdd} — ${id}</span></div>`;
     document.getElementById('mornOutput').classList.add('visible');
     document.getElementById('mornOutput').scrollIntoView({behavior:'smooth',block:'start'});
+    // Enable assess button
+    const ab=document.getElementById('assessBtn');if(ab)ab.disabled=false;
+  }
+
+  // ---- AI ASSESS ----
+  async function assessNote(){
+    const pulse=v('m_pulse'),spx=v('m_spx');
+    if(!pulse&&!spx){alert('Fill in Market Pulse or SPX Tracker first.');return;}
+    const btn=document.getElementById('assessBtn');
+    btn.disabled=true;btn.textContent='Assessing...';
+    const panel=document.getElementById('assessPanel');
+    panel.classList.add('visible');
+    ['mp_bias','spx_bias'].forEach(id=>{document.getElementById(id).textContent='Analyzing...';});
+    try{
+      const res=await fetch('/.netlify/functions/assess-note',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({market_pulse:pulse,spx_tracker:spx})
+      });
+      const data=await res.json();
+      if(data.error)throw new Error(data.error);
+
+      // Market Pulse
+      const mpBias=document.getElementById('mp_bias');
+      const mpVerdict=document.getElementById('mp_verdict');
+      mpBias.textContent=data.market_pulse.bias;
+      mpBias.className='assess-bias'+(data.market_pulse.bias!=='No bias detected'?' flagged':'');
+      document.getElementById('mp_suggestion').textContent=data.market_pulse.suggestion||pulse;
+      const mpV=data.market_pulse.verdict||'';
+      mpVerdict.textContent=mpV;
+      mpVerdict.className='assess-verdict '+(mpV==='Good to send'?'verdict-good':mpV==='Minor tweaks'?'verdict-minor':'verdict-needs');
+
+      // SPX Tracker
+      const spxBias=document.getElementById('spx_bias');
+      const spxVerdict=document.getElementById('spx_verdict');
+      spxBias.textContent=data.spx_tracker.bias;
+      spxBias.className='assess-bias'+(data.spx_tracker.bias!=='No bias detected'?' flagged':'');
+      document.getElementById('spx_suggestion').textContent=data.spx_tracker.suggestion||spx;
+      const spxV=data.spx_tracker.verdict||'';
+      spxVerdict.textContent=spxV;
+      spxVerdict.className='assess-verdict '+(spxV==='Good to send'?'verdict-good':spxV==='Minor tweaks'?'verdict-minor':'verdict-needs');
+
+      panel.scrollIntoView({behavior:'smooth',block:'start'});
+    }catch(e){
+      document.getElementById('mp_bias').textContent='Error: '+e.message;
+      document.getElementById('spx_bias').textContent='Error: '+e.message;
+    }
+    btn.disabled=false;btn.textContent='Assess with AI';
+  }
+
+  function acceptSuggestion(fieldId,suggestionId){
+    const suggestion=document.getElementById(suggestionId).textContent;
+    if(suggestion)document.getElementById(fieldId).value=suggestion;
   }
 
   // ---- BULLISH HELPERS ----
@@ -804,7 +896,10 @@
     ['m_etf_toggle','m_earn_toggle','m_extra_toggle'].forEach(id=>{document.getElementById(id).checked=false;});
     ['m_etf_section','m_earn_section','m_extra_section'].forEach(id=>{document.getElementById(id).classList.remove('show');});
     document.getElementById('m_liveurl').value=LIVE_ROOM;
-    document.getElementById('mornOutput').classList.remove('visible');updateIds();
+    document.getElementById('mornOutput').classList.remove('visible');
+    document.getElementById('assessPanel').classList.remove('visible');
+    const ab=document.getElementById('assessBtn');if(ab)ab.disabled=true;
+    updateIds();
   }
   function generateVideos(){
     const id=generateId(),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
