@@ -925,7 +925,7 @@
       const res=await fetch('/.netlify/functions/assess-note',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({market_pulse:pulse,spx_tracker:spx})
+        body:JSON.stringify({market_pulse:pulse,spx_tracker:spx,include_title:true})
       });
       const data=await res.json();
       if(data.error)throw new Error(data.error);
@@ -935,7 +935,9 @@
       const mpVerdict=document.getElementById('mp_verdict');
       mpBias.textContent=data.market_pulse.bias;
       mpBias.className='assess-bias'+(data.market_pulse.bias!=='No bias detected'?' flagged':'');
-      document.getElementById('mp_suggestion').textContent=data.market_pulse.suggestion||pulse;
+      const mpSug=document.getElementById('mp_suggestion');
+      mpSug.textContent=data.market_pulse.suggestion||pulse;
+      mpSug.dataset.raw=data.market_pulse.suggestion||pulse;
       const mpV=data.market_pulse.verdict||'';
       mpVerdict.textContent=mpV;
       mpVerdict.className='assess-verdict '+(mpV==='Good to send'?'verdict-good':mpV==='Minor tweaks'?'verdict-minor':'verdict-needs');
@@ -945,10 +947,19 @@
       const spxVerdict=document.getElementById('spx_verdict');
       spxBias.textContent=data.spx_tracker.bias;
       spxBias.className='assess-bias'+(data.spx_tracker.bias!=='No bias detected'?' flagged':'');
-      document.getElementById('spx_suggestion').textContent=data.spx_tracker.suggestion||spx;
+      const spxSug=document.getElementById('spx_suggestion');
+      spxSug.textContent=data.spx_tracker.suggestion||spx;
+      spxSug.dataset.raw=data.spx_tracker.suggestion||spx;
       const spxV=data.spx_tracker.verdict||'';
       spxVerdict.textContent=spxV;
       spxVerdict.className='assess-verdict '+(spxV==='Good to send'?'verdict-good':spxV==='Minor tweaks'?'verdict-minor':'verdict-needs');
+
+      // Title suggestion
+      if(data.title_suggestion){
+        const ts=document.getElementById('titleSuggestion');
+        const tv=document.getElementById('titleSuggestionValue');
+        if(ts&&tv){tv.textContent=data.title_suggestion;tv.dataset.raw=data.title_suggestion;ts.style.display='block';}
+      }
 
       panel.scrollIntoView({behavior:'smooth',block:'start'});
     }catch(e){
@@ -959,8 +970,12 @@
   }
 
   function acceptSuggestion(fieldId,suggestionId){
-    const suggestion=document.getElementById(suggestionId).textContent;
-    if(suggestion)document.getElementById(fieldId).value=suggestion;
+    const el=document.getElementById(suggestionId);
+    const suggestion=el.dataset.raw||el.textContent||'';
+    if(suggestion&&fieldId){
+      const target=document.getElementById(fieldId);
+      if(target)target.value=suggestion;
+    }
   }
 
   // ---- BULLISH HELPERS ----
