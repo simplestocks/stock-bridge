@@ -9,9 +9,16 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { market_pulse, spx_tracker } = JSON.parse(event.body);
+    const { market_pulse, spx_tracker, mode } = JSON.parse(event.body);
 
-    const prompt = `You are a trading newsletter editor. Review these two sections of a morning note.
+    let prompt;
+
+    if (mode === 'macro') {
+      // Weekly macro events mode
+      prompt = `${market_pulse}\n\nReturn your response as JSON with this exact structure:\n{"market_pulse":{"bias":"","suggestion":"[your formatted list here with \\n for line breaks]","verdict":"Good to send"},"spx_tracker":{"bias":"","suggestion":"","verdict":"Good to send"}}\n\nPut ALL your content in the market_pulse.suggestion field. Use plain text with \\n for line breaks. No markdown, no asterisks, no HTML.`;
+    } else {
+      // Normal assessment mode
+      prompt = `You are a trading newsletter editor. Review these two sections of a morning note.
 
 MARKET PULSE:
 ${market_pulse || '(empty)'}
@@ -39,6 +46,7 @@ Rules:
 - Do not add new information
 - Keep the same tone and length
 - Return only the JSON object, nothing else`;
+    }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -49,7 +57,7 @@ Rules:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 1500,
         messages: [{ role: 'user', content: prompt }]
       })
     });
