@@ -9,15 +9,13 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { market_pulse, spx_tracker, mode } = JSON.parse(event.body);
+    const { market_pulse, spx_tracker, mode, include_title } = JSON.parse(event.body);
 
     let prompt;
 
     if (mode === 'macro') {
-      // Weekly macro events mode
       prompt = `${market_pulse}\n\nReturn your response as JSON with this exact structure:\n{"market_pulse":{"bias":"","suggestion":"[your formatted list here with \\n for line breaks]","verdict":"Good to send"},"spx_tracker":{"bias":"","suggestion":"","verdict":"Good to send"}}\n\nPut ALL your content in the market_pulse.suggestion field. Use plain text with \\n for line breaks. No markdown, no asterisks, no HTML.`;
     } else {
-      // Normal assessment mode
       prompt = `You are a trading newsletter editor. Review these two sections of a morning note.
 
 MARKET PULSE:
@@ -37,7 +35,8 @@ Return ONLY valid JSON, no other text, no markdown, no backticks:
     "bias": "one sentence flagging any directional bias, or 'No bias detected'",
     "suggestion": "reworded version that sounds neutral and polished, preserving all facts",
     "verdict": "Good to send"
-  }
+  }${include_title ? `,
+  "title_suggestion": "a punchy 5-8 word title for today's morning note based on the content above. No punctuation at the end. Examples: Mega Caps Hold the Key, Resistance Zones in Focus, VIX Still Elevated — Stay Nimble"` : ''}
 }
 
 Rules:
