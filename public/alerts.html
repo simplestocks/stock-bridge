@@ -758,6 +758,20 @@
 
   setInterval(updateIds,30000);
 
+  // Auto-save persistent fields on input
+  document.addEventListener('DOMContentLoaded', function(){
+    const persist = [
+      ['m_liveurl','ss_liveurl'],
+      ['m_pw','ss_pw'],
+      ['m_earn_label','ss_earnlabel'],
+      ['m_earn_url','ss_earnurl']
+    ];
+    persist.forEach(([id,key])=>{
+      const el=document.getElementById(id);
+      if(el)el.addEventListener('input',function(){localStorage.setItem(key,this.value);});
+    });
+  });
+
   function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
   function toggleSection(checkId,sectionId){document.getElementById(sectionId).classList.toggle('show',document.getElementById(checkId).checked);}
   function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
