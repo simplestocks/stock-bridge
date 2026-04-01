@@ -625,6 +625,12 @@
     </div>
 
     <div class="section-label sl-trd">Trade Entry</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Expiration Date</label>
+        <input type="text" id="trd_exp" placeholder="e.g. Apr 17, Jun 20">
+      </div>
+    </div>
     <div class="form-grid" id="trd_strike_section">
       <div class="field" id="trd_s1_field">
         <label id="trd_s1_label">Strike 1</label>
@@ -697,7 +703,7 @@
         <table class="trade-log-table" id="trd_table">
           <thead>
             <tr>
-              <th>ID</th><th>Date</th><th>Time</th><th>Ticker</th><th>Type</th>
+              <th>ID</th><th>Date</th><th>Time</th><th>Ticker</th><th>Type</th><th>Exp</th><th>DTE</th>
               <th>S1</th><th>S2</th><th>S3</th><th>S4</th>
               <th>Credit</th><th>Max Risk</th><th>Close</th><th>P&L$</th><th>P&L%</th><th>Notes</th><th></th>
             </tr>
@@ -1309,6 +1315,7 @@
     const trade={
       trade_id:id, date:dateStr, time:timeStr,
       ticker:currentTicker, type:currentType,
+      expiration:document.getElementById('trd_exp').value||'',
       strike1:document.getElementById('trd_s1').value||'',
       strike2:document.getElementById('trd_s2').value||'',
       strike3:document.getElementById('trd_s3').value||'',
@@ -1353,8 +1360,21 @@
       const tr=document.createElement('tr');
       tr.style.cursor='pointer';
       tr.title='Click to exit this trade';
+      // Calculate DTE from expiration string
+      function calcDTE(expStr){
+        if(!expStr)return '';
+        try{
+          const now=new Date();
+          const yr=now.getFullYear();
+          const d=new Date(expStr+', '+yr);
+          if(isNaN(d.getTime()))return '';
+          const diff=Math.round((d-now)/(1000*60*60*24));
+          return diff<0?'exp':(diff===0?'0d':diff+'d');
+        }catch(e){return '';}
+      }
+      const dte=calcDTE(t.expiration);
       tr.innerHTML=`<td>${t.trade_id}</td><td>${t.date}</td><td>${t.time}</td>
-        <td>${t.ticker}</td><td>${t.type}</td>
+        <td>${t.ticker}</td><td>${t.type}</td><td>${t.expiration||''}</td><td style="color:${dte==='exp'?'var(--bear)':dte&&parseInt(dte)<=5?'#ffaa00':'var(--muted)'}">${dte}</td>
         <td>${t.strike1}</td><td>${t.strike2||''}</td><td>${t.strike3||''}</td><td>${t.strike4||''}</td>
         <td>${t.credit}</td><td>${t.max_risk}</td>
         <td class="${isOpen?'status-open':''}">${t.close_price||'<b>OPEN</b>'}</td>
@@ -1424,7 +1444,7 @@
     currentTicker='';currentType='';
     document.querySelectorAll('.ticker-btn').forEach(b=>{b.className='ticker-btn';});
     document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
-    ['trd_s1','trd_s2','trd_s3','trd_s4','trd_credit','trd_close','trd_notes','trd_width'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['trd_s1','trd_s2','trd_s3','trd_s4','trd_credit','trd_close','trd_notes','trd_width','trd_exp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     ['trd_s2_field','trd_s3_field','trd_s4_field'].forEach(id=>{document.getElementById(id).style.display='none';});
     document.getElementById('trd_width').style.display='none';
     document.getElementById('trd_maxrisk').textContent='—';
