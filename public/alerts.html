@@ -202,6 +202,18 @@
   <div class="tab-panel tab-morn active" id="tab-morn">
     <div class="id-display">NOTE ID: <span class="id-morn" id="mornId">—</span></div>
 
+    <div class="section-label sl-morn">Title</div>
+    <div class="form-grid full">
+      <div class="field"><label>Today's Title (shown in output header)</label>
+        <input type="text" id="m_title" placeholder="Searching for Leadership from the Megacaps.">
+      </div>
+    </div>
+    <div class="form-grid full">
+      <div class="field"><label>Subtitle (optional second line)</label>
+        <input type="text" id="m_subtitle" placeholder="Good morning traders.">
+      </div>
+    </div>
+
     <div class="section-label sl-morn">Market Pulse</div>
     <div class="form-grid full">
       <div class="field"><label>Market Pulse Text</label>
@@ -321,6 +333,7 @@
     <div class="btn-row">
       <button class="btn-morn" onclick="generateMorn()">Generate Morning Note</button>
       <button class="btn-assess" id="assessBtn" onclick="assessNote()" disabled>Assess with AI</button>
+      <button class="btn-assess" id="macroBtn" onclick="getMacroEvents()" style="border-color:#ffaa00;color:#ffaa00;">Week Ahead</button>
       <button class="btn-clear" onclick="clearMorn()">Clear</button>
     </div>
 
@@ -343,6 +356,12 @@
         <div class="assess-suggestion" id="spx_suggestion"></div>
         <button class="btn-accept" onclick="acceptSuggestion('m_spx','spx_suggestion')">Accept → Populate Field</button>
       </div>
+    </div>
+
+    <!-- MACRO EVENTS PANEL -->
+    <div class="assess-panel" id="macroPanel" style="border-color:#ffaa00;">
+      <div style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#ffaa00;margin-bottom:14px;">Week Ahead — Key Macro Events</div>
+      <div id="macroContent" style="font-family:var(--sans);font-size:13px;color:var(--text);line-height:1.7;">Click "Week Ahead" to load this week's key events.</div>
     </div>
 
     <div class="output-section" id="mornOutput">
@@ -577,7 +596,13 @@
     <div class="id-display">TRADE ID: <span style="color:var(--trade)" id="trdId">—</span></div>
 
     <div class="section-label sl-trd">Ticker</div>
-    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">SPX / SPY GROUP</div>
+    <div class="form-grid" style="margin-bottom:10px;">
+      <div class="field">
+        <label>Free-text Ticker (for any ticker — BA, AAPL, etc.)</label>
+        <input type="text" id="trd_free_ticker" placeholder="e.g. BA, AAPL, TSLA" oninput="if(this.value){document.querySelectorAll('.ticker-btn').forEach(b=>{b.className='ticker-btn';});currentTicker=this.value.toUpperCase().trim();}">
+      </div>
+    </div>
+    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">OR QUICK SELECT — SPX / SPY GROUP</div>
     <div class="ticker-btn-group" id="trd_ticker_btns">
       <button class="ticker-btn" onclick="selectTicker('SPX',this)">SPX</button>
       <button class="ticker-btn" onclick="selectTicker('SPY',this)">SPY</button>
@@ -853,16 +878,18 @@
       spxBlock=`<p><span class="b">+ SPX tracker:</span> ${spx||''}${levels?'<br>'+levels:''}${spxLinksHtml}</p>`;
     }
 
+    const mTitle=v('m_title')||('Morning Note — '+mmdd);
+    const mSubtitle=v('m_subtitle')||'Good morning traders.';
     document.getElementById('mornDoc').innerHTML=`
-      <div class="doc-meta">NOTE ID: ${id}</div>
-      <div class="doc-head">Morning Note — ${mmdd}</div>
+      <div class="doc-head">${mTitle}</div>
       <div class="doc-body">
-        <p>Good morning traders.</p>
+        <p>${mSubtitle}</p>
         ${pulse?`<p><span class="b">+ Market Pulse:</span> ${pulse}</p>`:''}
         ${spxBlock}
         ${trendsHtml}${ktpHtml}${etfHtml}${earnHtml}${extraHtml}
         <p><span class="b">+ Live discussion</span>, available <a href="${liveurl}" target="_blank">HERE</a> (PW: ${pw})</p>
         <div class="doc-sig">Nic</div>
+        <div class="doc-meta" style="margin-top:12px;font-size:10px;">NOTE ID: ${id} | ${mmdd}</div>
       </div>`;
     document.getElementById('mornMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Morning Note ${mmdd} — ${id}</span></div>`;
     document.getElementById('mornOutput').classList.add('visible');
@@ -962,6 +989,8 @@
     document.getElementById('bullDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} ${mmdd}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already long ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
     document.getElementById('bullMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
     document.getElementById('bullOutput').classList.add('visible');document.getElementById('bullOutput').scrollIntoView({behavior:'smooth',block:'start'});
+    // Auto-log to trade sheet
+    silentLogTrade({trade_id:id,date:mmdd,time:`${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`,ticker,type:bias,strike1:v('b_s2short')||v('b_s4strike_buy')||'',strike2:v('b_s2long')||v('b_s4strike_sell')||'',strike3:'',strike4:'',credit:v('b_s2credit')||v('b_s4cost')||'',max_risk:'',close_price:'',pnl_dollars:'',pnl_percent:'',status:'Open',notes:subtitle||''});
   }
 
   // ---- BEARISH HELPERS ----
@@ -1001,6 +1030,8 @@
     document.getElementById('bearDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} ${mmdd}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already short ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
     document.getElementById('bearMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
     document.getElementById('bearOutput').classList.add('visible');document.getElementById('bearOutput').scrollIntoView({behavior:'smooth',block:'start'});
+    // Auto-log to trade sheet
+    silentLogTrade({trade_id:id,date:mmdd,time:`${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`,ticker,type:bias,strike1:v('r_s2short')||v('r_s4strike_buy')||'',strike2:v('r_s2long')||v('r_s4strike_sell')||'',strike3:'',strike4:'',credit:v('r_s2credit')||v('r_s4cost')||'',max_risk:'',close_price:'',pnl_dollars:'',pnl_percent:'',status:'Open',notes:subtitle||''});
   }
 
   // ---- GENERATE SUNDAY ----
@@ -1039,7 +1070,7 @@
 
   // ---- CLEAR ----
   function clearMorn(){
-    ['m_pulse','m_spx','m_r1','m_r2','m_r3','m_r4','m_r5','m_r6','m_s1','m_s2','m_s3','m_s4','m_s5','m_s6',
+    ['m_title','m_subtitle','m_pulse','m_spx','m_r1','m_r2','m_r3','m_r4','m_r5','m_r6','m_s1','m_s2','m_s3','m_s4','m_s5','m_s6',
      'm_spx_l1_url','m_spx_l2_url','m_spx_l3_label','m_spx_l3_url',
      'm_t1_url','m_t2_url','m_t3_url','m_t4_url','m_t5_url','m_t6_url',
      'm_ktp','m_pw','m_etf1_url','m_etf2_url','m_etf3_url','m_etf4_label','m_etf4_url',
@@ -1049,6 +1080,7 @@
     document.getElementById('m_liveurl').value=LIVE_ROOM;
     document.getElementById('mornOutput').classList.remove('visible');
     document.getElementById('assessPanel').classList.remove('visible');
+    document.getElementById('macroPanel').classList.remove('visible');
     const ab=document.getElementById('assessBtn');if(ab)ab.disabled=true;
     updateIds();
   }
@@ -1095,6 +1127,8 @@
 
   function selectTicker(ticker, btn){
     currentTicker = ticker;
+    const ftEl=document.getElementById('trd_free_ticker');
+    if(ftEl)ftEl.value='';
     document.querySelectorAll('.ticker-btn').forEach(b=>{
       b.className='ticker-btn';
     });
@@ -1368,7 +1402,43 @@
     document.getElementById('trd_pnl_dollars').textContent='—';
     document.getElementById('trd_pnl_pct').textContent='—';
     document.getElementById('trd_s1_label').textContent='Strike 1';
+    const ftEl=document.getElementById('trd_free_ticker');if(ftEl)ftEl.value='';
     updateIds();
+  }
+
+  // Silent log — no UI feedback, just fires and forgets
+  async function silentLogTrade(trade){
+    if(!TRADE_LOG_URL)return;
+    try{await fetch(TRADE_LOG_URL,{method:'POST',body:JSON.stringify(trade)});}catch(e){}
+  }
+
+  // Week Ahead macro events
+  async function getMacroEvents(){
+    const btn=document.getElementById('macroBtn');
+    const panel=document.getElementById('macroPanel');
+    const content=document.getElementById('macroContent');
+    btn.disabled=true;btn.textContent='Loading...';
+    panel.classList.add('visible');
+    content.textContent='Fetching this week\'s key events...';
+    const now=new Date();
+    const dateStr=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+    try{
+      const res=await fetch('/.netlify/functions/assess-note',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          market_pulse:`Today is ${dateStr}. List the major US economic events for THIS week (Monday to Friday of this current week). Focus ONLY on: Fed Chair Powell speeches, FOMC minutes, CPI, Core CPI, PPI, Core PPI, NFP (Non-Farm Payrolls), Unemployment Rate, Retail Sales, GDP, PCE, Consumer Confidence, ISM Manufacturing, ISM Services, Housing Starts. For each event include: day of week, date, time ET, and a 1-sentence note on why it matters to equity traders. Format as a clean list. Skip low-impact events. If no major events this week, say so.`,
+          spx_tracker:'Skip assessment for this field.',
+          mode:'macro'
+        })
+      });
+      const data=await res.json();
+      const text=data.market_pulse?.suggestion||data.market_pulse?.bias||'No events found.';
+      content.innerHTML=text.replace(/\n/g,'<br>');
+    }catch(e){
+      content.textContent='Error loading events: '+e.message;
+    }
+    btn.disabled=false;btn.textContent='Week Ahead';
   }
 
   function clearBull(){['b_ticker','b_price','b_subtitle','b_context','b_thesis','b_s1price','b_s1note','b_s2exp','b_s2credit','b_s2short','b_s2long','b_s2note','b_s3exp','b_s3credit','b_s3strike','b_s3be','b_s3margin','b_s3note','b_s4exp_buy','b_s4exp_sell','b_s4strike_buy','b_s4strike_sell','b_s4cost','b_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bullOutput').classList.remove('visible');updateIds();}
