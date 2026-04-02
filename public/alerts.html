@@ -346,7 +346,7 @@
         <div class="assess-bias" id="mp_bias">—</div>
         <div class="assess-verdict" id="mp_verdict"></div>
         <div class="assess-suggestion" id="mp_suggestion"></div>
-        <button class="btn-accept" onclick="acceptSuggestion('m_pulse','mp_suggestion')">Accept → Populate Field</button>
+        <button class="btn-accept" id="acceptMpBtn">Accept → Populate Field</button>
       </div>
 
       <div class="assess-section">
@@ -354,7 +354,7 @@
         <div class="assess-bias" id="spx_bias">—</div>
         <div class="assess-verdict" id="spx_verdict"></div>
         <div class="assess-suggestion" id="spx_suggestion"></div>
-        <button class="btn-accept" onclick="acceptSuggestion('m_spx','spx_suggestion')">Accept → Populate Field</button>
+        <button class="btn-accept" id="acceptSpxBtn">Accept → Populate Field</button>
       </div>
     </div>
 
@@ -766,6 +766,14 @@
 
   // Auto-save persistent fields on input
   document.addEventListener('DOMContentLoaded', function(){
+    // Wire accept buttons
+    const ab1=document.getElementById('acceptMpBtn');
+    const ab2=document.getElementById('acceptSpxBtn');
+    const ab3=document.getElementById('acceptTitleBtn');
+    if(ab1)ab1.addEventListener('click',function(){acceptSuggestion('m_pulse','mp_suggestion');});
+    if(ab2)ab2.addEventListener('click',function(){acceptSuggestion('m_spx','spx_suggestion');});
+    if(ab3)ab3.addEventListener('click',function(){acceptSuggestion('m_title','titleSuggestionValue');});
+
     const persist = [
       ['m_liveurl','ss_liveurl'],
       ['m_pw','ss_pw'],
