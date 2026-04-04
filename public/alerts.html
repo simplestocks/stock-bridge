@@ -629,13 +629,14 @@
       <button class="type-btn" id="ttype_cps" onclick="selectType('CPS',this)">CPS</button>
       <button class="type-btn" id="ttype_ccs" onclick="selectType('CCS',this)">CCS</button>
       <button class="type-btn" id="ttype_ib" onclick="selectType('IB',this)">IB</button>
+      <button class="type-btn" id="ttype_ic" onclick="selectType('IC',this)">IC</button>
     </div>
 
     <div class="section-label sl-trd">Trade Entry</div>
     <div class="form-grid">
       <div class="field">
         <label>Expiration Date</label>
-        <input type="text" id="trd_exp" placeholder="e.g. Apr 17, Jun 20">
+        <input type="text" id="trd_exp" placeholder="0DTE">
       </div>
     </div>
     <div class="form-grid" id="trd_strike_section">
@@ -649,7 +650,7 @@
       </div>
       <div class="field" id="trd_s3_field" style="display:none;">
         <label id="trd_s3_label">Strike 3</label>
-        <input type="number" id="trd_s3" placeholder="auto" step="5">
+        <input type="number" id="trd_s3" placeholder="auto" step="5" oninput="autoFillS3()">
       </div>
       <div class="field" id="trd_s4_field" style="display:none;">
         <label id="trd_s4_label">Strike 4 (auto)</label>
@@ -759,6 +760,8 @@
     const todayStr=`${MONTHS[todayD.getMonth()]} ${todayD.getDate()}${ordinal(todayD.getDate())}`;
     document.getElementById('s_date').value=getNextSunday();
     document.getElementById('v_date').value=todayStr;
+    // Default expiration to today (0DTE)
+    document.getElementById('trd_exp').value=todayStr;
     updateIds();
     // Restore saved values
     const savedPw=localStorage.getItem('ss_live_pw');
@@ -1227,6 +1230,13 @@
       document.getElementById('trd_s2_label').textContent='Short Put (auto)';
       document.getElementById('trd_s3_label').textContent='Long Call (auto)';
       document.getElementById('trd_s4_label').textContent='Long Put (auto)';
+    } else if(type==='IC'){
+      s2.style.display='flex'; s3.style.display='flex'; s4.style.display='flex';
+      widthField.style.display='block';
+      document.getElementById('trd_s1_label').textContent='Short Put (Sell)';
+      document.getElementById('trd_s2_label').textContent='Long Put (Buy) auto −5';
+      document.getElementById('trd_s3_label').textContent='Short Call (Sell)';
+      document.getElementById('trd_s4_label').textContent='Long Call (Buy) auto +5';
     } else {
       document.getElementById('trd_s1_label').textContent='Strike';
     }
@@ -1256,7 +1266,18 @@
       document.getElementById('trd_s2').value=s1-5;
     } else if(currentType==='CCS'){
       document.getElementById('trd_s2').value=s1+5;
+    } else if(currentType==='IC'){
+      // s1 = short put, s2 = long put (auto -5)
+      document.getElementById('trd_s2').value=s1-5;
     }
+    calcRisk();
+  }
+
+  function autoFillS3(){
+    if(currentType!=='IC')return;
+    const s3=parseFloat(document.getElementById('trd_s3').value);
+    if(isNaN(s3))return;
+    document.getElementById('trd_s4').value=s3+5;
     calcRisk();
   }
 
@@ -1284,6 +1305,9 @@
     } else if(currentType==='IB'){
       const width=parseFloat(document.getElementById('trd_width').value)||0;
       if(width){maxRisk=(width-credit)*100;}
+    } else if(currentType==='IC'){
+      const width=parseFloat(document.getElementById('trd_width').value)||0;
+      if(width){maxRisk=(width-credit)*100;}
     }
     const el=document.getElementById('trd_maxrisk');
     if(maxRisk!==null){
@@ -1309,6 +1333,9 @@
       const s2=parseFloat(document.getElementById('trd_s2').value)||0;
       if(s1&&s2){const width=Math.abs(s1-s2);maxRisk=(width-credit)*100;}
     } else if(currentType==='IB'){
+      const width=parseFloat(document.getElementById('trd_width').value)||0;
+      if(width){maxRisk=(width-credit)*100;}
+    } else if(currentType==='IC'){
       const width=parseFloat(document.getElementById('trd_width').value)||0;
       if(width){maxRisk=(width-credit)*100;}
     }
@@ -1475,6 +1502,10 @@
     document.getElementById('trd_pnl_pct').textContent='—';
     document.getElementById('trd_s1_label').textContent='Strike 1';
     const ftEl=document.getElementById('trd_free_ticker');if(ftEl)ftEl.value='';
+    // Reset expiration to today
+    const now=new Date();
+    const todayReset=`${MONTHS[now.getMonth()]} ${now.getDate()}${ordinal(now.getDate())}`;
+    const expEl=document.getElementById('trd_exp');if(expEl)expEl.value=todayReset;
     updateIds();
   }
 
