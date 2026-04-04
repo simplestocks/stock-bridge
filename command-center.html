@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center — Nic</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --card: #141a2b;
+    --card-border: #232b42;
+    --text: #e6edf7;
+    --muted: #8792a8;
+    --accent: #4ea1ff;
+    --red: #ff4d4d;
+    --red-bg: rgba(255, 77, 77, 0.12);
+    --yellow: #ffc857;
+    --yellow-bg: rgba(255, 200, 87, 0.12);
+    --gray: #6b7489;
+    --gray-bg: rgba(107, 116, 137, 0.12);
+    --code-bg: #0d1322;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 24px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  header {
+    max-width: 1700px;
+    margin: 0 auto 28px auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  h1 span { color: var(--accent); }
+  .meta { color: var(--muted); font-size: 12px; }
+  .grid {
+    max-width: 1700px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .card h2 {
+    margin: 0 0 14px 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    line-height: 1.25;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin: 16px 0 6px 0;
+  }
+  .status, .notes-text {
+    font-size: 13px;
+    color: #c8d2e5;
+    margin: 0;
+  }
+  code, .mono {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #9cc2ff;
+  }
+  ol.actions, ul.flat {
+    margin: 6px 0 0 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  ol.actions { counter-reset: step; }
+  ol.actions li {
+    counter-increment: step;
+    position: relative;
+    padding: 10px 12px 10px 36px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid transparent;
+    font-size: 13px;
+  }
+  ol.actions li::before {
+    content: counter(step);
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.actions li .trigger {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 3px;
+    color: var(--muted);
+  }
+  ol.actions li.red { background: var(--red-bg); border-color: rgba(255,77,77,0.35); }
+  ol.actions li.red::before { background: var(--red); color: #fff; }
+  ol.actions li.red .trigger { color: var(--red); }
+  ol.actions li.yellow { background: var(--yellow-bg); border-color: rgba(255,200,87,0.35); }
+  ol.actions li.yellow::before { background: var(--yellow); color: #0b0f1a; }
+  ol.actions li.yellow .trigger { color: var(--yellow); }
+  ol.actions li.gray { background: var(--gray-bg); border-color: rgba(107,116,137,0.25); }
+  ol.actions li.gray::before { background: var(--gray); color: #fff; }
+  ol.actions li.gray .trigger { color: var(--gray); }
+
+  ul.flat li {
+    padding: 5px 0 5px 14px;
+    font-size: 13px;
+    position: relative;
+    color: #c8d2e5;
+  }
+  ul.flat li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+  .cost {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .total-line {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--card-border);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .total-line strong { color: var(--accent); }
+  .notes-box {
+    background: rgba(78, 161, 255, 0.05);
+    border: 1px dashed rgba(78, 161, 255, 0.25);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #b8c4dc;
+    font-style: italic;
+    white-space: pre-wrap;
+  }
+  footer {
+    max-width: 1700px;
+    margin: 32px auto 0 auto;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 640px) {
+    body { padding: 20px 14px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Command <span>Center</span></h1>
+    <div class="meta">Nic · All active Claude projects · Last updated Apr 4, 2026 (PT)</div>
+  </header>
+
+  <div class="grid">
+
+    <!-- ============ PROJECT 1: MAGIX ============ -->
+    <div class="card">
+      <h2>MAGIX — 0DTE SPX Dashboard</h2>
+
+      <div class="section-label">Status / What's Done</div>
+      <p class="status">
+        Replaced ThinkorSwim + Excel RTD workflow with cloud-hosted options pressure dashboard.
+        FastAPI backend + ThetaData v3 feed via Theta Terminal sidecar, both on Railway (private networking).
+        Frontend served same-origin at <code>magix-production.up.railway.app</code>. Public URL verified,
+        health endpoint responding, 0DTE expiration auto-detection working. Desktop <code>.url</code> shortcut created.
+        Structural plumbing confirmed — live market data not yet witnessed end-to-end (weekend).
+      </p>
+
+      <div class="section-label">Next Actions</div>
+      <ol class="actions">
+        <li class="red">
+          <span class="trigger">Mon 4/6 · 6:30 AM PT</span>
+          Load MAGIX at market open. Confirm live SPX options ticks flowing through Railway. First real-world test. If blank/stale, dig Railway logs.
+        </li>
+        <li class="yellow">
+          <span class="trigger">Tue 4/7 · 1:00 PM PT</span>
+          Kickoff: Expiration + Ticker Selector. Real dropdown from Theta Terminal that swaps chain, BE Score, X-Factor. Wire multi-symbol ticker input (e.g., AAPL Friday exp). Scope ~2-3 hrs. Reminder already scheduled.
+        </li>
+        <li class="gray">
+          <span class="trigger">Future · no date</span>
+          Tab-per-ticker expansion for actively traded names (AAPL etc. — 3 weekly expirations).
+        </li>
+      </ol>
+
+      <div class="section-label">Delivered Files</div>
+      <ul class="flat">
+        <li><code>index.html</code> — frontend dashboard (single file, ~77 KB)</li>
+        <li><code>main.py</code> — FastAPI backend (serves frontend + <code>/api/scores</code>, <code>/api/health</code>)</li>
+        <li><code>data_thetadata.py</code> — ThetaData v3 adapter (expiration detection, strikes/quotes/greeks)</li>
+        <li><code>Dockerfile</code> — Theta Terminal sidecar container</li>
+        <li><code>railway.toml</code> — Railway deployment config</li>
+        <li><code>MAGIX Dashboard.url</code> — Windows desktop shortcut (one-click launch)</li>
+        <li>GitHub repo: <code>simplestocks/magix</code> (main branch)</li>
+      </ul>
+
+      <div class="section-label">Services &amp; Costs</div>
+      <ul class="flat">
+        <li><strong>Railway</strong> — <span class="cost">~$5/mo</span> hobby plan. Hosts FastAPI (<code>magix-production</code>) + Theta Terminal sidecar (<code>theta-terminal-v3</code>) on private network.</li>
+        <li><strong>ThetaData</strong> — <span class="cost">~$60/mo</span> subscription. Credentials live inside Theta Terminal container.</li>
+        <li><strong>GitHub</strong> — <span class="cost">free</span> (simplestocks org, public repo)</li>
+        <li><strong>Domain</strong> — none yet, using free Railway subdomain <code>magix-production.up.railway.app</code></li>
+      </ul>
+      <div class="total-line">Total recurring: <strong>~$65/mo</strong></div>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-box">Credentials kept in password manager — not stored here. Encrypted vault upgrade scheduled for Fri 4/10.</div>
+    </div>
+
+    <!-- ============ PROJECT 2: SIMPLESTOCKS ALERT DASHBOARD ============ -->
+    <div class="card">
+      <h2>SimpleStocks Alert Generator Dashboard</h2>
+
+      <div class="section-label">Status / What's Done</div>
+      <p class="status">
+        Live on Netlify, in testing phase. 6-tab HTML dashboard: Morning Note, Bullish Alert, Bearish Alert,
+        Sunday Session, Sunday Videos, Trade Log. Netlify serverless functions
+        (<code>slack-proxy.js</code>, <code>log-trade.js</code>, <code>assess-note.js</code>) handle
+        Slack/Discord/Sheets logging and Claude API morning note assessment + title suggestion + week-ahead macro.
+        Trade Log supports Buy Call, Buy Put, CPS, CCS, IB, IC across SPX/SPY/QQQ/IWM/RUT/XSP + free text.
+        Single HTML file, accessible from any device.
+      </p>
+
+      <div class="section-label">Next Actions</div>
+      <ol class="actions">
+        <li class="gray">
+          <span class="trigger">No date · testing phase</span>
+          Monitor for bugs and edge cases as trades get logged. No immediate open items.
+        </li>
+        <li class="gray">
+          <span class="trigger">Future · no date</span>
+          Merge MAGIX + SimpleStocks Alert Dashboard into a unified web-based platform.
+        </li>
+      </ol>
+
+      <div class="section-label">Delivered Files</div>
+      <ul class="flat">
+        <li><code>alerts.html</code> — 6-tab dashboard (live at <code>jazzy-starlight-0a9a95.netlify.app/alerts.html</code>)</li>
+        <li><code>slack-proxy.js</code> — Netlify serverless function (Slack webhook relay)</li>
+        <li><code>log-trade.js</code> — Netlify serverless function (Google Sheets logger)</li>
+        <li><code>assess-note.js</code> — Netlify serverless function (Claude API morning note)</li>
+        <li>GitHub repo: <code>simplestocks/stock-bridge</code> (public folder)</li>
+      </ul>
+
+      <div class="section-label">Services &amp; Costs</div>
+      <ul class="flat">
+        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (hosting + serverless functions)</li>
+        <li><strong>GitHub</strong> — <span class="cost">free tier</span> (simplestocks org)</li>
+        <li><strong>Google Sheets</strong> — <span class="cost">free</span> (trade log storage)</li>
+        <li><strong>Discord</strong> — <span class="cost">free</span> (2 hardcoded channel webhooks)</li>
+        <li><strong>Slack</strong> — webhook via Netlify proxy</li>
+        <li><strong>Claude API</strong> — usage-based (morning note assessment)</li>
+      </ul>
+      <div class="total-line">Total recurring: <strong>~$0/mo + Claude API usage</strong></div>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-box">Full project details live in the other Cowork session. Pull service costs and delivered file list next time that session is awake.</div>
+    </div>
+
+    <!-- ============ PROJECT 3: HELO ============ -->
+    <div class="card">
+      <h2>Helo — Command Center &amp; Meta-Ops</h2>
+
+      <div class="section-label">Status / What's Done</div>
+      <p class="status">
+        The meta-project. This Cowork session acts as Nic's helicopter view across every other active Claude
+        project. Built the Options Trade Tracker (<code>Options_Trade_Tracker.xlsx</code>) — 2-sheet dark-themed
+        workbook with Trade Log (credit/debit spreads, singles, shares) and Summary dashboard (win rate, profit
+        factor, stats by strategy + direction, last 10 trades). 1,110 formulas verified, zero errors.
+        Now building <code>command-center.html</code> — single-file, portable, responsive dashboard with
+        per-project status, urgency-ranked next actions, delivered files, services &amp; costs, and freeform notes.
+      </p>
+
+      <div class="section-label">Next Actions</div>
+      <ol class="actions">
+        <li class="yellow">
+          <span class="trigger">Fri 4/10 · 4:00 PM PT</span>
+          Kickoff: encrypted credentials vault inside command-center.html (Option C — AES-GCM + PBKDF2 master password). Lets Nic store real creds inside Notes, GitHub-safe. Scheduled reminder already set.
+        </li>
+        <li class="gray">
+          <span class="trigger">Ongoing</span>
+          Update this file whenever a project status changes. Nic drops updates in chat ("update MAGIX: live data confirmed") and Helo regenerates.
+        </li>
+        <li class="gray">
+          <span class="trigger">Future · no date</span>
+          Host on GitHub Pages as the portable command center accessible from any device during travel.
+        </li>
+      </ol>
+
+      <div class="section-label">Delivered Files</div>
+      <ul class="flat">
+        <li><code>Options_Trade_Tracker.xlsx</code> — options trade tracker w/ summary dashboard</li>
+        <li><code>command-center.html</code> — this file</li>
+        <li><code>command-center.url</code> — desktop shortcut (pending)</li>
+      </ul>
+
+      <div class="section-label">Services &amp; Costs</div>
+      <ul class="flat">
+        <li><strong>Cowork (Claude)</strong> — part of Claude subscription, no additional cost</li>
+        <li><strong>GitHub</strong> — <span class="cost">free</span> (future hosting)</li>
+      </ul>
+      <div class="total-line">Total recurring: <strong>$0/mo incremental</strong></div>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-box">Chat renamed to "Helo" (user does this client-side in Cowork sidebar). Scheduled reminder set for Fri 4/10/2026 4:00 PM PT to action plan the encrypted vault build — Option 1 now (plain notes), Option C later (master-password-encrypted creds).</div>
+    </div>
+
+  </div>
+
+  <footer>
+    simplestocks.com · built in Cowork · 3 active projects · single-file, portable, GitHub-ready
+  </footer>
+</body>
+</html>
