@@ -93,7 +93,8 @@
   .btn-clear { background: var(--surface); color: var(--muted); border: 1px solid var(--border); flex: 1; } .btn-clear:hover { color: var(--text); }
   .btn-discord { background: var(--discord); color: #fff; flex: 1; } .btn-discord:hover { background: #6875f5; }
   .btn-slack   { background: var(--slack);   color: #fff; flex: 1; } .btn-slack:hover   { background: #611f69; }
-  .btn-discord:disabled, .btn-slack:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-squarespace { background: #1a1a1a; color: #fff; flex: 1; border: 1px solid #ffd24d; } .btn-squarespace:hover { background: #2a2a2a; }
+  .btn-discord:disabled, .btn-slack:disabled, .btn-squarespace:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .send-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .assess-panel { background: var(--surface); border: 1px solid var(--morn); border-radius: 4px; padding: 16px; margin-top: 16px; display: none; }
@@ -381,6 +382,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('mornDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('mornDoc')">Send to Slack</button>
+        <button class="btn-squarespace" onclick="sendToSquarespace('mornDoc')" id="mornSqsBtn">Send to Squarespace</button>
         <button class="btn-copy-html cb-morn" onclick="copyHTML('mornDoc','mornHtmlBtn')" id="mornHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="mornSendStatus"></div>
@@ -929,6 +931,42 @@
     }catch(e){
       // Slack webhooks block from browser due to CORS — offer fallback
       if(statusEl){statusEl.textContent='✗ Slack blocked by browser CORS. Use the Copy button and paste into Slack instead.';statusEl.className='send-status err';}
+    }
+    setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
+  }
+
+  // ---- SQUARESPACE QUEUE ----
+  async function sendToSquarespace(docId){
+    const doc=document.getElementById(docId);
+    if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
+    const html=doc.innerHTML;
+    const plaintext=(doc.innerText||doc.textContent||'').trim();
+    // Pull title from first .doc-head if present, else fallback
+    const headEl=doc.querySelector('.doc-head');
+    const title=headEl?headEl.textContent.trim():`Post ${new Date().toISOString()}`;
+
+    const btnId=docId.replace('Doc','SqsBtn');
+    const btn=document.getElementById(btnId);
+    const statusId=docId.replace('Doc','SendStatus');
+    const statusEl=document.getElementById(statusId);
+    if(btn){btn.disabled=true;btn.textContent='Queueing...';}
+    if(statusEl){statusEl.textContent='Queueing for Squarespace...';statusEl.className='send-status';}
+    try{
+      const res=await fetch('/.netlify/functions/send-to-squarespace',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({docId,title,html,plaintext})
+      });
+      const data=await res.json().catch(()=>({}));
+      if(res.ok&&data.status==='ok'){
+        if(statusEl){statusEl.textContent=`✓ Queued for Squarespace (${data.path}).`;statusEl.className='send-status ok';}
+        if(btn){btn.textContent='Queued ✓';setTimeout(()=>{btn.textContent='Send to Squarespace';btn.disabled=false;},3000);}
+      }else{
+        throw new Error(data.message||`HTTP ${res.status}`);
+      }
+    }catch(e){
+      if(statusEl){statusEl.textContent=`✗ Queue failed: ${e.message}`;statusEl.className='send-status err';}
+      if(btn){btn.textContent='Send to Squarespace';btn.disabled=false;}
     }
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
   }
