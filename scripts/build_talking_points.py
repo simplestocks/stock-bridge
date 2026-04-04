@@ -87,7 +87,7 @@ FED_INCLUDE_KEYWORDS = (
 )
 
 # Window (business days including today)
-DAYS_AHEAD = 3  # today + next 2 business days
+DAYS_AHEAD = 5  # today + next 4 business days (one trading week)
 
 # Output path (relative to repo root)
 OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "data", "talking-points.json")
