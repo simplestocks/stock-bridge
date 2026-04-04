@@ -767,12 +767,12 @@
   // Auto-save persistent fields on input
   document.addEventListener('DOMContentLoaded', function(){
     // Wire accept buttons
-    const ab1=document.getElementById('acceptMpBtn');
-    const ab2=document.getElementById('acceptSpxBtn');
-    const ab3=document.getElementById('acceptTitleBtn');
-    if(ab1)ab1.addEventListener('click',function(){acceptSuggestion('m_pulse','mp_suggestion');});
-    if(ab2)ab2.addEventListener('click',function(){acceptSuggestion('m_spx','spx_suggestion');});
-    if(ab3)ab3.addEventListener('click',function(){acceptSuggestion('m_title','titleSuggestionValue');});
+    // Use event delegation — buttons may not exist at DOMContentLoaded time
+    document.addEventListener('click',function(e){
+      if(e.target&&e.target.id==='acceptMpBtn'){acceptSuggestion('m_pulse','mp_suggestion');}
+      if(e.target&&e.target.id==='acceptSpxBtn'){acceptSuggestion('m_spx','spx_suggestion');}
+      if(e.target&&e.target.id==='acceptTitleBtn'){acceptSuggestion('m_title','titleSuggestionValue');}
+    });
 
     const persist = [
       ['m_liveurl','ss_liveurl'],
