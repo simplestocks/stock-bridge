@@ -769,9 +769,10 @@
     // Wire accept buttons
     // Use event delegation — buttons may not exist at DOMContentLoaded time
     document.addEventListener('click',function(e){
-      if(e.target&&e.target.id==='acceptMpBtn'){acceptSuggestion('m_pulse','mp_suggestion');}
-      if(e.target&&e.target.id==='acceptSpxBtn'){acceptSuggestion('m_spx','spx_suggestion');}
-      if(e.target&&e.target.id==='acceptTitleBtn'){acceptSuggestion('m_title','titleSuggestionValue');}
+      console.log('[CLICK] clicked element id='+e.target.id+' class='+e.target.className);
+      if(e.target&&e.target.id==='acceptMpBtn'){console.log('[CLICK] acceptMpBtn matched');acceptSuggestion('m_pulse','mp_suggestion');}
+      if(e.target&&e.target.id==='acceptSpxBtn'){console.log('[CLICK] acceptSpxBtn matched');acceptSuggestion('m_spx','spx_suggestion');}
+      if(e.target&&e.target.id==='acceptTitleBtn'){console.log('[CLICK] acceptTitleBtn matched');acceptSuggestion('m_title','titleSuggestionValue');}
     });
 
     const persist = [
@@ -984,11 +985,18 @@
   }
 
   function acceptSuggestion(fieldId,suggestionId){
+    console.log('[ACCEPT] called with fieldId='+fieldId+' suggestionId='+suggestionId);
     const el=document.getElementById(suggestionId);
-    const suggestion=el.dataset.raw||el.textContent||'';
+    console.log('[ACCEPT] el='+el+' dataset.raw='+(el?el.dataset.raw:'N/A')+' textContent='+(el?el.textContent.substring(0,50):'N/A'));
+    const suggestion=el?(el.dataset.raw||el.textContent||''):'';
+    console.log('[ACCEPT] suggestion length='+suggestion.length);
     if(suggestion&&fieldId){
       const target=document.getElementById(fieldId);
-      if(target)target.value=suggestion;
+      console.log('[ACCEPT] target='+target);
+      if(target){target.value=suggestion;console.log('[ACCEPT] SUCCESS — field populated');}
+      else{console.log('[ACCEPT] FAIL — target element not found');}
+    } else {
+      console.log('[ACCEPT] FAIL — no suggestion or fieldId');
     }
   }
 
