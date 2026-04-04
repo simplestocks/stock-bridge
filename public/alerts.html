@@ -636,7 +636,14 @@
     <div class="form-grid">
       <div class="field">
         <label>Expiration Date</label>
-        <input type="text" id="trd_exp" placeholder="0DTE">
+        <div style="display:flex;gap:6px;align-items:stretch;">
+          <input type="text" id="trd_exp" placeholder="0DTE" style="flex:1;">
+          <button style="font-family:var(--mono);font-size:10px;font-weight:600;padding:0 10px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:3px;cursor:pointer;white-space:nowrap;" id="datePickerBtn">▼ Pick</button>
+        </div>
+        <div id="datePicker" style="display:none;margin-top:6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em;">Select expiration</div>
+          <div id="datePickerGrid" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+        </div>
       </div>
     </div>
     <div class="form-grid" id="trd_strike_section">
@@ -783,6 +790,12 @@
       if(e.target&&e.target.id==='acceptMpBtn'){console.log('[CLICK] acceptMpBtn matched');acceptSuggestion('m_pulse','mp_suggestion');}
       if(e.target&&e.target.id==='acceptSpxBtn'){console.log('[CLICK] acceptSpxBtn matched');acceptSuggestion('m_spx','spx_suggestion');}
       if(e.target&&e.target.id==='acceptTitleBtn'){console.log('[CLICK] acceptTitleBtn matched');acceptSuggestion('m_title','titleSuggestionValue');}
+      if(e.target&&e.target.id==='datePickerBtn'){toggleDatePicker();}
+      // Close date picker if clicking outside
+      if(!e.target.closest('#datePicker')&&e.target.id!=='datePickerBtn'){
+        const dp=document.getElementById('datePicker');
+        if(dp)dp.style.display='none';
+      }
     });
 
     const persist = [
@@ -1542,6 +1555,46 @@
       content.textContent='Error loading events: '+e.message;
     }
     btn.disabled=false;btn.textContent='Week Ahead';
+  }
+
+  // ---- DATE PICKER ----
+  function toggleDatePicker(){
+    const dp=document.getElementById('datePicker');
+    if(dp.style.display==='none'){
+      buildDatePicker();
+      dp.style.display='block';
+    } else {
+      dp.style.display='none';
+    }
+  }
+
+  function buildDatePicker(){
+    const grid=document.getElementById('datePickerGrid');
+    grid.innerHTML='';
+    const days=['SU','MO','TU','WE','TH','FR','SA'];
+    const now=new Date();
+    // Generate next 45 calendar days
+    for(let i=0;i<=45;i++){
+      const d=new Date(now);
+      d.setDate(now.getDate()+i);
+      const dayAbbr=days[d.getDay()];
+      const mon=MONTHS[d.getMonth()].substring(0,3);
+      const date=d.getDate();
+      const label=`${dayAbbr}\n${mon} ${date}`;
+      const isFriday=d.getDay()===5;
+      const isToday=i===0;
+      const btn=document.createElement('button');
+      btn.style.cssText=`font-family:var(--mono);font-size:9px;padding:5px 7px;border-radius:3px;cursor:pointer;white-space:pre;line-height:1.4;text-align:center;transition:all 0.1s;border:1px solid ${isFriday?'#ffaa00':isToday?'var(--morn)':'var(--border)'};background:${isToday?'rgba(0,180,255,0.1)':isFriday?'rgba(255,170,0,0.08)':'var(--surface)'};color:${isFriday?'#ffaa00':isToday?'var(--morn)':'var(--muted)'};`;
+      btn.textContent=label;
+      if(isToday){btn.style.fontWeight='700';}
+      btn.addEventListener('click',function(){
+        const expStr=`${mon} ${date}`;
+        document.getElementById('trd_exp').value=expStr;
+        document.getElementById('datePicker').style.display='none';
+        // Recalc DTE display in any open trade rows
+      });
+      grid.appendChild(btn);
+    }
   }
 
   function clearBull(){['b_ticker','b_price','b_subtitle','b_context','b_thesis','b_s1price','b_s1note','b_s2exp','b_s2credit','b_s2short','b_s2long','b_s2note','b_s3exp','b_s3credit','b_s3strike','b_s3be','b_s3margin','b_s3note','b_s4exp_buy','b_s4exp_sell','b_s4strike_buy','b_s4strike_sell','b_s4cost','b_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bullOutput').classList.remove('visible');updateIds();}
