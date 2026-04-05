@@ -18,6 +18,8 @@
     --yellow-bg: rgba(255, 200, 87, 0.12);
     --gray: #6b7489;
     --gray-bg: rgba(107, 116, 137, 0.12);
+    --green: #5eead4;
+    --green-bg: rgba(94, 234, 212, 0.10);
     --code-bg: #0d1322;
   }
   * { box-sizing: border-box; }
@@ -140,6 +142,28 @@
   ol.actions li.gray { background: var(--gray-bg); border-color: rgba(107,116,137,0.25); }
   ol.actions li.gray::before { background: var(--gray); color: #fff; }
   ol.actions li.gray .trigger { color: var(--gray); }
+  ol.actions li.green { background: var(--green-bg); border-color: rgba(94,234,212,0.35); }
+  ol.actions li.green::before { content: "✓"; background: var(--green); color: #0b0f1a; }
+  ol.actions li.green .trigger { color: var(--green); }
+
+  .card.completed {
+    border-color: rgba(94, 234, 212, 0.45);
+    background: linear-gradient(180deg, rgba(94,234,212,0.04) 0%, var(--card) 100%);
+  }
+  .card.completed h2::after {
+    content: "SHIPPED";
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--green);
+    background: var(--green-bg);
+    border: 1px solid rgba(94,234,212,0.4);
+    padding: 2px 8px;
+    border-radius: 10px;
+    vertical-align: middle;
+  }
 
   ul.flat li {
     padding: 5px 0 5px 14px;
@@ -192,7 +216,7 @@
 <body>
   <header>
     <h1>Command <span>Center</span></h1>
-    <div class="meta">Nic · 4 active Claude projects · Last updated Apr 4, 2026 (PT)</div>
+    <div class="meta">Nic · 5 active Claude projects · Last updated Apr 5, 2026 (PT)</div>
   </header>
 
   <div class="grid">
@@ -407,10 +431,60 @@
       <div class="notes-box">Chat renamed to "Helo" (user does this client-side in Cowork sidebar). Scheduled reminder set for Fri 4/10/2026 4:00 PM PT to action plan the encrypted vault build — Option 1 now (plain notes), Option C later (master-password-encrypted creds).</div>
     </div>
 
+    <!-- ============ PROJECT 5: BRIEFING ============ -->
+    <div class="card completed">
+      <h2>Briefing — Morning Note Auto-Populate</h2>
+
+      <div class="section-label">Status / What's Done</div>
+      <p class="status">
+        Two auto-populate workstreams shipped and running on the Morning Note tab in <code>alerts.html</code>.
+        Both feed the Morning Note output automatically at market prep time — no manual copy/paste.
+        Currently stable, no open items. Parked until new improvements come up.
+      </p>
+
+      <div class="section-label">Completed</div>
+      <ol class="actions">
+        <li class="green">
+          <span class="trigger">Shipped · yesterday</span>
+          <strong>News → Talking Points auto-populate.</strong> News items pulled and dropped directly into the Talking Points textarea on page load. Flows straight into the generated Morning Note.
+        </li>
+        <li class="green">
+          <span class="trigger">Shipped · latest</span>
+          <strong>Earnings calendar auto-populate.</strong> <code>scripts/build_earnings.py</code> hits the Nasdaq public API (no key), filters $10B+ market cap, pulls Mon–Fri current week, writes <code>public/data/earnings.json</code>. New <code>m_earn_text</code> textarea in the Earnings section auto-fills on page load via <code>loadEarnings()</code>. Format per line: <code>Mon Apr 6: — | —</code> (BMO | AMC, em dash when empty). Non-overridden — hand-typed edits survive page reload.
+        </li>
+      </ol>
+
+      <div class="section-label">Delivered Files</div>
+      <ul class="flat">
+        <li><code>scripts/build_earnings.py</code> — Nasdaq API fetcher, $10B+ filter</li>
+        <li><code>public/data/earnings.json</code> — auto-written, committed, served by Netlify</li>
+        <li><code>alerts.html</code> — new <code>m_earn_text</code> textarea + <code>loadEarnings()</code> wiring</li>
+        <li>Scheduled task: <code>morning-briefing-earnings-calendar</code> — weekdays ~3:14 AM PT, rolls forward on weekends</li>
+      </ul>
+
+      <div class="section-label">Services &amp; Costs</div>
+      <ul class="flat">
+        <li><strong>Nasdaq public API</strong> — <span class="cost">free</span> (no key, consolidated US earnings feed)</li>
+        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (serves <code>earnings.json</code>, auto-deploys on commit)</li>
+        <li><strong>GitHub</strong> — <span class="cost">free</span> (reuses <code>stock-bridge</code> repo)</li>
+        <li><strong>Cowork scheduled task</strong> — part of Claude subscription</li>
+      </ul>
+      <div class="total-line">Total recurring: <strong>$0/mo incremental</strong></div>
+
+      <div class="section-label">Live URLs</div>
+      <ul class="flat">
+        <li>JSON: <code>jazzy-starlight-0a9a95.netlify.app/data/earnings.json</code></li>
+        <li>Page: <code>jazzy-starlight-0a9a95.netlify.app/alerts.html</code> → Morning Note → Earnings</li>
+      </ul>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-box">Current week is light — Apr 6-10 shows only DAL, RPM, STZ at the $10B threshold. Real test is Apr 13-17 (JPM, JNJ, WFC, BLK, BAC, MS, GS, ASML, TSM, NFLX, PEP, ABT etc). Market cap pulled from Nasdaq's per-ticker feed — no separate quote call. Parked; green card = shipped, no active work.</div>
+    </div>
+
   </div>
 
   <footer>
-    simplestocks.com · built in Cowork · 4 active projects · single-file, portable, GitHub-ready
+    simplestocks.com · built in Cowork · 5 active projects · single-file, portable, GitHub-ready
   </footer>
 </body>
 </html>
