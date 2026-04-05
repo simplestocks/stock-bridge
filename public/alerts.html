@@ -438,6 +438,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('bullDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bullDoc')">Send to Slack</button>
+        <button class="btn-squarespace" onclick="sendToSquarespace('bullDoc')" id="bullSqsBtn">Send to Squarespace</button>
         <button class="btn-copy-html cb-bull" onclick="copyHTML('bullDoc','bullHtmlBtn')" id="bullHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="bullSendStatus"></div>
@@ -495,6 +496,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('bearDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bearDoc')">Send to Slack</button>
+        <button class="btn-squarespace" onclick="sendToSquarespace('bearDoc')" id="bearSqsBtn">Send to Squarespace</button>
         <button class="btn-copy-html cb-bear" onclick="copyHTML('bearDoc','bearHtmlBtn')" id="bearHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="bearSendStatus"></div>
@@ -1124,7 +1126,8 @@
     setups+=bullS4();
     const ctxHtml=context?`<p>${context}</p>`:`<p><span class="ph">[Market context]</span></p>`;
     const thHtml=thesis?`<p>${thesis}</p>`:`<p><span class="ph">[Trade thesis]</span></p>`;
-    document.getElementById('bullDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} ${mmdd}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already long ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
+    const bullTitleDate=`${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
+    document.getElementById('bullDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} - ${bullTitleDate}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already long ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
     document.getElementById('bullMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
     document.getElementById('bullOutput').classList.add('visible');document.getElementById('bullOutput').scrollIntoView({behavior:'smooth',block:'start'});
     // Auto-log to trade sheet
@@ -1165,7 +1168,8 @@
     setups+=bearS4();
     const ctxHtml=context?`<p>${context}</p>`:`<p><span class="ph">[Market context]</span></p>`;
     const thHtml=thesis?`<p>${thesis}</p>`:`<p><span class="ph">[Trade thesis]</span></p>`;
-    document.getElementById('bearDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} ${mmdd}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already short ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
+    const bearTitleDate=`${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
+    document.getElementById('bearDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} - ${bearTitleDate}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already short ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
     document.getElementById('bearMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
     document.getElementById('bearOutput').classList.add('visible');document.getElementById('bearOutput').scrollIntoView({behavior:'smooth',block:'start'});
     // Auto-log to trade sheet
