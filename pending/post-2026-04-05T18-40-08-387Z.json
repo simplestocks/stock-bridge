@@ -1,8 +1,0 @@
-{
-  "docId": "bullDoc",
-  "title": "SPX - 04/05",
-  "html": "<div class=\"doc-meta\">TRADE ID: 202604051140</div><div class=\"doc-head\">SPX - 04/05</div><div class=\"doc-sub\">Test Trade Entry - DUMMY WRITE UP</div><div class=\"doc-body\"><p>Testing the process of automation</p><p>SPX showed support and this trade banks on it.</p><p><span class=\"b\">Trade Alert: SPX (Bullish / Neutral)</span> Note: Skip these setups if you are already long SPX.</p><p><span class=\"b\">+ Setup 2 (Active):</span> Sell the 4/17 6200/6195 credit put spread for a .5. This catches the falling knife while leaving lines of support to play out. Note: Testin notes for trades</p><div class=\"doc-sig\">Nic</div></div>",
-  "plaintext": "TRADE ID: 202604051140\nSPX - 04/05\nTest Trade Entry - DUMMY WRITE UP\n\nTesting the process of automation\n\nSPX showed support and this trade banks on it.\n\nTrade Alert: SPX (Bullish / Neutral) Note: Skip these setups if you are already long SPX.\n\n+ Setup 2 (Active): Sell the 4/17 6200/6195 credit put spread for a .5. This catches the falling knife while leaving lines of support to play out. Note: Testin notes for trades\n\nNic",
-  "createdAt": "2026-04-05T18:40:08.387Z",
-  "status": "pending"
-}
