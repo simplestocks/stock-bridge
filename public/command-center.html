@@ -192,7 +192,7 @@
 <body>
   <header>
     <h1>Command <span>Center</span></h1>
-    <div class="meta">Nic · All active Claude projects · Last updated Apr 4, 2026 (PT)</div>
+    <div class="meta">Nic · 4 active Claude projects · Last updated Apr 4, 2026 (PT)</div>
   </header>
 
   <div class="grid">
@@ -300,7 +300,66 @@
       <div class="notes-box">Full project details live in the other Cowork session. Pull service costs and delivered file list next time that session is awake.</div>
     </div>
 
-    <!-- ============ PROJECT 3: HELO ============ -->
+    <!-- ============ PROJECT 3: SQUARESPACE AUTO-PUBLISH ============ -->
+    <div class="card">
+      <h2>Squarespace Auto-Publish — Morning Note Pipeline</h2>
+
+      <div class="section-label">Status / What's Done</div>
+      <p class="status">
+        Phase 1 shipped — both commits landed on <code>main</code>.
+        New <code>netlify/functions/send-to-squarespace.js</code> function and a "Send to Squarespace" button
+        on the Morning Note row in <code>public/alerts.html</code>. Button writes a JSON payload to
+        <code>pending/post-{timestamp}.json</code> in the repo via GitHub API
+        (using the <code>GITHUB_TOKEN</code> env var in Netlify). Queue-file commit messages include
+        <code>[skip netlify]</code> so they don't trigger rebuilds. Netlify redeploys in ~1-2 min after each push.
+        Phase 2 (auto-publish into Squarespace editor) still pending.
+      </p>
+
+      <div class="section-label">Next Actions</div>
+      <ol class="actions">
+        <li class="red">
+          <span class="trigger">ASAP · within 24 hrs</span>
+          Rotate the <code>GITHUB_TOKEN</code>. Current token is exposed in another Cowork chat history. Create a new fine-grained token scoped only to <code>stock-bridge</code> (contents read/write), replace the value in Netlify env vars, trigger a redeploy.
+        </li>
+        <li class="red">
+          <span class="trigger">Today · after Netlify deploy</span>
+          End-to-end test of Phase 1. Open <code>alerts.html</code>, generate a morning note, click Send to Squarespace. Confirm success message "✓ Queued for Squarespace (pending/post-...)". Verify JSON file lands at <code>github.com/simplestocks/stock-bridge/tree/main/pending</code>.
+        </li>
+        <li class="yellow">
+          <span class="trigger">Phase 2 · this week</span>
+          Map Squarespace editor click path. Nic opens the editor, Chrome tooling watches and records every step (login → dashboard → new blog post → title → body → save draft).
+        </li>
+        <li class="gray">
+          <span class="trigger">Phase 2 · no date</span>
+          Build Cowork scheduled task (15-min cadence) that reads <code>pending/</code>, drives Chrome into Squarespace, saves draft, moves file to <code>published/</code>, fires desktop notification + email to <code>racernic@gmail.com</code>.
+        </li>
+        <li class="gray">
+          <span class="trigger">Phase 2 · no date</span>
+          Retry / alert logic for when Chrome isn't reachable (machine off, network down).
+        </li>
+      </ol>
+
+      <div class="section-label">Delivered Files</div>
+      <ul class="flat">
+        <li><code>netlify/functions/send-to-squarespace.js</code> — queue writer (GitHub API)</li>
+        <li><code>public/alerts.html</code> — added "Send to Squarespace" button on Morning Note row</li>
+        <li><code>pending/post-{timestamp}.json</code> — queue file format (created on each button click)</li>
+      </ul>
+
+      <div class="section-label">Services &amp; Costs</div>
+      <ul class="flat">
+        <li><strong>Squarespace Pro</strong> — simplestocks.com hosting (existing)</li>
+        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (hosts function, auto-deploys)</li>
+        <li><strong>GitHub</strong> — <span class="cost">free tier</span> (repo + API token auth)</li>
+        <li><strong>Gmail</strong> — <span class="cost">free</span> (notification target: racernic@gmail.com)</li>
+      </ul>
+      <div class="total-line">Total recurring: <strong>$0/mo incremental (reuses existing stack)</strong></div>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-box">Phase 1 built in another Cowork session. Full reference files + source links: GitHub REST API (create/update file contents), Netlify Functions getting started, Netlify [skip ci] / [skip netlify] build tag docs. Details still coming from Nic.</div>
+    </div>
+
+    <!-- ============ PROJECT 4: HELO ============ -->
     <div class="card">
       <h2>Helo — Command Center &amp; Meta-Ops</h2>
 
@@ -351,7 +410,7 @@
   </div>
 
   <footer>
-    simplestocks.com · built in Cowork · 3 active projects · single-file, portable, GitHub-ready
+    simplestocks.com · built in Cowork · 4 active projects · single-file, portable, GitHub-ready
   </footer>
 </body>
 </html>
