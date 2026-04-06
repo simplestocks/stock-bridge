@@ -345,8 +345,8 @@ def main():
             label = day_label_map.get(current_day, header_date)
             lines.append(f"— {label} ({header_date}) —")
         stars = "★" * e["importance"]
-        t = f" {e['time']}" if e["time"] else ""
-        lines.append(f"{stars} {e['title']} [{e['category']}]{t}")
+        t = f" {e['time']} ET" if e["time"] else ""
+        lines.append(f"{stars} {e['title']}{t}")
 
     if not lines:
         lines = ["(no high-impact US events in window)"]
