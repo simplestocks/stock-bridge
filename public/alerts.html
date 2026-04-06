@@ -1030,9 +1030,10 @@
         <p>${mSubtitle}</p>
         ${pulse?`<p><span class="b">+ Market Pulse:</span> ${pulse}</p>`:''}
         ${spxBlock}
-        ${trendsHtml}${ktpHtml}${etfHtml}${earnHtml}${extraHtml}
+        ${trendsHtml}${etfHtml}
         <p><span class="b">+ Live discussion</span>, available <a href="${liveurl}" target="_blank">HERE</a> (PW: ${pw})</p>
         <div class="doc-sig">Nic</div>
+        ${ktpHtml}${earnHtml}${extraHtml}
         <div class="doc-meta" style="margin-top:12px;font-size:10px;">NOTE ID: ${id} | ${mmdd}</div>
       </div>`;
     document.getElementById('mornMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Morning Note ${mmdd} — ${id}</span></div>`;
