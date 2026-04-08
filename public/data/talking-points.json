@@ -1,37 +1,13 @@
 {
-  "generated_at": "2026-04-07T11:31:28.116985+00:00",
+  "generated_at": "2026-04-08T21:52:45.724423+00:00",
   "window": [
-    "2026-04-07",
     "2026-04-08",
     "2026-04-09",
     "2026-04-10",
-    "2026-04-13"
+    "2026-04-13",
+    "2026-04-14"
   ],
   "events": [
-    {
-      "date": "2026-04-07",
-      "time": "",
-      "category": "Econ Release",
-      "title": "Durable Goods (M3 Survey)",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-07",
-      "time": "01:00 PM",
-      "category": "Treasury Auction",
-      "title": "3-Year Note Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
-    {
-      "date": "2026-04-07",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "6-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
     {
       "date": "2026-04-08",
       "time": "2:00 PM",
@@ -42,19 +18,11 @@
     },
     {
       "date": "2026-04-08",
-      "time": "",
-      "category": "Treasury Auction",
-      "title": "17-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
-    {
-      "date": "2026-04-08",
-      "time": "01:00 PM",
-      "category": "Treasury Auction",
-      "title": "9-Year 10-Month Note Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
+      "time": "2:00 PM",
+      "category": "Fed",
+      "title": "Minutes of the Federal Open Market Committee, March 17\u201318, 2026",
+      "source": "Federal Reserve",
+      "importance": 3
     },
     {
       "date": "2026-04-09",
@@ -90,7 +58,7 @@
     },
     {
       "date": "2026-04-09",
-      "time": "",
+      "time": "11:30 AM",
       "category": "Treasury Auction",
       "title": "4-Week Bill Auction",
       "source": "TreasuryDirect",
@@ -98,7 +66,7 @@
     },
     {
       "date": "2026-04-09",
-      "time": "",
+      "time": "11:30 AM",
       "category": "Treasury Auction",
       "title": "8-Week Bill Auction",
       "source": "TreasuryDirect",
@@ -135,8 +103,32 @@
       "title": "26-Week Bill Auction",
       "source": "TreasuryDirect",
       "importance": 1
+    },
+    {
+      "date": "2026-04-14",
+      "time": "",
+      "category": "Econ Release",
+      "title": "PPI",
+      "source": "FRED",
+      "importance": 2
+    },
+    {
+      "date": "2026-04-14",
+      "time": "",
+      "category": "Treasury Auction",
+      "title": "52-Week Bill Auction",
+      "source": "TreasuryDirect",
+      "importance": 1
+    },
+    {
+      "date": "2026-04-14",
+      "time": "",
+      "category": "Treasury Auction",
+      "title": "6-Week Bill Auction",
+      "source": "TreasuryDirect",
+      "importance": 1
     }
   ],
-  "talking_points_text": "\u2014 TODAY (Tue Apr 7) \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2605 3-Year Note Auction 01:00 PM ET\n\u2605 6-Week Bill Auction 11:30 AM ET\n\u2014 TOMORROW (Wed Apr 8) \u2014\n\u2605\u2605\u2605 FOMC Minutes (from Mar 18 meeting) 2:00 PM ET\n\u2605 17-Week Bill Auction\n\u2605 9-Year 10-Month Note Auction 01:00 PM ET\n\u2014 THU APR 9 (Thu Apr 9) \u2014\n\u2605\u2605\u2605 GDP\n\u2605\u2605\u2605 Personal Income & Outlays (PCE)\n\u2605\u2605 Initial Jobless Claims\n\u2605 29-Year 10-Month Bond Auction 01:00 PM ET\n\u2605 4-Week Bill Auction\n\u2605 8-Week Bill Auction\n\u2014 FRI APR 10 (Fri Apr 10) \u2014\n\u2605\u2605\u2605 CPI\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2014 MON APR 13 (Mon Apr 13) \u2014\n\u2605 13-Week Bill Auction\n\u2605 26-Week Bill Auction",
+  "talking_points_text": "\u2014 TODAY (Wed Apr 8) \u2014\n\u2605\u2605\u2605 FOMC Minutes (from Mar 18 meeting) 2:00 PM ET\n\u2605\u2605\u2605 Minutes of the Federal Open Market Committee, March 17\u201318, 2026 2:00 PM ET\n\u2014 TOMORROW (Thu Apr 9) \u2014\n\u2605\u2605\u2605 GDP\n\u2605\u2605\u2605 Personal Income & Outlays (PCE)\n\u2605\u2605 Initial Jobless Claims\n\u2605 29-Year 10-Month Bond Auction 01:00 PM ET\n\u2605 4-Week Bill Auction 11:30 AM ET\n\u2605 8-Week Bill Auction 11:30 AM ET\n\u2014 FRI APR 10 (Fri Apr 10) \u2014\n\u2605\u2605\u2605 CPI\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2014 MON APR 13 (Mon Apr 13) \u2014\n\u2605 13-Week Bill Auction\n\u2605 26-Week Bill Auction\n\u2014 TUE APR 14 (Tue Apr 14) \u2014\n\u2605\u2605 PPI\n\u2605 52-Week Bill Auction\n\u2605 6-Week Bill Auction",
   "errors": []
 }
