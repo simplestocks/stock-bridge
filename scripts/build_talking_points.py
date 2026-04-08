@@ -317,7 +317,14 @@ def main():
         all_events.extend(ev)
         errors.extend(errs)
 
-    # Dedupe by (date,title)
+    # Normalize FOMC-related titles so duplicates collapse
+    for e in all_events:
+        t = e["title"].lower()
+        if ("fomc" in t or "federal open market" in t) and "minute" in t:
+            e["title"] = "FOMC Minutes"
+            e["importance"] = max(e["importance"], 3)
+
+    # Dedupe by (date, normalized title)
     seen = set()
     deduped = []
     for e in sorted(all_events, key=lambda x: (x["date"], -x["importance"], x["title"])):
