@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-08T14:52:46.190060-07:00",
+  "generated_at": "2026-04-09T08:33:28.154055-07:00",
   "week_start": "2026-04-06",
   "week_end": "2026-04-10",
   "min_market_cap": 10000000000,
@@ -10,25 +10,25 @@
       {
         "symbol": "DAL",
         "name": "Delta Air Lines, Inc.",
-        "market_cap": 42858437059,
-        "when": "BMO"
+        "market_cap": 44465138601,
+        "when": "OTH"
       },
       {
         "symbol": "STZ",
         "name": "Constellation Brands Inc",
-        "market_cap": 26671756864,
-        "when": "AMC"
+        "market_cap": 26052773753,
+        "when": "OTH"
       },
       {
         "symbol": "RPM",
         "name": "RPM International Inc.",
-        "market_cap": 12386199303,
-        "when": "BMO"
+        "market_cap": 13924388256,
+        "when": "OTH"
       }
     ],
     "2026-04-09": [],
     "2026-04-10": []
   },
-  "earnings_text": "Mon Apr 6: \u2014 | \u2014\nTue Apr 7: \u2014 | \u2014\nWed Apr 8: DAL RPM | STZ\nThu Apr 9: \u2014 | \u2014\nFri Apr 10: \u2014 | \u2014",
+  "earnings_text": "Mon Apr 6: \u2014 | \u2014\nTue Apr 7: \u2014 | \u2014\nWed Apr 8: \u2014 | (DAL STZ RPM)\nThu Apr 9: \u2014 | \u2014\nFri Apr 10: \u2014 | \u2014",
   "errors": []
 }
