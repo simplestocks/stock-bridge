@@ -750,6 +750,7 @@
           <thead>
             <tr>
               <th>ID</th><th>Date</th><th>Time</th><th>Ticker</th><th>Type</th><th>Exp</th><th>DTE</th>
+              <th>Under</th>
               <th>S1</th><th>S2</th><th>S3</th><th>S4</th>
               <th>Credit</th><th>Max Risk</th><th>Close</th><th>P&L$</th><th>P&L%</th><th>Notes</th><th></th>
             </tr>
@@ -1712,6 +1713,7 @@
       const dte=calcDTE(t.expiration);
       tr.innerHTML=`<td>${t.trade_id}</td><td>${t.date}</td><td>${t.time}</td>
         <td>${t.ticker}</td><td>${t.type}</td><td>${t.expiration||''}</td><td style="color:${dte==='exp'?'var(--bear)':dte&&parseInt(dte)<=5?'#ffaa00':'var(--muted)'}">${dte}</td>
+        <td>${t.underlying_price||''}</td>
         <td>${t.strike1}</td><td>${t.strike2||''}</td><td>${t.strike3||''}</td><td>${t.strike4||''}</td>
         <td>${t.credit}</td><td>${t.max_risk}</td>
         <td class="${isOpen?'status-open':''}">${t.close_price||'<b>OPEN</b>'}</td>
