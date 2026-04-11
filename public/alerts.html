@@ -1441,14 +1441,15 @@
   }
 
   function autoFillIB(){
+    // IB layout mirrors IC: s1/s2 = put side, s3/s4 = call side
+    // s1 = short put (body), s2 = long put (wing below)
+    // s3 = short call (body, same strike as s1), s4 = long call (wing above)
     const mid=parseFloat(document.getElementById('trd_s1').value);
     const width=parseFloat(document.getElementById('trd_width').value);
     if(isNaN(mid)||isNaN(width))return;
-    document.getElementById('trd_s2').value=mid; // Short Put = middle
-    document.getElementById('trd_s3').value=mid; // Short Call = middle
-    document.getElementById('trd_s4').value=mid-width; // Long Put
-    // We repurpose s3 for Long Call
-    document.getElementById('trd_s3').value=mid+width;
+    document.getElementById('trd_s2').value=mid-width; // Long Put  (wing below)
+    document.getElementById('trd_s3').value=mid;       // Short Call (body)
+    document.getElementById('trd_s4').value=mid+width; // Long Call (wing above)
     calcRisk();
   }
 
@@ -1465,7 +1466,14 @@
       const width=parseFloat(document.getElementById('trd_width').value)||0;
       if(width){maxRisk=(width-credit)*100;}
     } else if(currentType==='IC'){
-      const width=parseFloat(document.getElementById('trd_width').value)||0;
+      // Derive width from strikes (not from trd_width, which isn't shown for IC)
+      const s1=parseFloat(document.getElementById('trd_s1').value)||0;
+      const s2=parseFloat(document.getElementById('trd_s2').value)||0;
+      const s3=parseFloat(document.getElementById('trd_s3').value)||0;
+      const s4=parseFloat(document.getElementById('trd_s4').value)||0;
+      const putWidth=(s1&&s2)?Math.abs(s1-s2):0;
+      const callWidth=(s3&&s4)?Math.abs(s3-s4):0;
+      const width=Math.max(putWidth,callWidth);
       if(width){maxRisk=(width-credit)*100;}
     }
     const el=document.getElementById('trd_maxrisk');
@@ -1495,7 +1503,13 @@
       const width=parseFloat(document.getElementById('trd_width').value)||0;
       if(width){maxRisk=(width-credit)*100;}
     } else if(currentType==='IC'){
-      const width=parseFloat(document.getElementById('trd_width').value)||0;
+      const s1=parseFloat(document.getElementById('trd_s1').value)||0;
+      const s2=parseFloat(document.getElementById('trd_s2').value)||0;
+      const s3=parseFloat(document.getElementById('trd_s3').value)||0;
+      const s4=parseFloat(document.getElementById('trd_s4').value)||0;
+      const putWidth=(s1&&s2)?Math.abs(s1-s2):0;
+      const callWidth=(s3&&s4)?Math.abs(s3-s4):0;
+      const width=Math.max(putWidth,callWidth);
       if(width){maxRisk=(width-credit)*100;}
     }
     const pEl=document.getElementById('trd_pnl_dollars');
