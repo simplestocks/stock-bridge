@@ -800,7 +800,15 @@
       'Buy Call': "Before entry, set hard stop-out and profit-taking levels based on your risk appetite. Don't let a trade bleed past your planned exit, and take profits at predefined targets instead of hoping for more.",
       'Buy Put':  "Before entry, set hard stop-out and profit-taking levels based on your risk appetite. Don't let a trade bleed past your planned exit, and take profits at predefined targets instead of hoping for more."
     },
-    globalDisclaimer: "⚠ Risk Disclosure — 0DTE Trading. Zero-DTE options are high-risk instruments that can result in rapid and substantial losses, including total loss of premium or margin. This alert reflects a personal trade idea, not financial advice or a recommendation. Trading alongside the live room is recommended for added context. Maximum loss can be painful and may damage accounts. This setup is intended for experienced traders only. You are solely responsible for your own trading decisions."
+    executionNotes: {
+      'CPS': "Execute this as one \"limit\" order.",
+      'CCS': "Execute this as one \"limit\" order.",
+      'IC':  "Execute this as two separate \"limit\" orders — one for the put spread, one for the call spread.",
+      'IB':  "Execute this as one \"limit\" order.",
+      'Buy Call': "",
+      'Buy Put':  ""
+    },
+    globalDisclaimer: "⚠ Risk Disclosure — 0DTE Trading. Zero-DTE options are high-risk instruments that can produce rapid and total loss of premium or margin. This is a personal trade idea only—not financial advice or a recommendation. Trading alongside the live room is strongly recommended for full context. Maximum loss can be severe and may significantly damage accounts. This setup is for experienced traders only. You alone are responsible for your trading decisions."
   };
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1635,6 +1643,9 @@
     if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:false});
     if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:false});
     if(notes)fields.push({name:'Notes',value:notes,inline:false});
+    // Execution instruction (e.g. "one limit order" / "two separate limit orders")
+    const execNote=(TRADE_DISCLAIMERS.executionNotes||{})[currentType];
+    if(execNote)fields.push({name:'Execution',value:execNote,inline:false});
     // Strategy note pulled from single source of truth
     const stratNote=TRADE_DISCLAIMERS.strategyNotes[currentType];
     if(stratNote)fields.push({name:'Strategy Notes',value:stratNote,inline:false});
