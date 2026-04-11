@@ -1628,13 +1628,18 @@
       summaryParts.push(mrClean);
     }
     const summaryLine=summaryParts.join('  │  ');
-    // Line 2: $N │ Max Win P%   (credit spreads/irons)
-    //        $N                 (Buy Call/Put — premium paid only)
+    // Line 2: Credit $N │ Max Win P% │ Execution note   (credit spreads/irons)
+    //         $N                                         (Buy Call/Put — premium paid only)
+    const execNote=(TRADE_DISCLAIMERS.executionNotes||{})[currentType]||'';
     let creditLine='';
     if(hasMaxWin){
-      creditLine=`$${winDollars.toFixed(0)}  │  Max Win ${winPct.toFixed(1)}%`;
+      const parts2=[`Credit $${winDollars.toFixed(0)}`,`Max Win ${winPct.toFixed(1)}%`];
+      if(execNote)parts2.push(execNote);
+      creditLine=parts2.join('  │  ');
     } else if(isBuy && creditNum>0){
-      creditLine=`$${(creditNum*100).toFixed(0)}`;
+      const parts2=[`$${(creditNum*100).toFixed(0)}`];
+      if(execNote)parts2.push(execNote);
+      creditLine=parts2.join('  │  ');
     }
     // Non-inline fields for cleaner, wider-feeling layout
     const fields=[];
@@ -1643,9 +1648,6 @@
     if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:false});
     if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:false});
     if(notes)fields.push({name:'Notes',value:notes,inline:false});
-    // Execution instruction (e.g. "one limit order" / "two separate limit orders")
-    const execNote=(TRADE_DISCLAIMERS.executionNotes||{})[currentType];
-    if(execNote)fields.push({name:'Execution',value:execNote,inline:false});
     // Strategy note pulled from single source of truth
     const stratNote=TRADE_DISCLAIMERS.strategyNotes[currentType];
     if(stratNote)fields.push({name:'Strategy Notes',value:stratNote,inline:false});
