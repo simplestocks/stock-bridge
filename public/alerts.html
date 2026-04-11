@@ -711,6 +711,13 @@
       </div>
     </div>
 
+    <!-- DISCLAIMER PREVIEW — used by Discord embed + future HTML email export -->
+    <div id="trd_disclaimer_preview" style="margin-top:14px;display:none;">
+      <div class="section-label sl-trd" style="margin-bottom:6px;">Strategy Notes & Disclaimer (preview)</div>
+      <div id="trd_strategy_note" style="font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--text);background:var(--surface);border-left:3px solid var(--trade);padding:10px 12px;border-radius:3px;margin-bottom:8px;"></div>
+      <div id="trd_global_disclaimer" style="font-family:var(--mono);font-size:10px;line-height:1.5;color:#ffb3b3;background:rgba(255,80,80,0.08);border-left:3px solid var(--bear);padding:10px 12px;border-radius:3px;"></div>
+    </div>
+
     <div class="btn-row">
       <button class="btn-trd" onclick="logTrade()">Log Trade</button>
       <button class="btn-discord" onclick="sendTradeToDiscord()">Send to Discord</button>
@@ -776,6 +783,20 @@
   const DISCORD_VID_URL = 'https://discord.com/api/webhooks/1487891731474288780/zJQR_hv1Vd_G8RMhPy6LMTkRJia60oVNkkmZBetZtA7YihtxzmuI1D2xtO5Mb_yV6i8q';
   const SLACK_URL = '/.netlify/functions/slack-proxy';
   const DISCORD_PROXY_URL = '/.netlify/functions/discord-proxy';
+
+  // ===== TRADE DISCLAIMERS — single source of truth =====
+  // Used by: Discord embed builder, on-page preview, future HTML email export.
+  const TRADE_DISCLAIMERS = {
+    strategyNotes: {
+      'CPS': "CPS wins when the underlying closes above the short put at expiration. Consider closing early and leaving profits on the table — past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'CCS': "CCS wins when the underlying closes below the short call at expiration. Consider closing early and leaving profits on the table — past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'IC':  "An Iron Condor wins when the underlying closes between the two short strikes at expiration. Consider closing early and leaving profits on the table — past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'IB':  "The goal with an Iron Butterfly is to take partial profits — a 100% win is very low odds because it requires the underlying to pin exactly at the center short strikes at expiration. Close early and leave profits on the table. Past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'Buy Call': "Before entry, set hard stop-out and profit-taking levels based on your risk appetite. Don't let a trade bleed past your planned exit, and take profits at predefined targets instead of hoping for more.",
+      'Buy Put':  "Before entry, set hard stop-out and profit-taking levels based on your risk appetite. Don't let a trade bleed past your planned exit, and take profits at predefined targets instead of hoping for more."
+    },
+    globalDisclaimer: "⚠ Risk Disclosure — 0DTE Trading. Zero-DTE options are high-risk instruments that can result in rapid and substantial losses, including total loss of premium or margin. This alert reflects a personal trade idea, not financial advice or a recommendation. Trading alongside the live room is recommended for added context. Maximum loss can be painful and may damage accounts. This setup is intended for experienced traders only. You are solely responsible for your own trading decisions."
+  };
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   function pad(n){return String(n).padStart(2,'0');}
@@ -1362,6 +1383,18 @@
     }
     clearStrikes();
     calcRisk();
+    renderDisclaimerPreview();
+  }
+
+  function renderDisclaimerPreview(){
+    const panel=document.getElementById('trd_disclaimer_preview');
+    const noteEl=document.getElementById('trd_strategy_note');
+    const discEl=document.getElementById('trd_global_disclaimer');
+    if(!currentType){panel.style.display='none';return;}
+    const note=TRADE_DISCLAIMERS.strategyNotes[currentType]||'';
+    noteEl.textContent=note;
+    discEl.textContent=TRADE_DISCLAIMERS.globalDisclaimer;
+    panel.style.display='block';
   }
 
   function clearStrikes(){
@@ -1377,6 +1410,7 @@
     ['trd_s2_field','trd_s3_field','trd_s4_field'].forEach(id=>{document.getElementById(id).style.display='none';});
     document.getElementById('trd_width').style.display='none';
     clearStrikes();
+    renderDisclaimerPreview();
   }
 
   function autoFillStrikes(){
@@ -1517,6 +1551,7 @@
     if(!currentTicker){alert('Select a ticker first.');return;}
     if(!currentType){alert('Select a trade type first.');return;}
     const statusEl=document.getElementById('trdLogStatus');
+    const tradeId=document.getElementById('trdId').textContent||generateId();
     const exp=document.getElementById('trd_exp').value||'';
     const s1=document.getElementById('trd_s1').value||'';
     const s2=document.getElementById('trd_s2').value||'';
@@ -1533,21 +1568,31 @@
     const color=bullish?5763719:(bearish?15548997:5793266);
     // Build strikes string
     const strikes=[s1,s2,s3,s4].filter(x=>x!=='').join(' / ');
+    // Non-inline fields for cleaner, wider-feeling layout
     const fields=[];
-    if(exp)fields.push({name:'Expiration',value:exp,inline:true});
-    if(credit)fields.push({name:'Credit',value:String(credit),inline:true});
-    if(maxRisk&&maxRisk!=='—')fields.push({name:'Max Risk',value:String(maxRisk),inline:true});
+    if(exp)fields.push({name:'Expiration',value:exp,inline:false});
+    if(credit)fields.push({name:'Credit',value:String(credit),inline:false});
+    if(maxRisk&&maxRisk!=='—')fields.push({name:'Max Risk',value:String(maxRisk),inline:false});
     if(strikes)fields.push({name:'Strikes',value:strikes,inline:false});
-    if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:true});
-    if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:true});
+    if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:false});
+    if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:false});
     if(notes)fields.push({name:'Notes',value:notes,inline:false});
-    const embed={
-      title:`${currentTicker} — ${currentType}`,
+    // Strategy note pulled from single source of truth
+    const stratNote=TRADE_DISCLAIMERS.strategyNotes[currentType];
+    if(stratNote)fields.push({name:'Strategy Notes',value:stratNote,inline:false});
+    // Main trade embed — trade ID in title for prominence
+    const mainEmbed={
+      title:`${currentTicker} — ${currentType} · #${tradeId}`,
       color:color,
       fields:fields,
       timestamp:new Date().toISOString()
     };
-    const payload={embeds:[embed]};
+    // Second embed: red risk disclosure
+    const disclaimerEmbed={
+      color:15548997,
+      description:TRADE_DISCLAIMERS.globalDisclaimer
+    };
+    const payload={embeds:[mainEmbed,disclaimerEmbed]};
     statusEl.textContent='Sending to Discord...';statusEl.className='send-status';
     try{
       const res=await fetch(DISCORD_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
