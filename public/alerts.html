@@ -654,6 +654,10 @@
           <div id="datePickerGrid" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
         </div>
       </div>
+      <div class="field">
+        <label>Underlying Price at Entry (manual)</label>
+        <input type="number" id="trd_underlying" placeholder="e.g. 5420.50" step="0.01">
+      </div>
     </div>
     <div class="form-grid" id="trd_strike_section">
       <div class="field" id="trd_s1_field">
@@ -1520,6 +1524,7 @@
       trade_id:id, date:dateStr, time:timeStr,
       ticker:currentTicker, type:currentType,
       expiration:document.getElementById('trd_exp').value||'',
+      underlying_price:document.getElementById('trd_underlying').value||'',
       strike1:document.getElementById('trd_s1').value||'',
       strike2:document.getElementById('trd_s2').value||'',
       strike3:document.getElementById('trd_s3').value||'',
@@ -1553,6 +1558,7 @@
     const statusEl=document.getElementById('trdLogStatus');
     const tradeId=document.getElementById('trdId').textContent||generateId();
     const exp=document.getElementById('trd_exp').value||'';
+    const underlying=document.getElementById('trd_underlying').value||'';
     const s1=document.getElementById('trd_s1').value||'';
     const s2=document.getElementById('trd_s2').value||'';
     const s3=document.getElementById('trd_s3').value||'';
@@ -1582,6 +1588,7 @@
     // Line 1: Expiration │ Strikes │ Max Risk $N/contract
     const summaryParts=[];
     if(exp)summaryParts.push(`Expiration ${exp}`);
+    if(underlying)summaryParts.push(`${currentTicker} @ ${underlying}`);
     if(strikes)summaryParts.push(strikes);
     if(maxRisk&&maxRisk!=='—'){
       const mrClean=maxRiskNum>0?`Max Risk $${maxRiskNum.toFixed(0)}/contract`:`Max Risk ${maxRisk}`;
@@ -1774,7 +1781,7 @@
     currentTicker='';currentType='';
     document.querySelectorAll('.ticker-btn').forEach(b=>{b.className='ticker-btn';});
     document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
-    ['trd_s1','trd_s2','trd_s3','trd_s4','trd_credit','trd_close','trd_notes','trd_width','trd_exp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['trd_s1','trd_s2','trd_s3','trd_s4','trd_credit','trd_close','trd_notes','trd_width','trd_exp','trd_underlying'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     ['trd_s2_field','trd_s3_field','trd_s4_field'].forEach(id=>{document.getElementById(id).style.display='none';});
     document.getElementById('trd_width').style.display='none';
     document.getElementById('trd_maxrisk').textContent='—';
