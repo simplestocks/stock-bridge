@@ -713,6 +713,7 @@
 
     <div class="btn-row">
       <button class="btn-trd" onclick="logTrade()">Log Trade</button>
+      <button class="btn-discord" onclick="sendTradeToDiscord()">Send to Discord</button>
       <button class="btn-clear" onclick="clearTrade()">Clear</button>
     </div>
     <div class="send-status" id="trdLogStatus"></div>
@@ -764,6 +765,7 @@
   const DISCORD_MAIN_THREAD = '1483104531247140955';
   const DISCORD_VID_URL = 'https://discord.com/api/webhooks/1487891731474288780/zJQR_hv1Vd_G8RMhPy6LMTkRJia60oVNkkmZBetZtA7YihtxzmuI1D2xtO5Mb_yV6i8q';
   const SLACK_URL = '/.netlify/functions/slack-proxy';
+  const DISCORD_PROXY_URL = '/.netlify/functions/discord-proxy';
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   function pad(n){return String(n).padStart(2,'0');}
@@ -1497,6 +1499,56 @@
       addTradeToTable(trade);
     }catch(e){
       statusEl.textContent='✗ Log failed: '+e.message;statusEl.className='send-status err';
+    }
+    setTimeout(()=>{statusEl.textContent='';},4000);
+  }
+
+  async function sendTradeToDiscord(){
+    if(!currentTicker){alert('Select a ticker first.');return;}
+    if(!currentType){alert('Select a trade type first.');return;}
+    const statusEl=document.getElementById('trdLogStatus');
+    const exp=document.getElementById('trd_exp').value||'';
+    const s1=document.getElementById('trd_s1').value||'';
+    const s2=document.getElementById('trd_s2').value||'';
+    const s3=document.getElementById('trd_s3').value||'';
+    const s4=document.getElementById('trd_s4').value||'';
+    const credit=document.getElementById('trd_credit').value||'';
+    const maxRisk=document.getElementById('trd_maxrisk').textContent||'';
+    const pnlD=document.getElementById('trd_pnl_dollars').textContent||'';
+    const pnlP=document.getElementById('trd_pnl_pct').textContent||'';
+    const notes=document.getElementById('trd_notes').value||'';
+    // Color by direction: bullish green, bearish red, neutral blue
+    const bullish=(currentType==='Buy Call'||currentType==='CPS');
+    const bearish=(currentType==='Buy Put'||currentType==='CCS');
+    const color=bullish?5763719:(bearish?15548997:5793266);
+    // Build strikes string
+    const strikes=[s1,s2,s3,s4].filter(x=>x!=='').join(' / ');
+    const fields=[];
+    if(exp)fields.push({name:'Expiration',value:exp,inline:true});
+    if(credit)fields.push({name:'Credit',value:String(credit),inline:true});
+    if(maxRisk&&maxRisk!=='—')fields.push({name:'Max Risk',value:String(maxRisk),inline:true});
+    if(strikes)fields.push({name:'Strikes',value:strikes,inline:false});
+    if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:true});
+    if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:true});
+    if(notes)fields.push({name:'Notes',value:notes,inline:false});
+    const embed={
+      title:`${currentTicker} — ${currentType}`,
+      color:color,
+      fields:fields,
+      timestamp:new Date().toISOString()
+    };
+    const payload={embeds:[embed]};
+    statusEl.textContent='Sending to Discord...';statusEl.className='send-status';
+    try{
+      const res=await fetch(DISCORD_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const j=await res.json();
+      if(j.ok){
+        statusEl.textContent='✓ Sent to Discord.';statusEl.className='send-status ok';
+      }else{
+        statusEl.textContent='✗ Discord send failed: '+(j.error||'unknown');statusEl.className='send-status err';
+      }
+    }catch(e){
+      statusEl.textContent='✗ Discord send failed: '+e.message;statusEl.className='send-status err';
     }
     setTimeout(()=>{statusEl.textContent='';},4000);
   }
