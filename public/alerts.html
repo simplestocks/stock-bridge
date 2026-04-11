@@ -1573,27 +1573,33 @@
     const creditNum=parseFloat(credit)||0;
     // Max win calc: only meaningful for credit spreads / iron structures
     const isBuy=(currentType==='Buy Call'||currentType==='Buy Put');
-    let maxWinStr='';
+    let winDollars=0, winPct=0, hasMaxWin=false;
     if(!isBuy && creditNum>0 && maxRiskNum>0){
-      const winDollars=creditNum*100;
-      const winPct=(winDollars/maxRiskNum)*100;
-      maxWinStr=`$${winDollars.toFixed(0)}/contract (${winPct.toFixed(1)}%)`;
+      winDollars=creditNum*100;
+      winPct=(winDollars/maxRiskNum)*100;
+      hasMaxWin=true;
     }
-    // Combined one-line summary: Expiration │ Strikes │ Max Risk
+    // Line 1: Expiration │ Strikes │ Max Risk $N/contract
     const summaryParts=[];
     if(exp)summaryParts.push(exp);
     if(strikes)summaryParts.push(strikes);
     if(maxRisk&&maxRisk!=='—'){
-      // Normalize max risk to "$N/contract"
-      const mrClean=maxRiskNum>0?`$${maxRiskNum.toFixed(0)}/contract`:String(maxRisk);
+      const mrClean=maxRiskNum>0?`Max Risk $${maxRiskNum.toFixed(0)}/contract`:`Max Risk ${maxRisk}`;
       summaryParts.push(mrClean);
     }
     const summaryLine=summaryParts.join('  │  ');
+    // Line 2: $N │ Max Win P%   (credit spreads/irons)
+    //        $N                 (Buy Call/Put — premium paid only)
+    let creditLine='';
+    if(hasMaxWin){
+      creditLine=`$${winDollars.toFixed(0)}  │  Max Win ${winPct.toFixed(1)}%`;
+    } else if(isBuy && creditNum>0){
+      creditLine=`$${(creditNum*100).toFixed(0)}`;
+    }
     // Non-inline fields for cleaner, wider-feeling layout
     const fields=[];
     if(summaryLine)fields.push({name:'\u200B',value:summaryLine,inline:false});
-    if(credit)fields.push({name:'Credit/contract',value:`$${(creditNum*100).toFixed(0)} (${credit})`,inline:false});
-    if(maxWinStr)fields.push({name:'Max Win/contract',value:maxWinStr,inline:false});
+    if(creditLine)fields.push({name:'\u200B',value:creditLine,inline:false});
     if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:false});
     if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:false});
     if(notes)fields.push({name:'Notes',value:notes,inline:false});
