@@ -1573,8 +1573,18 @@
     const bullish=(currentType==='Buy Call'||currentType==='CPS');
     const bearish=(currentType==='Buy Put'||currentType==='CCS');
     const color=bullish?5763719:(bearish?15548997:5793266);
-    // Build strikes string
-    const strikes=[s1,s2,s3,s4].filter(x=>x!=='').join(' / ');
+    // Build strikes string — for IC/IB, break out the put side (CPS) and call side (CCS)
+    let strikes='';
+    if(currentType==='IC'||currentType==='IB'){
+      const putSide=[s1,s2].filter(x=>x!=='').join('/');
+      const callSide=[s3,s4].filter(x=>x!=='').join('/');
+      const parts=[];
+      if(putSide)parts.push(`CPS: ${putSide}`);
+      if(callSide)parts.push(`CCS: ${callSide}`);
+      strikes=parts.join('  ·  ');
+    } else {
+      strikes=[s1,s2,s3,s4].filter(x=>x!=='').join(' / ');
+    }
     // Parse numeric max risk from display (e.g. "$450/ea" → 450)
     const maxRiskNum=parseFloat(String(maxRisk).replace(/[^0-9.\-]/g,''))||0;
     const creditNum=parseFloat(credit)||0;
@@ -1626,12 +1636,15 @@
       fields:fields,
       timestamp:now.toISOString()
     };
-    // Second embed: red risk disclosure
+    // Second embed: red risk disclosure (full legal text)
     const disclaimerEmbed={
       color:15548997,
       description:TRADE_DISCLAIMERS.globalDisclaimer
     };
-    const payload={embeds:[mainEmbed,disclaimerEmbed]};
+    // Top-level content — renders large, impossible to miss. Uses Discord markdown
+    // headings (#/##) which are only supported in message content, not embed fields.
+    const loudBanner='## ⚠️ 0DTE RISK DISCLOSURE — EXPERIENCED TRADERS ONLY\n**Zero-DTE options can cause rapid, total loss. Not financial advice. Read full disclosure below.**';
+    const payload={content:loudBanner,embeds:[mainEmbed,disclaimerEmbed]};
     statusEl.textContent='Sending to Discord...';statusEl.className='send-status';
     try{
       const res=await fetch(DISCORD_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
