@@ -718,8 +718,18 @@
     </div>
     <div class="send-status" id="trdLogStatus"></div>
 
+    <!-- LOAD TRADES BY TICKER -->
+    <div style="margin-top:24px;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+      <div class="field" style="flex:1;min-width:140px;">
+        <label>Load Trades by Ticker</label>
+        <input type="text" id="trd_query_ticker" placeholder="e.g. SPY" style="text-transform:uppercase;" onkeydown="if(event.key==='Enter')loadTradesByTicker()">
+      </div>
+      <button class="btn-trd" style="flex:0 0 auto;padding:8px 14px;" onclick="loadTradesByTicker()">Load Trades</button>
+      <div class="send-status" id="trdQueryStatus" style="flex:1;min-width:120px;"></div>
+    </div>
+
     <!-- TRADE LOG TABLE -->
-    <div style="margin-top:24px;" id="trd_log_section" style="display:none;">
+    <div style="margin-top:16px;" id="trd_log_section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <div class="section-label sl-trd" style="margin:0;border:none;">Logged Trades</div>
         <a href="https://docs.google.com/spreadsheets/d/1pyUwZDGJuQv49KNe0rpaZImcxxKILJD7d3UZ45e5Ifo/edit" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--morn);text-decoration:none;">Open Sheet ↗</a>
@@ -1559,6 +1569,38 @@
     sessionTrades.unshift(t);
     document.getElementById('trd_log_section').style.display='block';
     rebuildTable();
+  }
+
+  async function loadTradesByTicker(){
+    const input=document.getElementById('trd_query_ticker');
+    const ticker=(input.value||'').toUpperCase().trim();
+    const statusEl=document.getElementById('trdQueryStatus');
+    if(!ticker){statusEl.textContent='Enter a ticker.';statusEl.className='send-status err';setTimeout(()=>{statusEl.textContent='';},3000);return;}
+    if(!TRADE_LOG_URL){statusEl.textContent='⚠ Apps Script URL not set.';statusEl.className='send-status err';return;}
+    statusEl.textContent='Loading '+ticker+'...';statusEl.className='send-status';
+    try{
+      const res=await fetch(TRADE_LOG_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'query',ticker:ticker})});
+      const wrap=await res.json();
+      // log-trade proxy wraps Apps Script response under .response as a string
+      let inner=wrap&&wrap.response;
+      if(typeof inner==='string'){
+        try{inner=JSON.parse(inner);}catch(e){statusEl.textContent='✗ Bad response: '+e.message;statusEl.className='send-status err';return;}
+      }
+      if(!inner||inner.status!=='ok'||!Array.isArray(inner.trades)){
+        statusEl.textContent='✗ Query failed: '+(inner&&inner.message?inner.message:'unknown');
+        statusEl.className='send-status err';
+        return;
+      }
+      sessionTrades=inner.trades;
+      document.getElementById('trd_log_section').style.display='block';
+      rebuildTable();
+      statusEl.textContent='✓ Loaded '+inner.trades.length+' trade(s) for '+ticker+'.';
+      statusEl.className='send-status ok';
+    }catch(e){
+      statusEl.textContent='✗ Query failed: '+e.message;
+      statusEl.className='send-status err';
+    }
+    setTimeout(()=>{statusEl.textContent='';},5000);
   }
 
   function rebuildTable(){
