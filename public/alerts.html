@@ -1581,7 +1581,7 @@
     }
     // Line 1: Expiration │ Strikes │ Max Risk $N/contract
     const summaryParts=[];
-    if(exp)summaryParts.push(exp);
+    if(exp)summaryParts.push(`Expiration ${exp}`);
     if(strikes)summaryParts.push(strikes);
     if(maxRisk&&maxRisk!=='—'){
       const mrClean=maxRiskNum>0?`Max Risk $${maxRiskNum.toFixed(0)}/contract`:`Max Risk ${maxRisk}`;
@@ -1606,12 +1606,17 @@
     // Strategy note pulled from single source of truth
     const stratNote=TRADE_DISCLAIMERS.strategyNotes[currentType];
     if(stratNote)fields.push({name:'Strategy Notes',value:stratNote,inline:false});
-    // Main trade embed — trade ID in title for prominence
+    // Main trade embed — trade ID + human-readable time in title
+    const now=new Date();
+    const h=now.getHours(), m=pad(now.getMinutes());
+    const ampm=h>=12?'PM':'AM';
+    const h12=((h+11)%12)+1;
+    const timeStr=`${h12}:${m} ${ampm}`;
     const mainEmbed={
-      title:`${currentTicker} — ${currentType} · #${tradeId}`,
+      title:`${currentTicker} — ${currentType} · #${tradeId} · ${timeStr}`,
       color:color,
       fields:fields,
-      timestamp:new Date().toISOString()
+      timestamp:now.toISOString()
     };
     // Second embed: red risk disclosure
     const disclaimerEmbed={
