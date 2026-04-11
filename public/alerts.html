@@ -1568,12 +1568,32 @@
     const color=bullish?5763719:(bearish?15548997:5793266);
     // Build strikes string
     const strikes=[s1,s2,s3,s4].filter(x=>x!=='').join(' / ');
+    // Parse numeric max risk from display (e.g. "$450/ea" → 450)
+    const maxRiskNum=parseFloat(String(maxRisk).replace(/[^0-9.\-]/g,''))||0;
+    const creditNum=parseFloat(credit)||0;
+    // Max win calc: only meaningful for credit spreads / iron structures
+    const isBuy=(currentType==='Buy Call'||currentType==='Buy Put');
+    let maxWinStr='';
+    if(!isBuy && creditNum>0 && maxRiskNum>0){
+      const winDollars=creditNum*100;
+      const winPct=(winDollars/maxRiskNum)*100;
+      maxWinStr=`$${winDollars.toFixed(0)}/contract (${winPct.toFixed(1)}%)`;
+    }
+    // Combined one-line summary: Expiration │ Strikes │ Max Risk
+    const summaryParts=[];
+    if(exp)summaryParts.push(exp);
+    if(strikes)summaryParts.push(strikes);
+    if(maxRisk&&maxRisk!=='—'){
+      // Normalize max risk to "$N/contract"
+      const mrClean=maxRiskNum>0?`$${maxRiskNum.toFixed(0)}/contract`:String(maxRisk);
+      summaryParts.push(mrClean);
+    }
+    const summaryLine=summaryParts.join('  │  ');
     // Non-inline fields for cleaner, wider-feeling layout
     const fields=[];
-    if(exp)fields.push({name:'Expiration',value:exp,inline:false});
-    if(credit)fields.push({name:'Credit',value:String(credit),inline:false});
-    if(maxRisk&&maxRisk!=='—')fields.push({name:'Max Risk',value:String(maxRisk),inline:false});
-    if(strikes)fields.push({name:'Strikes',value:strikes,inline:false});
+    if(summaryLine)fields.push({name:'\u200B',value:summaryLine,inline:false});
+    if(credit)fields.push({name:'Credit/contract',value:`$${(creditNum*100).toFixed(0)} (${credit})`,inline:false});
+    if(maxWinStr)fields.push({name:'Max Win/contract',value:maxWinStr,inline:false});
     if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:false});
     if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:false});
     if(notes)fields.push({name:'Notes',value:notes,inline:false});
