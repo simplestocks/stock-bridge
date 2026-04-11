@@ -729,7 +729,7 @@
     </div>
 
     <!-- TRADE LOG TABLE -->
-    <div style="margin-top:16px;" id="trd_log_section">
+    <div style="margin-top:16px;display:none;" id="trd_log_section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <div class="section-label sl-trd" style="margin:0;border:none;">Logged Trades</div>
         <a href="https://docs.google.com/spreadsheets/d/1pyUwZDGJuQv49KNe0rpaZImcxxKILJD7d3UZ45e5Ifo/edit" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--morn);text-decoration:none;">Open Sheet ↗</a>
@@ -1604,6 +1604,8 @@
   }
 
   function rebuildTable(){
+    const section=document.getElementById('trd_log_section');
+    section.style.display=(sessionTrades&&sessionTrades.length>0)?'block':'none';
     const tbody=document.getElementById('trd_tbody');
     tbody.innerHTML='';
     sessionTrades.forEach((t,i)=>{
