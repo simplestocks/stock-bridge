@@ -1,34 +1,248 @@
 {
-  "generated_at": "2026-04-09T08:33:28.154055-07:00",
-  "week_start": "2026-04-06",
-  "week_end": "2026-04-10",
+  "generated_at": "2026-04-12T10:59:20.130762-07:00",
+  "week_start": "2026-04-13",
+  "week_end": "2026-04-17",
   "min_market_cap": 10000000000,
   "events_by_day": {
-    "2026-04-06": [],
-    "2026-04-07": [],
-    "2026-04-08": [
+    "2026-04-13": [
       {
-        "symbol": "DAL",
-        "name": "Delta Air Lines, Inc.",
-        "market_cap": 44465138601,
-        "when": "OTH"
+        "symbol": "GS",
+        "name": "Goldman Sachs Group, Inc. (The)",
+        "market_cap": 266591925264,
+        "when": "BMO"
       },
       {
-        "symbol": "STZ",
-        "name": "Constellation Brands Inc",
-        "market_cap": 26052773753,
-        "when": "OTH"
-      },
-      {
-        "symbol": "RPM",
-        "name": "RPM International Inc.",
-        "market_cap": 13924388256,
-        "when": "OTH"
+        "symbol": "FAST",
+        "name": "Fastenal Company",
+        "market_cap": 56377231982,
+        "when": "BMO"
       }
     ],
-    "2026-04-09": [],
-    "2026-04-10": []
+    "2026-04-14": [
+      {
+        "symbol": "JPM",
+        "name": "J P Morgan Chase & Co",
+        "market_cap": 832373217468,
+        "when": "BMO"
+      },
+      {
+        "symbol": "JNJ",
+        "name": "Johnson & Johnson",
+        "market_cap": 581222455877,
+        "when": "BMO"
+      },
+      {
+        "symbol": "WFC",
+        "name": "Wells Fargo & Company",
+        "market_cap": 265403621076,
+        "when": "BMO"
+      },
+      {
+        "symbol": "C",
+        "name": "Citigroup Inc.",
+        "market_cap": 218303571365,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BLK",
+        "name": "BlackRock, Inc.",
+        "market_cap": 155793513288,
+        "when": "BMO"
+      }
+    ],
+    "2026-04-15": [
+      {
+        "symbol": "ASML",
+        "name": "ASML Holding N.V.",
+        "market_cap": 558331446226,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BAC",
+        "name": "Bank of America Corporation",
+        "market_cap": 376650330931,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MS",
+        "name": "Morgan Stanley",
+        "market_cap": 281739874782,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PGR",
+        "name": "Progressive Corporation (The)",
+        "market_cap": 117110961838,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PNC",
+        "name": "PNC Financial Services Group, Inc. (The)",
+        "market_cap": 90044491141,
+        "when": "BMO"
+      },
+      {
+        "symbol": "KMI",
+        "name": "Kinder Morgan, Inc.",
+        "market_cap": 73352278737,
+        "when": "OTH"
+      },
+      {
+        "symbol": "MTB",
+        "name": "M&T Bank Corporation",
+        "market_cap": 33225566193,
+        "when": "BMO"
+      },
+      {
+        "symbol": "JBHT",
+        "name": "J.B. Hunt Transport Services, Inc.",
+        "market_cap": 21306731573,
+        "when": "AMC"
+      },
+      {
+        "symbol": "FHN",
+        "name": "First Horizon Corporation",
+        "market_cap": 11668402594,
+        "when": "BMO"
+      }
+    ],
+    "2026-04-16": [
+      {
+        "symbol": "TSM",
+        "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "market_cap": 1895630934378,
+        "when": "BMO"
+      },
+      {
+        "symbol": "NFLX",
+        "name": "Netflix, Inc.",
+        "market_cap": 430871647408,
+        "when": "AMC"
+      },
+      {
+        "symbol": "PEP",
+        "name": "Pepsico, Inc.",
+        "market_cap": 215279532578,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ABT",
+        "name": "Abbott Laboratories",
+        "market_cap": 178903040321,
+        "when": "BMO"
+      },
+      {
+        "symbol": "SCHW",
+        "name": "The Charles Schwab Corporation",
+        "market_cap": 169064932626,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PLD",
+        "name": "Prologis, Inc.",
+        "market_cap": 128666477902,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BK",
+        "name": "The Bank Of New York Mellon Corporation",
+        "market_cap": 88492225346,
+        "when": "BMO"
+      },
+      {
+        "symbol": "USB",
+        "name": "U.S. Bancorp",
+        "market_cap": 87519684358,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MRSH",
+        "name": "Marsh",
+        "market_cap": 83643232437,
+        "when": "BMO"
+      },
+      {
+        "symbol": "TRV",
+        "name": "The Travelers Companies, Inc.",
+        "market_cap": 64479672908,
+        "when": "BMO"
+      },
+      {
+        "symbol": "CFG",
+        "name": "Citizens Financial Group, Inc.",
+        "market_cap": 27611188195,
+        "when": "BMO"
+      },
+      {
+        "symbol": "WIT",
+        "name": "Wipro Limited",
+        "market_cap": 23667027471,
+        "when": "BMO"
+      },
+      {
+        "symbol": "KEY",
+        "name": "KeyCorp",
+        "market_cap": 23223818453,
+        "when": "BMO"
+      },
+      {
+        "symbol": "AA",
+        "name": "Alcoa Corporation",
+        "market_cap": 19333204789,
+        "when": "AMC"
+      }
+    ],
+    "2026-04-17": [
+      {
+        "symbol": "HDB",
+        "name": "HDFC Bank Limited",
+        "market_cap": 137060749857,
+        "when": "OTH"
+      },
+      {
+        "symbol": "IBN",
+        "name": "ICICI Bank Limited",
+        "market_cap": 98006635197,
+        "when": "OTH"
+      },
+      {
+        "symbol": "TFC",
+        "name": "Truist Financial Corporation",
+        "market_cap": 62646172281,
+        "when": "BMO"
+      },
+      {
+        "symbol": "FITB",
+        "name": "Fifth Third Bancorp",
+        "market_cap": 45477398870,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ERIC",
+        "name": "Ericsson",
+        "market_cap": 40119085647,
+        "when": "BMO"
+      },
+      {
+        "symbol": "STT",
+        "name": "State Street Corporation",
+        "market_cap": 38366603463,
+        "when": "BMO"
+      },
+      {
+        "symbol": "RF",
+        "name": "Regions Financial Corporation",
+        "market_cap": 24406524525,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ALLY",
+        "name": "Ally Financial Inc.",
+        "market_cap": 12870982599,
+        "when": "BMO"
+      }
+    ]
   },
-  "earnings_text": "Mon Apr 6: \u2014 | \u2014\nTue Apr 7: \u2014 | \u2014\nWed Apr 8: \u2014 | (DAL STZ RPM)\nThu Apr 9: \u2014 | \u2014\nFri Apr 10: \u2014 | \u2014",
+  "earnings_text": "Mon Apr 13: GS FAST | \u2014\nTue Apr 14: JPM JNJ WFC C BLK | \u2014\nWed Apr 15: ASML BAC MS PGR PNC MTB FHN | JBHT (KMI)\nThu Apr 16: TSM PEP ABT SCHW PLD BK USB MRSH TRV CFG WIT KEY | NFLX AA\nFri Apr 17: TFC FITB ERIC STT RF ALLY | (HDB IBN)",
   "errors": []
 }
