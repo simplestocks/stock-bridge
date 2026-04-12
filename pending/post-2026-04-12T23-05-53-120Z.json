@@ -1,0 +1,10 @@
+{
+  "docId": "morning-note-test",
+  "title": "Test Draft from Netlify",
+  "html": "<p>This is a test post created via the Netlify function pipeline. If you see this as a draft in Squarespace, the pipeline works.</p>",
+  "plaintext": "Test post from Netlify function.",
+  "createdAt": "2026-04-12T23:05:53.120Z",
+  "status": "pending",
+  "squarespaceId": null,
+  "squarespaceUrl": null
+}
