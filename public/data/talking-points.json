@@ -1,93 +1,13 @@
 {
-  "generated_at": "2026-04-09T15:33:49.612616+00:00",
+  "generated_at": "2026-04-12T21:01:38.484277+00:00",
   "window": [
-    "2026-04-09",
-    "2026-04-10",
     "2026-04-13",
     "2026-04-14",
-    "2026-04-15"
+    "2026-04-15",
+    "2026-04-16",
+    "2026-04-17"
   ],
   "events": [
-    {
-      "date": "2026-04-09",
-      "time": "",
-      "category": "Econ Release",
-      "title": "GDP",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-09",
-      "time": "",
-      "category": "Econ Release",
-      "title": "Personal Income & Outlays (PCE)",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-09",
-      "time": "",
-      "category": "Econ Release",
-      "title": "Initial Jobless Claims",
-      "source": "FRED",
-      "importance": 2
-    },
-    {
-      "date": "2026-04-09",
-      "time": "01:00 PM",
-      "category": "Treasury Auction",
-      "title": "29-Year 10-Month Bond Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
-    {
-      "date": "2026-04-09",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "4-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
-    {
-      "date": "2026-04-09",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "8-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
-    {
-      "date": "2026-04-10",
-      "time": "",
-      "category": "Econ Release",
-      "title": "CPI",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-10",
-      "time": "",
-      "category": "Econ Release",
-      "title": "Durable Goods (M3 Survey)",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-13",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "13-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
-    {
-      "date": "2026-04-13",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "26-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
-    },
     {
       "date": "2026-04-14",
       "time": "",
@@ -97,22 +17,22 @@
       "importance": 2
     },
     {
-      "date": "2026-04-14",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "52-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
+      "date": "2026-04-16",
+      "time": "",
+      "category": "Econ Release",
+      "title": "Industrial Production",
+      "source": "FRED",
+      "importance": 2
     },
     {
-      "date": "2026-04-14",
-      "time": "11:30 AM",
-      "category": "Treasury Auction",
-      "title": "6-Week Bill Auction",
-      "source": "TreasuryDirect",
-      "importance": 1
+      "date": "2026-04-16",
+      "time": "",
+      "category": "Econ Release",
+      "title": "Initial Jobless Claims",
+      "source": "FRED",
+      "importance": 2
     }
   ],
-  "talking_points_text": "\u2014 TODAY (Thu Apr 9) \u2014\n\u2605\u2605\u2605 GDP\n\u2605\u2605\u2605 Personal Income & Outlays (PCE)\n\u2605\u2605 Initial Jobless Claims\n\u2605 29-Year 10-Month Bond Auction 01:00 PM ET\n\u2605 4-Week Bill Auction 11:30 AM ET\n\u2605 8-Week Bill Auction 11:30 AM ET\n\u2014 TOMORROW (Fri Apr 10) \u2014\n\u2605\u2605\u2605 CPI\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2014 MON APR 13 (Mon Apr 13) \u2014\n\u2605 13-Week Bill Auction 11:30 AM ET\n\u2605 26-Week Bill Auction 11:30 AM ET\n\u2014 TUE APR 14 (Tue Apr 14) \u2014\n\u2605\u2605 PPI\n\u2605 52-Week Bill Auction 11:30 AM ET\n\u2605 6-Week Bill Auction 11:30 AM ET",
+  "talking_points_text": "\u2014 TOMORROW \u2014\n\u2605\u2605 PPI\n\u2014 Thu Apr 16 \u2014\n\u2605\u2605 Industrial Production\n\u2605\u2605 Initial Jobless Claims",
   "errors": []
 }

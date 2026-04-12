@@ -344,13 +344,16 @@ def main():
     for i, d in enumerate(window[2:], start=2):
         day_label_map[d.isoformat()] = d.strftime("%a %b %-d").upper()
 
+    # Filter out 1-star events (bill auctions etc)
+    deduped = [e for e in deduped if e["importance"] >= 2]
+
     current_day = None
     for e in deduped:
         if e["date"] != current_day:
             current_day = e["date"]
             header_date = datetime.strptime(current_day, "%Y-%m-%d").strftime("%a %b %-d")
             label = day_label_map.get(current_day, header_date)
-            lines.append(f"— {label} ({header_date}) —")
+            lines.append(f"— {label} —" if label in ("TODAY", "TOMORROW") else f"— {header_date} —")
         stars = "★" * e["importance"]
         t = f" {e['time']} ET" if e["time"] else ""
         lines.append(f"{stars} {e['title']}{t}")
