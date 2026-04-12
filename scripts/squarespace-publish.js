@@ -6,10 +6,10 @@
 // post as a DRAFT, then moves the file from pending/ to published/.
 //
 // Required env vars:
-//   SQUARESPACE_EMAIL    – Squarespace account email
-//   SQUARESPACE_PASSWORD – Squarespace account password
-//   SQUARESPACE_SITE_URL – e.g. https://simplestocks.squarespace.com
-//   GITHUB_TOKEN         – PAT with contents:write on the repo
+//   SQUARESPACE_EMAIL    - Squarespace account email
+//   SQUARESPACE_PASSWORD - Squarespace account password
+//   SQUARESPACE_SITE_URL - e.g. https://simplestocks.squarespace.com
+//   GITHUB_TOKEN         - PAT with contents:write on the repo
 // ---------------------------------------------------------------
 
 const https = require('https');
@@ -92,18 +92,61 @@ function ghApi(method, path, body) {
   });
 }
 
+// ---------- COOKIE HELPERS ----------
+
+function extractCookiePairs(setCookies) {
+  const arr = Array.isArray(setCookies) ? setCookies : [setCookies];
+  return arr.map(sc => sc.split(';')[0]); // "name=value"
+}
+
+function mergeCookies(existingPairs, newSetCookies) {
+  const map = {};
+  for (const pair of existingPairs) {
+    const [k] = pair.split('=');
+    map[k] = pair;
+  }
+  const newPairs = extractCookiePairs(newSetCookies);
+  for (const pair of newPairs) {
+    const [k] = pair.split('=');
+    map[k] = pair;
+  }
+  return Object.values(map);
+}
+
 // ---------- SQUARESPACE AUTH ----------
 
 async function squarespaceLogin(siteUrl, email, password) {
-  console.log('  Step 1: POST /api/auth/Login ...');
 
-  // Step 1: POST /api/auth/Login with form-encoded credentials
+  // Step 0: GET the login page to obtain initial crumb + session cookies
+  console.log('  Step 0: GET /login to get initial crumb ...');
+  const initRes = await request(`${siteUrl}/login`, { method: 'GET' });
+
+  if (initRes.status >= 400) {
+    throw new Error(`Step 0 GET /login failed: ${initRes.status}`);
+  }
+
+  let cookiePairs = [];
+  if (initRes.headers['set-cookie']) {
+    cookiePairs = extractCookiePairs(initRes.headers['set-cookie']);
+  }
+
+  // Extract initial crumb from cookies
+  const initCookieStr = cookiePairs.join('; ');
+  const initCrumbMatch = initCookieStr.match(/crumb=([^;]+)/);
+  const initCrumb = initCrumbMatch ? initCrumbMatch[1] : '';
+  console.log(`  Initial crumb obtained: ${initCrumb ? 'yes' : 'no'}`);
+
+  // Step 1: POST /api/auth/Login with form-encoded credentials + cookies from step 0
+  console.log('  Step 1: POST /api/auth/Login ...');
   const formBody = `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
-  const loginRes = await request(`${siteUrl}/api/auth/Login`, {
+  const loginRes = await request(`${siteUrl}/api/auth/Login?crumb=${initCrumb}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(formBody)
+      'Content-Length': Buffer.byteLength(formBody),
+      'Cookie': initCookieStr,
+      'Origin': siteUrl,
+      'Referer': `${siteUrl}/login`
     },
     body: formBody
   });
@@ -112,11 +155,26 @@ async function squarespaceLogin(siteUrl, email, password) {
     throw new Error(`Login step 1 failed: ${loginRes.status} ${loginRes.body.substring(0, 300)}`);
   }
 
+  // Merge new cookies from login response
+  if (loginRes.headers['set-cookie']) {
+    cookiePairs = mergeCookies(cookiePairs, loginRes.headers['set-cookie']);
+  }
+
   const loginJson = JSON.parse(loginRes.body);
   const tokenLoginUrl = loginJson.targetWebsite && loginJson.targetWebsite.loginUrl;
 
   if (!tokenLoginUrl) {
-    throw new Error('Login step 1 did not return targetWebsite.loginUrl');
+    // Some accounts may not need the token exchange step
+    console.log('  No targetWebsite.loginUrl - checking if already authenticated...');
+    const finalCookieStr = cookiePairs.join('; ');
+    const finalCrumbMatch = finalCookieStr.match(/crumb=([^;]+)/);
+    if (finalCrumbMatch) {
+      return {
+        crumb: finalCrumbMatch[1],
+        cookieHeader: finalCookieStr
+      };
+    }
+    throw new Error('Login step 1 did not return targetWebsite.loginUrl and no crumb found');
   }
 
   console.log('  Step 2: Token exchange at loginUrl ...');
@@ -124,37 +182,31 @@ async function squarespaceLogin(siteUrl, email, password) {
   // Step 2: GET the tokenLogin URL with credentials as query params
   const sep = tokenLoginUrl.includes('?') ? '&' : '?';
   const tokenUrl = `${tokenLoginUrl}${sep}email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
-  const tokenRes = await request(tokenUrl, { method: 'GET' });
+  const tokenRes = await request(tokenUrl, {
+    method: 'GET',
+    headers: {
+      'Cookie': cookiePairs.join('; ')
+    }
+  });
 
   if (tokenRes.status < 200 || tokenRes.status >= 400) {
     throw new Error(`Login step 2 failed: ${tokenRes.status}`);
   }
 
-  // Extract cookies from set-cookie headers
-  const setCookies = tokenRes.headers['set-cookie'];
-  if (!setCookies) {
-    throw new Error('Login step 2 did not return set-cookie headers');
+  // Merge all cookies
+  if (tokenRes.headers['set-cookie']) {
+    cookiePairs = mergeCookies(cookiePairs, tokenRes.headers['set-cookie']);
   }
 
-  const cookieStr = (Array.isArray(setCookies) ? setCookies : [setCookies]).join('; ');
-
-  // Extract crumb value
-  const crumbMatch = cookieStr.match(/crumb=([^;]+)/);
+  const finalCookieStr = cookiePairs.join('; ');
+  const crumbMatch = finalCookieStr.match(/crumb=([^;]+)/);
   if (!crumbMatch) {
-    throw new Error('Could not extract crumb from cookies');
-  }
-
-  // Build cookie header for subsequent requests (need session cookies)
-  const cookiePairs = [];
-  const cookieArray = Array.isArray(setCookies) ? setCookies : [setCookies];
-  for (const sc of cookieArray) {
-    const pair = sc.split(';')[0]; // "name=value"
-    cookiePairs.push(pair);
+    throw new Error('Could not extract crumb from cookies after login');
   }
 
   return {
     crumb: crumbMatch[1],
-    cookieHeader: cookiePairs.join('; ')
+    cookieHeader: finalCookieStr
   };
 }
 
