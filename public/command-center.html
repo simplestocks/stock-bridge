@@ -216,7 +216,7 @@
 <body>
   <header>
     <h1>Command <span>Center</span></h1>
-    <div class="meta">Nic · 5 active Claude projects · Last updated Apr 5, 2026 (PT)</div>
+    <div class="meta">Nic · 5 active Claude projects · Last updated Apr 12, 2026 (PT)</div>
   </header>
 
   <div class="grid">
@@ -431,54 +431,24 @@
       <div class="notes-box">Chat renamed to "Helo" (user does this client-side in Cowork sidebar). Scheduled reminder set for Fri 4/10/2026 4:00 PM PT to action plan the encrypted vault build — Option 1 now (plain notes), Option C later (master-password-encrypted creds).</div>
     </div>
 
-    <!-- ============ PROJECT 5: BRIEFING ============ -->
+    <!-- ============ PROJECT 5: BRIEFING: EARNINGS ============ -->
     <div class="card completed">
-      <h2>Briefing — Morning Note Auto-Populate</h2>
+      <h2>Briefing: Earnings</h2>
 
       <div class="section-label">Status / What's Done</div>
       <p class="status">
-        Two auto-populate workstreams shipped and running on the Morning Note tab in <code>alerts.html</code>.
-        Both feed the Morning Note output automatically at market prep time — no manual copy/paste.
-        Currently stable, no open items. Parked until new improvements come up.
+        Operational. Code lives on GitHub (<code>simplestocks/stock-bridge</code>), runs via Netlify functions.
+        Pulls current-week earnings data into the Morning Note tab on <code>alerts.html</code>.
+        Added functionality: Refresh, +7 days, +14 days, project status indicator, and Status Done with today's date.
       </p>
 
-      <div class="section-label">Completed</div>
-      <ol class="actions">
-        <li class="green">
-          <span class="trigger">Shipped · yesterday</span>
-          <strong>News → Talking Points auto-populate.</strong> News items pulled and dropped directly into the Talking Points textarea on page load. Flows straight into the generated Morning Note.
-        </li>
-        <li class="green">
-          <span class="trigger">Shipped · latest</span>
-          <strong>Earnings calendar auto-populate.</strong> <code>scripts/build_earnings.py</code> hits the Nasdaq public API (no key), filters $10B+ market cap, pulls Mon–Fri current week, writes <code>public/data/earnings.json</code>. New <code>m_earn_text</code> textarea in the Earnings section auto-fills on page load via <code>loadEarnings()</code>. Format per line: <code>Mon Apr 6: — | —</code> (BMO | AMC, em dash when empty). Non-overridden — hand-typed edits survive page reload.
-        </li>
-      </ol>
-
-      <div class="section-label">Delivered Files</div>
+      <div class="section-label">Services</div>
       <ul class="flat">
-        <li><code>scripts/build_earnings.py</code> — Nasdaq API fetcher, $10B+ filter</li>
-        <li><code>public/data/earnings.json</code> — auto-written, committed, served by Netlify</li>
-        <li><code>alerts.html</code> — new <code>m_earn_text</code> textarea + <code>loadEarnings()</code> wiring</li>
-        <li>Scheduled task: <code>morning-briefing-earnings-calendar</code> — weekdays ~3:14 AM PT, rolls forward on weekends</li>
+        <li><strong>GitHub</strong> — <span class="cost">free</span> (<code>stock-bridge</code> repo)</li>
+        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (functions + hosting)</li>
+        <li><strong>Nasdaq public API</strong> — <span class="cost">free</span> (no key)</li>
       </ul>
-
-      <div class="section-label">Services &amp; Costs</div>
-      <ul class="flat">
-        <li><strong>Nasdaq public API</strong> — <span class="cost">free</span> (no key, consolidated US earnings feed)</li>
-        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (serves <code>earnings.json</code>, auto-deploys on commit)</li>
-        <li><strong>GitHub</strong> — <span class="cost">free</span> (reuses <code>stock-bridge</code> repo)</li>
-        <li><strong>Cowork scheduled task</strong> — part of Claude subscription</li>
-      </ul>
-      <div class="total-line">Total recurring: <strong>$0/mo incremental</strong></div>
-
-      <div class="section-label">Live URLs</div>
-      <ul class="flat">
-        <li>JSON: <code>jazzy-starlight-0a9a95.netlify.app/data/earnings.json</code></li>
-        <li>Page: <code>jazzy-starlight-0a9a95.netlify.app/alerts.html</code> → Morning Note → Earnings</li>
-      </ul>
-
-      <div class="section-label">Notes</div>
-      <div class="notes-box">Current week is light — Apr 6-10 shows only DAL, RPM, STZ at the $10B threshold. Real test is Apr 13-17 (JPM, JNJ, WFC, BLK, BAC, MS, GS, ASML, TSM, NFLX, PEP, ABT etc). Market cap pulled from Nasdaq's per-ticker feed — no separate quote call. Parked; green card = shipped, no active work.</div>
+      <div class="total-line">Total recurring: <strong>$0/mo</strong></div>
     </div>
 
   </div>
