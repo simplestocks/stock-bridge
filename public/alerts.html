@@ -317,7 +317,16 @@
         <div class="field"><label>URL</label><input type="text" id="m_earn_url" placeholder="https://..."></div>
       </div>
       <div class="form-grid full">
-        <div class="field"><label>Weekly Earnings (auto-filled, $10B+ market cap)</label>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            Weekly Earnings (auto-filled, $10B+ market cap)
+            <span style="display:inline-flex;gap:6px;font-size:12px">
+              <a href="#" onclick="fetchEarningsLive(0);return false" style="color:#4fc3f7;text-decoration:none;border:1px solid #4fc3f7;padding:2px 8px;border-radius:4px" title="Refresh current week">Refresh</a>
+              <a href="#" onclick="fetchEarningsLive(7);return false" style="color:#81c784;text-decoration:none;border:1px solid #81c784;padding:2px 8px;border-radius:4px" title="Next week">+7</a>
+              <a href="#" onclick="fetchEarningsLive(14);return false" style="color:#ffb74d;text-decoration:none;border:1px solid #ffb74d;padding:2px 8px;border-radius:4px" title="Two weeks out">+14</a>
+            </span>
+            <span id="earn_fetch_status" style="font-size:11px;color:#888"></span>
+          </label>
           <textarea id="m_earn_text" rows="6" placeholder="Mon Apr 13: GS FAST | NFLX&#10;Tue Apr 14: JPM JNJ WFC C | —"></textarea>
         </div>
       </div>
@@ -887,6 +896,28 @@
       }
     }catch(e){
       console.warn('[earnings] load failed',e);
+    }
+  }
+
+  async function fetchEarningsLive(offset){
+    const ta=document.getElementById('m_earn_text');
+    const st=document.getElementById('earn_fetch_status');
+    if(!ta)return;
+    const labels={0:'current week',7:'next week',14:'two weeks out'};
+    if(st)st.textContent='Fetching '+labels[offset]+'…';
+    try{
+      const res=await fetch('/.netlify/functions/earnings-fetch?offset='+offset,{cache:'no-store'});
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const data=await res.json();
+      if(data.error)throw new Error(data.error);
+      if(data.earnings_text){
+        ta.value=data.earnings_text;
+        if(st)st.textContent='✓ '+data.week_start+' → '+data.week_end;
+        console.log('[earnings] live fetch offset='+offset+', week='+data.week_start+' to '+data.week_end);
+      }
+    }catch(e){
+      console.warn('[earnings] live fetch failed',e);
+      if(st)st.textContent='✗ fetch failed: '+e.message;
     }
   }
 
