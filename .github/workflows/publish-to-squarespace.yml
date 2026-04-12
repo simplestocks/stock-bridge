@@ -1,0 +1,45 @@
+# .github/workflows/publish-to-squarespace.yml
+# ---------------------------------------------------------------
+# Picks up queued posts from pending/ and creates Squarespace
+# DRAFTS via the internal API.  Runs:
+#   - Every 5 minutes (cron)
+#   - On any push that touches pending/
+#   - Manual dispatch from GitHub Actions UI
+# ---------------------------------------------------------------
+
+name: Publish to Squarespace
+
+on:
+  schedule:
+    # Every 5 minutes
+    - cron: '*/5 * * * *'
+
+  push:
+    branches: [main]
+    paths:
+      - 'pending/**'
+
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Squarespace publisher
+        env:
+          SQUARESPACE_SITE_URL: ${{ secrets.SQUARESPACE_SITE_URL }}
+          SQUARESPACE_EMAIL: ${{ secrets.SQUARESPACE_EMAIL }}
+          SQUARESPACE_PASSWORD: ${{ secrets.SQUARESPACE_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/squarespace-publish.js
