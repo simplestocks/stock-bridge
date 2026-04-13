@@ -220,6 +220,61 @@
   }
   .xsearch-btn:hover { color: #fff; }
 
+  .earnings-btn {
+    background: linear-gradient(135deg, #ff8c00 0%, #cc6600 100%);
+    color: #fff;
+    border: 1px solid #cc6600;
+    box-shadow: 0 0 10px rgba(255,140,0,0.4);
+  }
+
+  /* ---- EARNINGS DRAWER ---- */
+  .earn-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:900; }
+  .earn-overlay.open { display:block; }
+  .earn-drawer {
+    position:fixed; top:0; right:-480px; width:460px; max-width:92vw; height:100vh;
+    background:#0d0d0d; border-left:1px solid #222; z-index:901;
+    transition: right 0.25s ease; display:flex; flex-direction:column;
+    font-family: var(--sans);
+  }
+  .earn-drawer.open { right:0; }
+  .earn-drawer-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 14px; border-bottom:1px solid #222;
+  }
+  .earn-drawer-title { font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#ff8c00; }
+  .earn-close { background:none; border:none; color:#666; font-size:22px; cursor:pointer; padding:0 4px; }
+  .earn-close:hover { color:#fff; }
+  .earn-input-row { display:flex; gap:8px; padding:14px 20px; border-bottom:1px solid #1a1a1a; }
+  .earn-input {
+    flex:1; background:#111; border:1px solid #333; color:#fff; font-family:var(--mono);
+    font-size:14px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+    padding:10px 14px; border-radius:4px; outline:none;
+  }
+  .earn-input:focus { border-color:#ff8c00; }
+  .earn-input::placeholder { color:#444; text-transform:none; font-weight:400; letter-spacing:0; }
+  .earn-go {
+    background:#ff8c00; color:#000; border:none; font-family:var(--mono); font-size:11px;
+    font-weight:700; letter-spacing:0.1em; padding:10px 18px; border-radius:4px; cursor:pointer;
+    transition: opacity 0.15s;
+  }
+  .earn-go:hover { opacity:0.85; }
+  .earn-go:disabled { opacity:0.4; cursor:not-allowed; }
+  .earn-body { flex:1; overflow-y:auto; padding:18px 20px; }
+  .earn-body .loading { color:#666; font-family:var(--mono); font-size:12px; }
+  .earn-body .error { color:#ff4444; font-family:var(--mono); font-size:12px; }
+  .earn-report {
+    font-size:13px; line-height:1.65; color:#ddd;
+  }
+  .earn-report strong, .earn-report b { color:#fff; }
+  .earn-copy-row { padding:10px 20px 14px; border-top:1px solid #222; }
+  .earn-copy {
+    background:#1a1a1a; color:#888; border:1px solid #333; font-family:var(--mono);
+    font-size:10px; font-weight:600; letter-spacing:0.1em; padding:8px 16px;
+    border-radius:3px; cursor:pointer; width:100%; text-transform:uppercase;
+    transition: all 0.15s;
+  }
+  .earn-copy:hover { color:#fff; border-color:#555; }
+
   </style>
 </head>
 <body>
@@ -232,6 +287,7 @@
     <a href="https://magix-production.up.railway.app/" target="_blank" class="nav-btn magix-btn">⚡ MAGIX</a>
     <a href="https://jazzy-starlight-0a9a95.netlify.app/command-center.html" target="_blank" class="nav-btn helo-btn">🧭 HELO</a>
     <a href="xsearch://" class="nav-btn xsearch-btn">X Search</a>
+    <button class="nav-btn earnings-btn" onclick="openEarnings()">📊 Earnings</button>
   </div>
 
 
@@ -1992,6 +2048,79 @@
   function clearBull(){['b_ticker','b_price','b_subtitle','b_context','b_thesis','b_s1price','b_s1note','b_s2exp','b_s2credit','b_s2short','b_s2long','b_s2note','b_s3exp','b_s3credit','b_s3strike','b_s3be','b_s3margin','b_s3note','b_s4exp_buy','b_s4exp_sell','b_s4strike_buy','b_s4strike_sell','b_s4cost','b_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bullOutput').classList.remove('visible');updateIds();}
   function clearBear(){['r_ticker','r_price','r_subtitle','r_context','r_thesis','r_s1price','r_s1note','r_s2exp','r_s2credit','r_s2short','r_s2long','r_s2note','r_s3exp','r_s3credit','r_s3strike','r_s3margin','r_s3note','r_s4exp_buy','r_s4exp_sell','r_s4strike_buy','r_s4strike_sell','r_s4cost','r_s4note'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('bearOutput').classList.remove('visible');updateIds();}
   function clearSunday(){document.getElementById('s_date').value=getNextSunday();document.getElementById('s_time').value='10am Eastern';document.getElementById('s_pw').value='';document.getElementById('s_notes').value='';document.getElementById('s_type').selectedIndex=0;document.getElementById('sunOutput').classList.remove('visible');updateIds();}
+  // ---- EARNINGS DRAWER ----
+  function openEarnings(){
+    document.getElementById('earnOverlay').classList.add('open');
+    document.getElementById('earnDrawer').classList.add('open');
+    setTimeout(()=>document.getElementById('earnTicker').focus(),300);
+  }
+  function closeEarnings(){
+    document.getElementById('earnOverlay').classList.remove('open');
+    document.getElementById('earnDrawer').classList.remove('open');
+  }
+  async function fetchEarnings(){
+    const inp=document.getElementById('earnTicker');
+    const ticker=inp.value.trim().toUpperCase();
+    if(!ticker) return;
+    const body=document.getElementById('earnBody');
+    const btn=document.getElementById('earnGoBtn');
+    const copyRow=document.getElementById('earnCopyRow');
+    btn.disabled=true;
+    btn.textContent='...';
+    body.innerHTML='<div class="loading">Fetching '+ticker+' earnings…</div>';
+    copyRow.style.display='none';
+    try{
+      const resp=await fetch('/.netlify/functions/earnings-report',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ticker})
+      });
+      const data=await resp.json();
+      if(!resp.ok) throw new Error(data.error||'Request failed');
+      // Convert markdown-style bold and bullets to HTML
+      let html=data.report
+        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+        .replace(/^• /gm,'<br>• ')
+        .replace(/\n\n/g,'<br><br>')
+        .replace(/\n/g,'<br>');
+      body.innerHTML='<div class="earn-report">'+html+'</div>';
+      copyRow.style.display='block';
+    }catch(e){
+      body.innerHTML='<div class="error">'+e.message+'</div>';
+    }finally{
+      btn.disabled=false;
+      btn.textContent='GO';
+    }
+  }
+  function copyEarnings(){
+    const el=document.getElementById('earnBody');
+    const text=el.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn=document.getElementById('earnCopyBtn');
+      btn.textContent='Copied ✓';
+      setTimeout(()=>{btn.textContent='Copy Report';},2000);
+    });
+  }
 </script>
+
+<!-- Earnings Drawer -->
+<div class="earn-overlay" id="earnOverlay" onclick="closeEarnings()"></div>
+<div class="earn-drawer" id="earnDrawer">
+  <div class="earn-drawer-header">
+    <div class="earn-drawer-title">Earnings Report</div>
+    <button class="earn-close" onclick="closeEarnings()">✕</button>
+  </div>
+  <div class="earn-input-row">
+    <input class="earn-input" id="earnTicker" placeholder="Ticker e.g. GS" onkeydown="if(event.key==='Enter')fetchEarnings()">
+    <button class="earn-go" id="earnGoBtn" onclick="fetchEarnings()">GO</button>
+  </div>
+  <div class="earn-body" id="earnBody">
+    <div style="color:#444;font-family:var(--mono);font-size:11px;padding-top:40px;text-align:center;">Type a ticker and hit GO</div>
+  </div>
+  <div class="earn-copy-row" id="earnCopyRow" style="display:none;">
+    <button class="earn-copy" id="earnCopyBtn" onclick="copyEarnings()">Copy Report</button>
+  </div>
+</div>
+
 </body>
 </html>
