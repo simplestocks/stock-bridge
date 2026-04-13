@@ -216,7 +216,7 @@
 <body>
   <header>
     <h1>Command <span>Center</span></h1>
-    <div class="meta">Nic · 6 active Claude projects · Last updated Apr 12, 2026 (PT)</div>
+    <div class="meta">Nic · 7 active Claude projects · Last updated Apr 12, 2026 (PT)</div>
   </header>
 
   <div class="grid">
@@ -452,6 +452,41 @@
       </ul>
     </div>
 
+    <!-- ============ PROJECT 7: EXTRACT SIGNUPS / ATTENDEES ============ -->
+    <div class="card">
+      <h2>Extract Sign Ups and Attendees from SquareSpace</h2>
+
+      <div class="section-label">Status</div>
+      <p class="status">
+        <strong style="color:var(--yellow)">On Hold</strong> — waiting to see how to move forward. No next actions at this time.
+      </p>
+
+      <div class="section-label">What Was Built</div>
+      <ul class="flat">
+        <li>
+          <strong>Seminar Attendee Master Workbook (Excel)</strong> — 446 attendance records extracted from 19-event Google Sheets file.
+          240 unique people, 107 repeat attendees. 4 tabs: Master List, Person Summary (✓ matrix), Event Summary, Lookup.
+          Lookup tab has single search box + 50-row bulk paste for live screening (green = existing member, red = new).
+          Static file — bring updated Google Sheets to regenerate.
+        </li>
+        <li>
+          <strong>Squaresubs — Order Tracker (15-min auto-poll)</strong> — Google Apps Script (<code>pullOrders</code>) runs every 15 min via time trigger.
+          Polls Squarespace Orders API, logs every new order to sheet.
+          Emails <code>racernic@gmail.com</code> only when new signups come in.
+          Rate-limit handling added (sleep between pages, retry on 429, errors log to sheet).
+          Sheet: <a href="https://docs.google.com/spreadsheets/d/14Ror5sWUP9QFXIb72zf5beeIn923caOtoI0VE9zlWp4" target="_blank" style="color:var(--accent);text-decoration:none;">Squaresubs Sheet</a>
+        </li>
+        <li>
+          <strong>Squarequery — 7start Plan Lookup (on-demand)</strong> — Google Apps Script (<code>pullPlanMembers</code>), run manually when needed.
+          Pulls all orders matching the 7start pricing plan from Squarespace. No changes needed — working fine.
+          Sheet: <a href="https://docs.google.com/spreadsheets/d/1sQyy_x52x4MvxAJQhn6fPGxsqa8PWr4PkCJNAJ0sy3Q" target="_blank" style="color:var(--accent);text-decoration:none;">Squarequery Sheet</a>
+        </li>
+      </ul>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-box">Next discussed move: convert seminar attendee data into a real web app via Firebase Studio + Firestore — so Nic and team can search, update, and import new events from a browser. On hold pending decision on direction.</div>
+    </div>
+
     <!-- ============ PROJECT 5: BRIEFING: EARNINGS ============ -->
     <div class="card completed">
       <h2>Briefing: Earnings</h2>
@@ -475,7 +510,7 @@
   </div>
 
   <footer>
-    simplestocks.com · built in Cowork · 6 active projects · single-file, portable, GitHub-ready
+    simplestocks.com · built in Cowork · 7 active projects · single-file, portable, GitHub-ready
   </footer>
 </body>
 </html>
