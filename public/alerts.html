@@ -229,24 +229,24 @@
     <div class="tagline">// alert generator</div>
   </header>
   <div class="nav-launchers">
-    <a href="https://magix-production.up.railway.app/" target="_blank" class="nav-btn magix-btn">â¡ MAGIX</a>
-    <a href="https://jazzy-starlight-0a9a95.netlify.app/command-center.html" target="_blank" class="nav-btn helo-btn">ð§­ HELO</a>
+    <a href="https://magix-production.up.railway.app/" target="_blank" class="nav-btn magix-btn">⚡ MAGIX</a>
+    <a href="https://jazzy-starlight-0a9a95.netlify.app/command-center.html" target="_blank" class="nav-btn helo-btn">🧭 HELO</a>
     <a href="xsearch://" class="nav-btn xsearch-btn">X Search</a>
   </div>
 
 
   <div class="tabs">
-    <button class="tab-btn morn active" onclick="switchTab('morn',this)">Ã¢ÂÂ Morning Note</button>
-    <button class="tab-btn bull" onclick="switchTab('bull',this)">Ã¢ÂÂ² Bullish Alert</button>
-    <button class="tab-btn bear" onclick="switchTab('bear',this)">Ã¢ÂÂ¼ Bearish Alert</button>
+    <button class="tab-btn morn active" onclick="switchTab('morn',this)">☀ Morning Note</button>
+    <button class="tab-btn bull" onclick="switchTab('bull',this)">▲ Bullish Alert</button>
+    <button class="tab-btn bear" onclick="switchTab('bear',this)">▼ Bearish Alert</button>
     <button class="tab-btn sun"  onclick="switchTab('sun',this)">Sunday Session</button>
-    <button class="tab-btn vid"  onclick="switchTab('vid',this)">Ã°ÂÂÂ¹ Sunday Videos</button>
-    <button class="tab-btn trd"  onclick="switchTab('trd',this)">Ã°ÂÂÂ Trade Log</button>
+    <button class="tab-btn vid"  onclick="switchTab('vid',this)">📹 Sunday Videos</button>
+    <button class="tab-btn trd"  onclick="switchTab('trd',this)">📊 Trade Log</button>
   </div>
 
   <!-- ===== MORNING NOTE ===== -->
   <div class="tab-panel tab-morn active" id="tab-morn">
-    <div class="id-display">NOTE ID: <span class="id-morn" id="mornId">Ã¢ÂÂ</span></div>
+    <div class="id-display">NOTE ID: <span class="id-morn" id="mornId">—</span></div>
 
     <div class="section-label sl-morn">Title</div>
     <div class="form-grid full">
@@ -301,7 +301,7 @@
     </div>
 
     <!-- SPX SHORT TERM LINKS -->
-    <div class="info-box">Short term line links Ã¢ÂÂ label + URL</div>
+    <div class="info-box">Short term line links — label + URL</div>
     <div class="link-pair">
       <div class="field"><label>Link 1 Label</label><input type="text" id="m_spx_l1_label" value="ES_F"></div>
       <div class="field"><label>Link 1 URL</label><input type="text" id="m_spx_l1_url" placeholder="https://www.tradingview.com/..."></div>
@@ -372,7 +372,7 @@
             </span>
             <span id="earn_fetch_status" style="font-size:11px;color:#888"></span>
           </label>
-          <textarea id="m_earn_text" rows="6" placeholder="Mon Apr 13: GS FAST | NFLX&#10;Tue Apr 14: JPM JNJ WFC C | Ã¢ÂÂ"></textarea>
+          <textarea id="m_earn_text" rows="6" placeholder="Mon Apr 13: GS FAST | NFLX&#10;Tue Apr 14: JPM JNJ WFC C | —"></textarea>
         </div>
       </div>
     </div>
@@ -403,21 +403,21 @@
 
       <div class="assess-section">
         <div class="assess-section-title">Market Pulse</div>
-        <div class="assess-bias" id="mp_bias">Ã¢ÂÂ</div>
+        <div class="assess-bias" id="mp_bias">—</div>
         <div class="assess-verdict" id="mp_verdict"></div>
         <div class="assess-suggestion" id="mp_suggestion"></div>
-        <button class="btn-accept" id="acceptMpBtn">Accept Ã¢ÂÂ Populate Field</button>
+        <button class="btn-accept" id="acceptMpBtn">Accept → Populate Field</button>
       </div>
 
       <div class="assess-section">
         <div class="assess-section-title">SPX Tracker</div>
-        <div class="assess-bias" id="spx_bias">Ã¢ÂÂ</div>
+        <div class="assess-bias" id="spx_bias">—</div>
         <div class="assess-verdict" id="spx_verdict"></div>
         <div class="assess-suggestion" id="spx_suggestion"></div>
-        <button class="btn-accept" id="acceptSpxBtn">Accept Ã¢ÂÂ Populate Field</button>
+        <button class="btn-accept" id="acceptSpxBtn">Accept → Populate Field</button>
       </div>
 
-      <!-- Title suggestion Ã¢ÂÂ populated by AI assess -->
+      <!-- Title suggestion — populated by AI assess -->
       <div id="titleSuggestion" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
         <div class="assess-section-title" style="color:var(--morn);margin-bottom:8px;">Suggested Title</div>
         <div class="assess-suggestion" id="titleSuggestionValue" style="margin-bottom:10px;"></div>
@@ -427,7 +427,7 @@
 
     <!-- MACRO EVENTS PANEL -->
     <div class="assess-panel" id="macroPanel" style="border-color:#ffaa00;">
-      <div style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#ffaa00;margin-bottom:14px;">Week Ahead Ã¢ÂÂ Key Macro Events</div>
+      <div style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#ffaa00;margin-bottom:14px;">Week Ahead — Key Macro Events</div>
       <div id="macroContent" style="font-family:var(--sans);font-size:13px;color:var(--text);line-height:1.7;">Click "Week Ahead" to load this week's key events.</div>
     </div>
 
@@ -450,7 +450,7 @@
 
   <!-- ===== BULLISH TAB ===== -->
   <div class="tab-panel tab-bull" id="tab-bull">
-    <div class="id-display">TRADE ID: <span class="id-bull" id="bullId">Ã¢ÂÂ</span></div>
+    <div class="id-display">TRADE ID: <span class="id-bull" id="bullId">—</span></div>
     <div class="section-label sl-bull">Core Info</div>
     <div class="form-grid three">
       <div class="field"><label>Ticker</label><input type="text" id="b_ticker" placeholder="DASH" maxlength="8" oninput="this.value=this.value.toUpperCase()"></div>
@@ -464,24 +464,24 @@
     <div class="form-grid full"><div class="field"><label>Trade Thesis</label><textarea id="b_thesis" placeholder="DASH is falling into a support zone..."></textarea></div></div>
     <div class="section-label sl-bull">Setups</div>
     <div class="setup-block">
-      <div class="setup-title st-bull">Setup 1 Ã¢ÂÂ Investment / Safest</div>
+      <div class="setup-title st-bull">Setup 1 — Investment / Safest</div>
       <div class="form-grid"><div class="field"><label>Type</label><select id="b_s1type"><option value="shares">Buy Shares</option><option value="skip">Skip</option></select></div><div class="field"><label>Entry Price</label><input type="text" id="b_s1price" placeholder="$XXX"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="b_s1note" placeholder="Starter position, leave room to add"></div>
     </div>
     <div class="setup-block">
-      <div class="setup-title st-bull">Setup 2 Ã¢ÂÂ Active</div>
+      <div class="setup-title st-bull">Setup 2 — Active</div>
       <div class="form-grid three"><div class="field"><label>Strategy</label><select id="b_s2type"><option value="cps">Credit Put Spread</option><option value="naked_put">Naked Put</option><option value="dcs">Debit Call Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="b_s2exp" placeholder="April 17th"></div><div class="field"><label>Credit / Debit</label><input type="text" id="b_s2credit" placeholder="$0.50 ($50/contract)"></div></div>
       <div class="form-grid"><div class="field"><label>Short Strike (Sell)</label><input type="text" id="b_s2short" placeholder="$XXX"></div><div class="field"><label>Long Strike (Buy)</label><input type="text" id="b_s2long" placeholder="$XXX"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="b_s2note" placeholder="Active trade, monitor every 1-2 days"></div>
     </div>
     <div class="setup-block">
-      <div class="setup-title st-bull">Setup 3 Ã¢ÂÂ Slower / Passive</div>
+      <div class="setup-title st-bull">Setup 3 — Slower / Passive</div>
       <div class="form-grid three"><div class="field"><label>Strategy</label><select id="b_s3type"><option value="naked_put">Naked Put</option><option value="cps">Credit Put Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="b_s3exp" placeholder="Sept 18th"></div><div class="field"><label>Credit</label><input type="text" id="b_s3credit" placeholder="$3.40 ($340/contract)"></div></div>
       <div class="form-grid"><div class="field"><label>Strike</label><input type="text" id="b_s3strike" placeholder="$XXX"></div><div class="field"><label>Breakeven</label><input type="text" id="b_s3be" placeholder="$XXX"></div></div>
       <div class="form-grid"><div class="field"><label>Margin Required</label><input type="text" id="b_s3margin" placeholder="~$1,300"></div><div class="field"><label>Notes (optional)</label><input type="text" id="b_s3note" placeholder="Can be modified into a spread for smaller accounts"></div></div>
     </div>
     <div class="setup-block">
-      <div class="setup-title st-bull">Setup 4 Ã¢ÂÂ Long Call / Debit Call Spread</div>
+      <div class="setup-title st-bull">Setup 4 — Long Call / Debit Call Spread</div>
       <div class="form-grid three"><div class="field"><label>Structure</label><select id="b_s4type"><option value="vertical">Vertical (same expiry)</option><option value="diagonal">Diagonal (diff expiry)</option><option value="calendar">Calendar (same strike)</option><option value="single_call">Single Call</option><option value="skip">Skip</option></select></div><div class="field"><label>Buy Expiration</label><input type="text" id="b_s4exp_buy" placeholder="June 20th"></div><div class="field"><label>Sell Expiration</label><input type="text" id="b_s4exp_sell" placeholder="April 17th (diag/cal)"></div></div>
       <div class="form-grid three"><div class="field"><label>Buy Strike</label><input type="text" id="b_s4strike_buy" placeholder="$XXX"></div><div class="field"><label>Sell Strike</label><input type="text" id="b_s4strike_sell" placeholder="$XXX (spread only)"></div><div class="field"><label>Cost / Debit</label><input type="text" id="b_s4cost" placeholder="$XXX ($XXX/contract)"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="b_s4note" placeholder="Defined risk bullish play targeting the upside move"></div>
@@ -491,7 +491,7 @@
       <button class="btn-clear" onclick="clearBull()">Clear</button>
     </div>
     <div class="output-section" id="bullOutput">
-      <div class="output-header"><div class="output-label ol-bull">Generated Alert Ã¢ÂÂ Bullish</div><button class="copy-btn cb-bull" id="bullCopyBtn" onclick="copyOutput('bullDoc','bullCopyBtn')">Copy All</button></div>
+      <div class="output-header"><div class="output-label ol-bull">Generated Alert — Bullish</div><button class="copy-btn cb-bull" id="bullCopyBtn" onclick="copyOutput('bullDoc','bullCopyBtn')">Copy All</button></div>
       <div class="output-doc" id="bullDoc"></div>
       <div class="meta-strip" id="bullMeta"></div>
       <div class="send-row">
@@ -506,7 +506,7 @@
 
   <!-- ===== BEARISH TAB ===== -->
   <div class="tab-panel tab-bear" id="tab-bear">
-    <div class="id-display">TRADE ID: <span class="id-bear" id="bearId">Ã¢ÂÂ</span></div>
+    <div class="id-display">TRADE ID: <span class="id-bear" id="bearId">—</span></div>
     <div class="section-label sl-bear">Core Info</div>
     <div class="form-grid three">
       <div class="field"><label>Ticker</label><input type="text" id="r_ticker" placeholder="DASH" maxlength="8" oninput="this.value=this.value.toUpperCase()"></div>
@@ -520,26 +520,26 @@
     <div class="form-grid full"><div class="field"><label>Trade Thesis</label><textarea id="r_thesis" placeholder="DASH is rallying into overhead resistance..."></textarea></div></div>
     <div class="section-label sl-bear">Setups</div>
     <div class="setup-block">
-      <div class="setup-title st-bear">Setup 1 Ã¢ÂÂ Short Shares</div>
+      <div class="setup-title st-bear">Setup 1 — Short Shares</div>
       <div class="warning-box">* Shorting stock carries unlimited risk and should not be taken lightly. Only appropriate for experienced traders with defined risk management.</div>
       <div class="form-grid"><div class="field"><label>Type</label><select id="r_s1type"><option value="short">Short Shares</option><option value="skip">Skip</option></select></div><div class="field"><label>Entry Price (Short)</label><input type="text" id="r_s1price" placeholder="$XXX"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="r_s1note" placeholder="Starter short, leave room to add on rips"></div>
     </div>
     <div class="setup-block">
-      <div class="setup-title st-bear">Setup 2 Ã¢ÂÂ Active</div>
+      <div class="setup-title st-bear">Setup 2 — Active</div>
       <div class="form-grid three"><div class="field"><label>Strategy</label><select id="r_s2type"><option value="ccs">Credit Call Spread</option><option value="dps">Debit Put Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="r_s2exp" placeholder="April 17th"></div><div class="field"><label>Credit / Debit</label><input type="text" id="r_s2credit" placeholder="$0.36 ($36/contract)"></div></div>
       <div class="form-grid"><div class="field"><label>Short Strike (Sell)</label><input type="text" id="r_s2short" placeholder="$XXX"></div><div class="field"><label>Long Strike (Buy)</label><input type="text" id="r_s2long" placeholder="$XXX"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="r_s2note" placeholder="Defined risk bearish setup, monitor every 1-2 days"></div>
     </div>
     <div class="setup-block">
-      <div class="setup-title st-bear">Setup 3 Ã¢ÂÂ Slower / Passive</div>
+      <div class="setup-title st-bear">Setup 3 — Slower / Passive</div>
       <div class="warning-box">* Selling naked calls carries unlimited risk and should not be taken lightly. Only appropriate for experienced traders with defined risk management.</div>
       <div class="form-grid three"><div class="field"><label>Strategy</label><select id="r_s3type"><option value="naked_call">Naked Call</option><option value="ccs">Credit Call Spread</option><option value="skip">Skip</option></select></div><div class="field"><label>Expiration</label><input type="text" id="r_s3exp" placeholder="May 1st"></div><div class="field"><label>Credit</label><input type="text" id="r_s3credit" placeholder="$0.50 ($50/contract)"></div></div>
       <div class="form-grid"><div class="field"><label>Strike</label><input type="text" id="r_s3strike" placeholder="$XXX"></div><div class="field"><label>Margin Required</label><input type="text" id="r_s3margin" placeholder="~$XXX"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="r_s3note" placeholder="Win as long as stock stays below short strike at expiration"></div>
     </div>
     <div class="setup-block">
-      <div class="setup-title st-bear">Setup 4 Ã¢ÂÂ Long Put / Debit Put Spread</div>
+      <div class="setup-title st-bear">Setup 4 — Long Put / Debit Put Spread</div>
       <div class="form-grid three"><div class="field"><label>Structure</label><select id="r_s4type"><option value="vertical_put">Vertical Put Spread</option><option value="diagonal_put">Diagonal Put Spread</option><option value="single_put">Single Put</option><option value="skip">Skip</option></select></div><div class="field"><label>Buy Expiration</label><input type="text" id="r_s4exp_buy" placeholder="June 20th"></div><div class="field"><label>Sell Expiration</label><input type="text" id="r_s4exp_sell" placeholder="April 17th (diag only)"></div></div>
       <div class="form-grid three"><div class="field"><label>Buy Strike</label><input type="text" id="r_s4strike_buy" placeholder="$XXX"></div><div class="field"><label>Sell Strike</label><input type="text" id="r_s4strike_sell" placeholder="$XXX (spread only)"></div><div class="field"><label>Cost / Debit</label><input type="text" id="r_s4cost" placeholder="$XXX ($XXX/contract)"></div></div>
       <div class="field"><label>Notes (optional)</label><input type="text" id="r_s4note" placeholder="Defined risk bearish play targeting the downside move"></div>
@@ -549,7 +549,7 @@
       <button class="btn-clear" onclick="clearBear()">Clear</button>
     </div>
     <div class="output-section" id="bearOutput">
-      <div class="output-header"><div class="output-label ol-bear">Generated Alert Ã¢ÂÂ Bearish</div><button class="copy-btn cb-bear" id="bearCopyBtn" onclick="copyOutput('bearDoc','bearCopyBtn')">Copy All</button></div>
+      <div class="output-header"><div class="output-label ol-bear">Generated Alert — Bearish</div><button class="copy-btn cb-bear" id="bearCopyBtn" onclick="copyOutput('bearDoc','bearCopyBtn')">Copy All</button></div>
       <div class="output-doc" id="bearDoc"></div>
       <div class="meta-strip" id="bearMeta"></div>
       <div class="send-row">
@@ -564,7 +564,7 @@
 
   <!-- ===== SUNDAY VIDEOS TAB ===== -->
   <div class="tab-panel tab-vid" id="tab-vid">
-    <div class="id-display">NOTE ID: <span style="color:var(--vid)" id="vidId">Ã¢ÂÂ</span></div>
+    <div class="id-display">NOTE ID: <span style="color:var(--vid)" id="vidId">—</span></div>
 
     <div class="section-label sl-vid">Session Info</div>
     <div class="form-grid">
@@ -577,7 +577,7 @@
       </div>
     </div>
 
-    <div class="section-label sl-vid">Videos (up to 4 Ã¢ÂÂ leave blank to skip)</div>
+    <div class="section-label sl-vid">Videos (up to 4 — leave blank to skip)</div>
 
     <div class="setup-block">
       <div class="setup-title" style="color:var(--vid)">Video 1</div>
@@ -638,7 +638,7 @@
 
   <!-- ===== SUNDAY TAB ===== -->
   <div class="tab-panel tab-sun" id="tab-sun">
-    <div class="id-display">SESSION ID: <span class="id-bull" id="sunId">Ã¢ÂÂ</span></div>
+    <div class="id-display">SESSION ID: <span class="id-bull" id="sunId">—</span></div>
     <div class="section-label sl-bull">Session Details</div>
     <div class="form-grid"><div class="field"><label>Session Date</label><input type="text" id="s_date"></div><div class="field"><label>Time</label><input type="text" id="s_time" value="10am Eastern"></div></div>
     <div class="form-grid"><div class="field"><label>Live Room Password</label><input type="text" id="s_pw" placeholder="Enter weekly password"></div><div class="field"><label>Session Type</label><select id="s_type"><option>Sunday Charting Session</option><option>Sunday Market Prep</option><option>Sunday Live Room</option><option>Special Session</option></select></div></div>
@@ -663,16 +663,16 @@
 
   <!-- ===== TRADE LOG TAB ===== -->
   <div class="tab-panel tab-trd" id="tab-trd">
-    <div class="id-display">TRADE ID: <span style="color:var(--trade)" id="trdId">Ã¢ÂÂ</span></div>
+    <div class="id-display">TRADE ID: <span style="color:var(--trade)" id="trdId">—</span></div>
 
     <div class="section-label sl-trd">Ticker</div>
     <div class="form-grid" style="margin-bottom:10px;">
       <div class="field">
-        <label>Free-text Ticker (for any ticker Ã¢ÂÂ BA, AAPL, etc.)</label>
+        <label>Free-text Ticker (for any ticker — BA, AAPL, etc.)</label>
         <input type="text" id="trd_free_ticker" placeholder="e.g. BA, AAPL, TSLA" oninput="if(this.value){document.querySelectorAll('.ticker-btn').forEach(b=>{b.className='ticker-btn';});currentTicker=this.value.toUpperCase().trim();}">
       </div>
     </div>
-    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">OR QUICK SELECT Ã¢ÂÂ SPX / SPY GROUP</div>
+    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">OR QUICK SELECT — SPX / SPY GROUP</div>
     <div class="ticker-btn-group" id="trd_ticker_btns">
       <button class="ticker-btn" onclick="selectTicker('SPX',this)">SPX</button>
       <button class="ticker-btn" onclick="selectTicker('SPY',this)">SPY</button>
@@ -701,7 +701,7 @@
         <label>Expiration Date</label>
         <div style="display:flex;gap:6px;align-items:stretch;">
           <input type="text" id="trd_exp" placeholder="0DTE" style="flex:1;">
-          <button style="font-family:var(--mono);font-size:10px;font-weight:600;padding:0 10px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:3px;cursor:pointer;white-space:nowrap;" id="datePickerBtn">Ã¢ÂÂ¼ Pick</button>
+          <button style="font-family:var(--mono);font-size:10px;font-weight:600;padding:0 10px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:3px;cursor:pointer;white-space:nowrap;" id="datePickerBtn">▼ Pick</button>
         </div>
         <div id="datePicker" style="display:none;margin-top:6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;">
           <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em;">Select expiration</div>
@@ -738,7 +738,7 @@
       </div>
       <div class="field">
         <label>Max Risk (auto)</label>
-        <div class="calc-display" id="trd_maxrisk">Ã¢ÂÂ</div>
+        <div class="calc-display" id="trd_maxrisk">—</div>
       </div>
       <div class="field">
         <label>Width (IB only)</label>
@@ -754,11 +754,11 @@
       </div>
       <div class="field">
         <label>P&L $</label>
-        <div class="calc-display" id="trd_pnl_dollars">Ã¢ÂÂ</div>
+        <div class="calc-display" id="trd_pnl_dollars">—</div>
       </div>
       <div class="field">
         <label>P&L %</label>
-        <div class="calc-display" id="trd_pnl_pct">Ã¢ÂÂ</div>
+        <div class="calc-display" id="trd_pnl_pct">—</div>
       </div>
     </div>
 
@@ -769,7 +769,7 @@
       </div>
     </div>
 
-    <!-- DISCLAIMER PREVIEW Ã¢ÂÂ used by Discord embed + future HTML email export -->
+    <!-- DISCLAIMER PREVIEW — used by Discord embed + future HTML email export -->
     <div id="trd_disclaimer_preview" style="margin-top:14px;display:none;">
       <div class="section-label sl-trd" style="margin-bottom:6px;">Strategy Notes & Disclaimer (preview)</div>
       <div id="trd_strategy_note" style="font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--text);background:var(--surface);border-left:3px solid var(--trade);padding:10px 12px;border-radius:3px;margin-bottom:8px;"></div>
@@ -797,7 +797,7 @@
     <div style="margin-top:16px;display:none;" id="trd_log_section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <div class="section-label sl-trd" style="margin:0;border:none;">Logged Trades</div>
-        <a href="https://docs.google.com/spreadsheets/d/1pyUwZDGJuQv49KNe0rpaZImcxxKILJD7d3UZ45e5Ifo/edit" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--morn);text-decoration:none;">Open Sheet Ã¢ÂÂ</a>
+        <a href="https://docs.google.com/spreadsheets/d/1pyUwZDGJuQv49KNe0rpaZImcxxKILJD7d3UZ45e5Ifo/edit" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--morn);text-decoration:none;">Open Sheet ↗</a>
       </div>
       <div style="overflow-x:auto;max-height:300px;overflow-y:auto;">
         <table class="trade-log-table" id="trd_table">
@@ -819,7 +819,7 @@
       <div style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--bear);margin-bottom:10px;">Exit Trade</div>
       <input type="hidden" id="exit_trade_idx">
       <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px;">ID: <span id="exit_trade_id" style="color:var(--text)"></span></div>
-      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;"><span id="exit_ticker" style="color:var(--text)"></span> Ã¢ÂÂ <span id="exit_credit"></span></div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;"><span id="exit_ticker" style="color:var(--text)"></span> — <span id="exit_credit"></span></div>
       <div class="form-grid">
         <div class="field"><label>Close Price</label><input type="number" id="exit_close" placeholder="0.05" step="0.05"></div>
         <div class="field"><label>Notes (optional)</label><input type="text" id="exit_notes" placeholder="Closed for profit at resistance"></div>
@@ -843,26 +843,26 @@
   const SLACK_URL = '/.netlify/functions/slack-proxy';
   const DISCORD_PROXY_URL = '/.netlify/functions/discord-proxy';
 
-  // ===== TRADE DISCLAIMERS Ã¢ÂÂ single source of truth =====
+  // ===== TRADE DISCLAIMERS — single source of truth =====
   // Used by: Discord embed builder, on-page preview, future HTML email export.
   const TRADE_DISCLAIMERS = {
     strategyNotes: {
-      'CPS': "CPS wins when the underlying closes above the short put at expiration. Consider closing early and leaving profits on the table Ã¢ÂÂ past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
-      'CCS': "CCS wins when the underlying closes below the short call at expiration. Consider closing early and leaving profits on the table Ã¢ÂÂ past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
-      'IC':  "An Iron Condor wins when the underlying closes between the two short strikes at expiration. Consider closing early and leaving profits on the table Ã¢ÂÂ past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
-      'IB':  "The goal with an Iron Butterfly is to take partial profits Ã¢ÂÂ a 100% win is very low odds because it requires the underlying to pin exactly at the center short strikes at expiration. Close early and leave profits on the table. Past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'CPS': "CPS wins when the underlying closes above the short put at expiration. Consider closing early and leaving profits on the table — past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'CCS': "CCS wins when the underlying closes below the short call at expiration. Consider closing early and leaving profits on the table — past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'IC':  "An Iron Condor wins when the underlying closes between the two short strikes at expiration. Consider closing early and leaving profits on the table — past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
+      'IB':  "The goal with an Iron Butterfly is to take partial profits — a 100% win is very low odds because it requires the underlying to pin exactly at the center short strikes at expiration. Close early and leave profits on the table. Past mid-day, gamma and time decay accelerate sharply and can reverse a winner into a loser, especially for newer traders.",
       'Buy Call': "Before entry, set hard stop-out and profit-taking levels based on your risk appetite. Don't let a trade bleed past your planned exit, and take profits at predefined targets instead of hoping for more.",
       'Buy Put':  "Before entry, set hard stop-out and profit-taking levels based on your risk appetite. Don't let a trade bleed past your planned exit, and take profits at predefined targets instead of hoping for more."
     },
     executionNotes: {
       'CPS': "Execute this as one \"limit\" order.",
       'CCS': "Execute this as one \"limit\" order.",
-      'IC':  "Execute this as two separate \"limit\" orders Ã¢ÂÂ one for the put spread, one for the call spread.",
+      'IC':  "Execute this as two separate \"limit\" orders — one for the put spread, one for the call spread.",
       'IB':  "Execute this as one \"limit\" order.",
       'Buy Call': "",
       'Buy Put':  ""
     },
-    globalDisclaimer: "Ã¢ÂÂ  Risk Disclosure: Zero-DTE options are high-risk instruments that can produce rapid and total loss of premium or margin. This is a personal trade idea onlyÃ¢ÂÂnot financial advice or a recommendation. Trading alongside the live room is strongly recommended for full context. Maximum loss can be severe and may significantly damage accounts. This setup is for experienced traders only. You alone are responsible for your trading decisions."
+    globalDisclaimer: "⚠ Risk Disclosure: Zero-DTE options are high-risk instruments that can produce rapid and total loss of premium or margin. This is a personal trade idea only—not financial advice or a recommendation. Trading alongside the live room is strongly recommended for full context. Maximum loss can be severe and may significantly damage accounts. This setup is for experienced traders only. You alone are responsible for your trading decisions."
   };
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -893,7 +893,7 @@
   // Auto-save persistent fields on input
   document.addEventListener('DOMContentLoaded', function(){
     // Wire accept buttons
-    // Use event delegation Ã¢ÂÂ buttons may not exist at DOMContentLoaded time
+    // Use event delegation — buttons may not exist at DOMContentLoaded time
     document.addEventListener('click',function(e){
       console.log('[CLICK] clicked element id='+e.target.id+' class='+e.target.className);
       if(e.target&&e.target.id==='acceptMpBtn'){console.log('[CLICK] acceptMpBtn matched');acceptSuggestion('m_pulse','mp_suggestion');}
@@ -949,7 +949,7 @@
     const st=document.getElementById('earn_fetch_status');
     if(!ta)return;
     const labels={0:'current week',7:'next week',14:'two weeks out'};
-    if(st)st.textContent='Fetching '+labels[offset]+'Ã¢ÂÂ¦';
+    if(st)st.textContent='Fetching '+labels[offset]+'…';
     try{
       const res=await fetch('/.netlify/functions/earnings-fetch?offset='+offset,{cache:'no-store'});
       if(!res.ok)throw new Error('HTTP '+res.status);
@@ -957,12 +957,12 @@
       if(data.error)throw new Error(data.error);
       if(data.earnings_text){
         ta.value=data.earnings_text;
-        if(st)st.textContent='Ã¢ÂÂ '+data.week_start+' Ã¢ÂÂ '+data.week_end;
+        if(st)st.textContent='✓ '+data.week_start+' → '+data.week_end;
         console.log('[earnings] live fetch offset='+offset+', week='+data.week_start+' to '+data.week_end);
       }
     }catch(e){
       console.warn('[earnings] live fetch failed',e);
-      if(st)st.textContent='Ã¢ÂÂ fetch failed: '+e.message;
+      if(st)st.textContent='✗ fetch failed: '+e.message;
     }
   }
 
@@ -1062,8 +1062,8 @@
       const url=useVidChannel?DISCORD_VID_URL:`${DISCORD_MAIN_URL}?thread_id=${DISCORD_MAIN_THREAD}`;
       const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
       const ok=res.ok||res.status===204;
-      if(statusEl){statusEl.textContent=ok?'Ã¢ÂÂ Sent to Discord successfully.':'Ã¢ÂÂ Discord send failed.';statusEl.className=ok?'send-status ok':'send-status err';}
-    }catch(e){if(statusEl){statusEl.textContent=`Ã¢ÂÂ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
+      if(statusEl){statusEl.textContent=ok?'✓ Sent to Discord successfully.':'✗ Discord send failed.';statusEl.className=ok?'send-status ok':'send-status err';}
+    }catch(e){if(statusEl){statusEl.textContent=`✗ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},5000);
   }
 
@@ -1076,11 +1076,11 @@
     if(statusEl){statusEl.textContent='Sending to Slack...';statusEl.className='send-status';}
     try{
       const res=await fetch(SLACK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.substring(0,3000)})});
-      if(res.ok){if(statusEl){statusEl.textContent='Ã¢ÂÂ Sent to Slack successfully.';statusEl.className='send-status ok';}}
+      if(res.ok){if(statusEl){statusEl.textContent='✓ Sent to Slack successfully.';statusEl.className='send-status ok';}}
       else{const errText=await res.text();throw new Error(errText||`HTTP ${res.status}`);}
     }catch(e){
-      // Slack webhooks block from browser due to CORS Ã¢ÂÂ offer fallback
-      if(statusEl){statusEl.textContent='Ã¢ÂÂ Slack blocked by browser CORS. Use the Copy button and paste into Slack instead.';statusEl.className='send-status err';}
+      // Slack webhooks block from browser due to CORS — offer fallback
+      if(statusEl){statusEl.textContent='✗ Slack blocked by browser CORS. Use the Copy button and paste into Slack instead.';statusEl.className='send-status err';}
     }
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
   }
@@ -1109,13 +1109,13 @@
       });
       const data=await res.json().catch(()=>({}));
       if(res.ok&&data.status==='ok'){
-        if(statusEl){statusEl.textContent=`Ã¢ÂÂ Queued for Squarespace (${data.path}).`;statusEl.className='send-status ok';}
-        if(btn){btn.textContent='Queued Ã¢ÂÂ';setTimeout(()=>{btn.textContent='Send to Squarespace';btn.disabled=false;},3000);}
+        if(statusEl){statusEl.textContent=`✓ Queued for Squarespace (${data.path}).`;statusEl.className='send-status ok';}
+        if(btn){btn.textContent='Queued ✓';setTimeout(()=>{btn.textContent='Send to Squarespace';btn.disabled=false;},3000);}
       }else{
         throw new Error(data.message||`HTTP ${res.status}`);
       }
     }catch(e){
-      if(statusEl){statusEl.textContent=`Ã¢ÂÂ Queue failed: ${e.message}`;statusEl.className='send-status err';}
+      if(statusEl){statusEl.textContent=`✗ Queue failed: ${e.message}`;statusEl.className='send-status err';}
       if(btn){btn.textContent='Send to Squarespace';btn.disabled=false;}
     }
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
@@ -1144,7 +1144,7 @@
       spxBlock=`<p><span class="b">+ SPX tracker:</span> ${spx||''}${levels?'<br>'+levels:''}${spxLinksHtml}</p>`;
     }
 
-    const mTitle=v('m_title')||('Morning Note Ã¢ÂÂ '+mmdd);
+    const mTitle=v('m_title')||('Morning Note — '+mmdd);
     const mSubtitle=v('m_subtitle')||'Good morning traders.';
     document.getElementById('mornDoc').innerHTML=`
       <div class="doc-head">${mTitle}</div>
@@ -1158,7 +1158,7 @@
         ${ktpHtml}${earnHtml}${extraHtml}
         <div class="doc-meta" style="margin-top:12px;font-size:10px;">NOTE ID: ${id} | ${mmdd}</div>
       </div>`;
-    document.getElementById('mornMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Morning Note ${mmdd} Ã¢ÂÂ ${id}</span></div>`;
+    document.getElementById('mornMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Morning Note ${mmdd} — ${id}</span></div>`;
     document.getElementById('mornOutput').classList.add('visible');
     document.getElementById('mornOutput').scrollIntoView({behavior:'smooth',block:'start'});
     // Enable assess button
@@ -1231,10 +1231,10 @@
     if(suggestion&&fieldId){
       const target=document.getElementById(fieldId);
       console.log('[ACCEPT] target='+target);
-      if(target){target.value=suggestion;console.log('[ACCEPT] SUCCESS Ã¢ÂÂ field populated');}
-      else{console.log('[ACCEPT] FAIL Ã¢ÂÂ target element not found');}
+      if(target){target.value=suggestion;console.log('[ACCEPT] SUCCESS — field populated');}
+      else{console.log('[ACCEPT] FAIL — target element not found');}
     } else {
-      console.log('[ACCEPT] FAIL Ã¢ÂÂ no suggestion or fieldId');
+      console.log('[ACCEPT] FAIL — no suggestion or fieldId');
     }
   }
 
@@ -1277,7 +1277,7 @@
     const thHtml=thesis?`<p>${thesis}</p>`:`<p><span class="ph">[Trade thesis]</span></p>`;
     const bullTitleDate=`${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
     document.getElementById('bullDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} - ${bullTitleDate}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already long ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
-    document.getElementById('bullMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} Ã¢ÂÂ ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
+    document.getElementById('bullMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
     document.getElementById('bullOutput').classList.add('visible');document.getElementById('bullOutput').scrollIntoView({behavior:'smooth',block:'start'});
     // Auto-log to trade sheet
     silentLogTrade({trade_id:id,date:mmdd,time:`${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`,ticker,type:bias,strike1:v('b_s2short')||v('b_s4strike_buy')||'',strike2:v('b_s2long')||v('b_s4strike_sell')||'',strike3:'',strike4:'',credit:v('b_s2credit')||v('b_s4cost')||'',max_risk:'',close_price:'',pnl_dollars:'',pnl_percent:'',status:'Open',notes:subtitle||''});
@@ -1319,7 +1319,7 @@
     const thHtml=thesis?`<p>${thesis}</p>`:`<p><span class="ph">[Trade thesis]</span></p>`;
     const bearTitleDate=`${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
     document.getElementById('bearDoc').innerHTML=`<div class="doc-meta">TRADE ID: ${id}</div><div class="doc-head">${ticker} - ${bearTitleDate}</div><div class="doc-sub">${subtitle}</div><div class="doc-body">${ctxHtml}${thHtml}<p><span class="b">Trade Alert: ${ticker} (${bias})</span> Note: Skip these setups if you are already short ${ticker}.</p>${setups}<div class="doc-sig">Nic</div></div>`;
-    document.getElementById('bearMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} Ã¢ÂÂ ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
+    document.getElementById('bearMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${ticker} ${mmdd} — ${id}</span></div><div class="meta-item">BIAS: <span>${bias}</span></div>${price?`<div class="meta-item">PRICE: <span>${price}</span></div>`:''}`;
     document.getElementById('bearOutput').classList.add('visible');document.getElementById('bearOutput').scrollIntoView({behavior:'smooth',block:'start'});
     // Auto-log to trade sheet
     silentLogTrade({trade_id:id,date:mmdd,time:`${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`,ticker,type:bias,strike1:v('r_s2short')||v('r_s4strike_buy')||'',strike2:v('r_s2long')||v('r_s4strike_sell')||'',strike3:'',strike4:'',credit:v('r_s2credit')||v('r_s4cost')||'',max_risk:'',close_price:'',pnl_dollars:'',pnl_percent:'',status:'Open',notes:subtitle||''});
@@ -1332,7 +1332,7 @@
     const notes=v('s_notes'),d=new Date(),mmdd=`${pad(d.getMonth()+1)}${pad(d.getDate())}`;
     const notesHtml=notes?`<p>${notes}</p>`:'';
     document.getElementById('sunDoc').innerHTML=`<div class="doc-meta">SESSION ID: ${id}</div><div class="doc-head">${type}</div><div class="doc-sub">${date} at ${time}</div><div class="doc-body">${notesHtml}<p><span class="b">+ ${type}:</span> We will hold our live session ${date} at ${time}. <a href="${LIVE_ROOM}" target="_blank">HERE</a> (pw ${pw}). Submit tickers for review <a href="${TICKERS_FORM}" target="_blank">HERE</a>.</p><div class="doc-sig">Nic</div></div>`;
-    document.getElementById('sunMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${type} ${mmdd} Ã¢ÂÂ ${id}</span></div><div class="meta-item">DATE: <span>${date} ${time}</span></div>`;
+    document.getElementById('sunMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>${type} ${mmdd} — ${id}</span></div><div class="meta-item">DATE: <span>${date} ${time}</span></div>`;
     document.getElementById('sunOutput').classList.add('visible');document.getElementById('sunOutput').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
@@ -1392,14 +1392,14 @@
     if(!videos){videos=`<p><span class="ph">[Add at least one video URL and tickers]</span></p>`;}
     document.getElementById('vidDoc').innerHTML=`
       <div class="doc-meta">NOTE ID: ${id}</div>
-      <div class="doc-head">Sunday Videos Ã¢ÂÂ ${date}</div>
+      <div class="doc-head">Sunday Videos — ${date}</div>
       <div class="doc-body">
         <p>Tomorrow's link to the live room <a href="${liveurl}" target="_blank">HERE</a>. (pw:${pw})</p>
         <p>${intro}</p>
         <p><span class="b">Nic.</span></p>
         ${videos}
       </div>`;
-    document.getElementById('vidMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Sunday Videos ${mmdd} Ã¢ÂÂ ${id}</span></div>`;
+    document.getElementById('vidMeta').innerHTML=`<div class="meta-item">ID: <span>${id}</span></div><div class="meta-item">SUBJECT: <span>Sunday Videos ${mmdd} — ${id}</span></div>`;
     document.getElementById('vidOutput').classList.add('visible');
     document.getElementById('vidOutput').scrollIntoView({behavior:'smooth',block:'start'});
   }
@@ -1432,7 +1432,7 @@
   function updateTypeButtons(ticker){
     const isSPYlike = ['SPY','IWM','QQQ'].includes(ticker);
     const isSPXlike = ['SPX','RUT','XSP'].includes(ticker);
-    // Show/hide based on ticker type Ã¢ÂÂ all show all buttons but highlight relevant ones
+    // Show/hide based on ticker type — all show all buttons but highlight relevant ones
     // SPY/IWM/QQQ: Buy Call + Buy Put primarily, but can also do spreads
     // SPX/RUT/XSP: CPS, CCS, IB primarily, but can also buy
     clearType();
@@ -1464,7 +1464,7 @@
       s2.style.display='flex'; s3.style.display='flex'; s4.style.display='flex';
       widthField.style.display='block';
       document.getElementById('trd_s1_label').textContent='Short Put (Sell)';
-      document.getElementById('trd_s2_label').textContent='Long Put (Buy) auto Ã¢ÂÂ5';
+      document.getElementById('trd_s2_label').textContent='Long Put (Buy) auto −5';
       document.getElementById('trd_s3_label').textContent='Short Call (Sell)';
       document.getElementById('trd_s4_label').textContent='Long Call (Buy) auto +5';
     } else {
@@ -1488,9 +1488,9 @@
 
   function clearStrikes(){
     ['trd_s1','trd_s2','trd_s3','trd_s4'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    document.getElementById('trd_maxrisk').textContent='Ã¢ÂÂ';
-    document.getElementById('trd_pnl_dollars').textContent='Ã¢ÂÂ';
-    document.getElementById('trd_pnl_pct').textContent='Ã¢ÂÂ';
+    document.getElementById('trd_maxrisk').textContent='—';
+    document.getElementById('trd_pnl_dollars').textContent='—';
+    document.getElementById('trd_pnl_pct').textContent='—';
   }
 
   function clearType(){
@@ -1565,7 +1565,7 @@
       el.textContent=`$${maxRisk.toFixed(0)}/ea`;
       el.className='calc-display';
     } else {
-      el.textContent='Ã¢ÂÂ';
+      el.textContent='—';
     }
     calcPnL();
   }
@@ -1634,7 +1634,7 @@
     };
     const statusEl=document.getElementById('trdLogStatus');
     if(!TRADE_LOG_URL){
-      statusEl.textContent='Ã¢ÂÂ  Apps Script URL not set. Trade saved locally only.';
+      statusEl.textContent='⚠ Apps Script URL not set. Trade saved locally only.';
       statusEl.className='send-status err';
       addTradeToTable(trade);
       setTimeout(()=>{statusEl.textContent='';},4000);
@@ -1643,10 +1643,10 @@
     statusEl.textContent='Logging trade...';statusEl.className='send-status';
     try{
       await fetch(TRADE_LOG_URL,{method:'POST',body:JSON.stringify(trade)});
-      statusEl.textContent='Ã¢ÂÂ Trade logged to Google Sheets.';statusEl.className='send-status ok';
+      statusEl.textContent='✓ Trade logged to Google Sheets.';statusEl.className='send-status ok';
       addTradeToTable(trade);
     }catch(e){
-      statusEl.textContent='Ã¢ÂÂ Log failed: '+e.message;statusEl.className='send-status err';
+      statusEl.textContent='✗ Log failed: '+e.message;statusEl.className='send-status err';
     }
     setTimeout(()=>{statusEl.textContent='';},4000);
   }
@@ -1671,7 +1671,7 @@
     const bullish=(currentType==='Buy Call'||currentType==='CPS');
     const bearish=(currentType==='Buy Put'||currentType==='CCS');
     const color=bullish?5763719:(bearish?15548997:5793266);
-    // Build strikes string Ã¢ÂÂ for IC/IB, break out the put side (CPS) and call side (CCS)
+    // Build strikes string — for IC/IB, break out the put side (CPS) and call side (CCS)
     let strikes='';
     if(currentType==='IC'||currentType==='IB'){
       const putSide=[s1,s2].filter(x=>x!=='').join('/');
@@ -1679,11 +1679,11 @@
       const parts=[];
       if(putSide)parts.push(`CPS: ${putSide}`);
       if(callSide)parts.push(`CCS: ${callSide}`);
-      strikes=parts.join('  ÃÂ·  ');
+      strikes=parts.join('  ·  ');
     } else {
       strikes=[s1,s2,s3,s4].filter(x=>x!=='').join(' / ');
     }
-    // Parse numeric max risk from display (e.g. "$450/ea" Ã¢ÂÂ 450)
+    // Parse numeric max risk from display (e.g. "$450/ea" → 450)
     const maxRiskNum=parseFloat(String(maxRisk).replace(/[^0-9.\-]/g,''))||0;
     const creditNum=parseFloat(credit)||0;
     // Max win calc: only meaningful for credit spreads / iron structures
@@ -1694,47 +1694,47 @@
       winPct=(winDollars/maxRiskNum)*100;
       hasMaxWin=true;
     }
-    // Line 1: Expiration Ã¢ÂÂ Strikes Ã¢ÂÂ Max Risk $N/contract
+    // Line 1: Expiration │ Strikes │ Max Risk $N/contract
     const summaryParts=[];
     if(exp)summaryParts.push(`Expiration ${exp}`);
     if(underlying)summaryParts.push(`${currentTicker} @ ${underlying}`);
     if(strikes)summaryParts.push(strikes);
-    if(maxRisk&&maxRisk!=='Ã¢ÂÂ'){
+    if(maxRisk&&maxRisk!=='—'){
       const mrClean=maxRiskNum>0?`Max Risk $${maxRiskNum.toFixed(0)}/contract`:`Max Risk ${maxRisk}`;
       summaryParts.push(mrClean);
     }
-    const summaryLine=summaryParts.join('  Ã¢ÂÂ  ');
-    // Line 2: Credit $N Ã¢ÂÂ Max Win P% Ã¢ÂÂ Execution note   (credit spreads/irons)
-    //         $N                                         (Buy Call/Put Ã¢ÂÂ premium paid only)
+    const summaryLine=summaryParts.join('  │  ');
+    // Line 2: Credit $N │ Max Win P% │ Execution note   (credit spreads/irons)
+    //         $N                                         (Buy Call/Put — premium paid only)
     const execNote=(TRADE_DISCLAIMERS.executionNotes||{})[currentType]||'';
     let creditLine='';
     if(hasMaxWin){
       const parts2=[`Credit $${winDollars.toFixed(0)}`,`Max Win ${winPct.toFixed(1)}%`];
       if(execNote)parts2.push(execNote);
-      creditLine=parts2.join('  Ã¢ÂÂ  ');
+      creditLine=parts2.join('  │  ');
     } else if(isBuy && creditNum>0){
       const parts2=[`$${(creditNum*100).toFixed(0)}`];
       if(execNote)parts2.push(execNote);
-      creditLine=parts2.join('  Ã¢ÂÂ  ');
+      creditLine=parts2.join('  │  ');
     }
     // Non-inline fields for cleaner, wider-feeling layout
     const fields=[];
     if(summaryLine)fields.push({name:'\u200B',value:summaryLine,inline:false});
     if(creditLine)fields.push({name:'\u200B',value:creditLine,inline:false});
-    if(pnlD&&pnlD!=='Ã¢ÂÂ')fields.push({name:'P&L $',value:String(pnlD),inline:false});
-    if(pnlP&&pnlP!=='Ã¢ÂÂ')fields.push({name:'P&L %',value:String(pnlP),inline:false});
+    if(pnlD&&pnlD!=='—')fields.push({name:'P&L $',value:String(pnlD),inline:false});
+    if(pnlP&&pnlP!=='—')fields.push({name:'P&L %',value:String(pnlP),inline:false});
     if(notes)fields.push({name:'Notes',value:notes,inline:false});
     // Strategy note pulled from single source of truth
     const stratNote=TRADE_DISCLAIMERS.strategyNotes[currentType];
     if(stratNote)fields.push({name:'Strategy Notes',value:stratNote,inline:false});
-    // Main trade embed Ã¢ÂÂ trade ID + human-readable time in title
+    // Main trade embed — trade ID + human-readable time in title
     const now=new Date();
     const h=now.getHours(), m=pad(now.getMinutes());
     const ampm=h>=12?'PM':'AM';
     const h12=((h+11)%12)+1;
     const timeStr=`${h12}:${m} ${ampm}`;
     const mainEmbed={
-      title:`${currentTicker} Ã¢ÂÂ ${currentType} ÃÂ· #${tradeId} ÃÂ· ${timeStr}`,
+      title:`${currentTicker} — ${currentType} · #${tradeId} · ${timeStr}`,
       color:color,
       fields:fields,
       timestamp:now.toISOString()
@@ -1744,21 +1744,21 @@
       color:15548997,
       description:TRADE_DISCLAIMERS.globalDisclaimer
     };
-    // Top-level content Ã¢ÂÂ renders large, impossible to miss. Uses Discord markdown
+    // Top-level content — renders large, impossible to miss. Uses Discord markdown
     // headings (#/##) which are only supported in message content, not embed fields.
-    const loudBanner='## Ã¢ÂÂ Ã¯Â¸Â 0DTE RISK DISCLOSURE Ã¢ÂÂ EXPERIENCED TRADERS ONLY\n**Zero-DTE options can cause rapid, total loss. Not financial advice. Read full disclosure below.**';
+    const loudBanner='## ⚠️ 0DTE RISK DISCLOSURE — EXPERIENCED TRADERS ONLY\n**Zero-DTE options can cause rapid, total loss. Not financial advice. Read full disclosure below.**';
     const payload={content:loudBanner,embeds:[mainEmbed,disclaimerEmbed]};
     statusEl.textContent='Sending to Discord...';statusEl.className='send-status';
     try{
       const res=await fetch(DISCORD_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       const j=await res.json();
       if(j.ok){
-        statusEl.textContent='Ã¢ÂÂ Sent to Discord.';statusEl.className='send-status ok';
+        statusEl.textContent='✓ Sent to Discord.';statusEl.className='send-status ok';
       }else{
-        statusEl.textContent='Ã¢ÂÂ Discord send failed: '+(j.error||'unknown');statusEl.className='send-status err';
+        statusEl.textContent='✗ Discord send failed: '+(j.error||'unknown');statusEl.className='send-status err';
       }
     }catch(e){
-      statusEl.textContent='Ã¢ÂÂ Discord send failed: '+e.message;statusEl.className='send-status err';
+      statusEl.textContent='✗ Discord send failed: '+e.message;statusEl.className='send-status err';
     }
     setTimeout(()=>{statusEl.textContent='';},4000);
   }
@@ -1776,7 +1776,7 @@
     const ticker=(input.value||'').toUpperCase().trim();
     const statusEl=document.getElementById('trdQueryStatus');
     if(!ticker){statusEl.textContent='Enter a ticker.';statusEl.className='send-status err';setTimeout(()=>{statusEl.textContent='';},3000);return;}
-    if(!TRADE_LOG_URL){statusEl.textContent='Ã¢ÂÂ  Apps Script URL not set.';statusEl.className='send-status err';return;}
+    if(!TRADE_LOG_URL){statusEl.textContent='⚠ Apps Script URL not set.';statusEl.className='send-status err';return;}
     statusEl.textContent='Loading '+ticker+'...';statusEl.className='send-status';
     try{
       const res=await fetch(TRADE_LOG_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'query',ticker:ticker})});
@@ -1784,20 +1784,20 @@
       // log-trade proxy wraps Apps Script response under .response as a string
       let inner=wrap&&wrap.response;
       if(typeof inner==='string'){
-        try{inner=JSON.parse(inner);}catch(e){statusEl.textContent='Ã¢ÂÂ Bad response: '+e.message;statusEl.className='send-status err';return;}
+        try{inner=JSON.parse(inner);}catch(e){statusEl.textContent='✗ Bad response: '+e.message;statusEl.className='send-status err';return;}
       }
       if(!inner||inner.status!=='ok'||!Array.isArray(inner.trades)){
-        statusEl.textContent='Ã¢ÂÂ Query failed: '+(inner&&inner.message?inner.message:'unknown');
+        statusEl.textContent='✗ Query failed: '+(inner&&inner.message?inner.message:'unknown');
         statusEl.className='send-status err';
         return;
       }
       sessionTrades=inner.trades;
       document.getElementById('trd_log_section').style.display='block';
       rebuildTable();
-      statusEl.textContent='Ã¢ÂÂ Loaded '+inner.trades.length+' trade(s) for '+ticker+'.';
+      statusEl.textContent='✓ Loaded '+inner.trades.length+' trade(s) for '+ticker+'.';
       statusEl.className='send-status ok';
     }catch(e){
-      statusEl.textContent='Ã¢ÂÂ Query failed: '+e.message;
+      statusEl.textContent='✗ Query failed: '+e.message;
       statusEl.className='send-status err';
     }
     setTimeout(()=>{statusEl.textContent='';},5000);
@@ -1833,8 +1833,8 @@
         <td>${t.strike1}</td><td>${t.strike2||''}</td><td>${t.strike3||''}</td><td>${t.strike4||''}</td>
         <td>${t.credit}</td><td>${t.max_risk}</td>
         <td class="${isOpen?'status-open':''}">${t.close_price||'<b>OPEN</b>'}</td>
-        <td class="${pnlClass}">${t.pnl_dollars||'Ã¢ÂÂ'}</td>
-        <td class="${pnlClass}">${t.pnl_percent||'Ã¢ÂÂ'}</td>
+        <td class="${pnlClass}">${t.pnl_dollars||'—'}</td>
+        <td class="${pnlClass}">${t.pnl_percent||'—'}</td>
         <td>${t.notes}</td>
         <td><button class="type-btn" style="font-size:9px;padding:4px 8px;" onclick="openExitForm(${i},event)">Exit</button></td>`;
       tbody.appendChild(tr);
@@ -1888,8 +1888,8 @@
       if(TRADE_LOG_URL){
         await fetch(TRADE_LOG_URL,{method:'POST',body:JSON.stringify({...t,action:'update'})});
       }
-      statusEl.textContent='Ã¢ÂÂ Exit logged.';statusEl.className='send-status ok';
-    }catch(e){statusEl.textContent='Ã¢ÂÂ Update failed: '+e.message;statusEl.className='send-status err';}
+      statusEl.textContent='✓ Exit logged.';statusEl.className='send-status ok';
+    }catch(e){statusEl.textContent='✗ Update failed: '+e.message;statusEl.className='send-status err';}
     setTimeout(()=>{statusEl.textContent='';},3000);
     document.getElementById('exitFormPanel').style.display='none';
     rebuildTable();
@@ -1902,9 +1902,9 @@
     ['trd_s1','trd_s2','trd_s3','trd_s4','trd_credit','trd_close','trd_notes','trd_width','trd_exp','trd_underlying'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     ['trd_s2_field','trd_s3_field','trd_s4_field'].forEach(id=>{document.getElementById(id).style.display='none';});
     document.getElementById('trd_width').style.display='none';
-    document.getElementById('trd_maxrisk').textContent='Ã¢ÂÂ';
-    document.getElementById('trd_pnl_dollars').textContent='Ã¢ÂÂ';
-    document.getElementById('trd_pnl_pct').textContent='Ã¢ÂÂ';
+    document.getElementById('trd_maxrisk').textContent='—';
+    document.getElementById('trd_pnl_dollars').textContent='—';
+    document.getElementById('trd_pnl_pct').textContent='—';
     document.getElementById('trd_s1_label').textContent='Strike 1';
     const ftEl=document.getElementById('trd_free_ticker');if(ftEl)ftEl.value='';
     // Reset expiration to today
@@ -1914,7 +1914,7 @@
     updateIds();
   }
 
-  // Silent log Ã¢ÂÂ no UI feedback, just fires and forgets
+  // Silent log — no UI feedback, just fires and forgets
   async function silentLogTrade(trade){
     if(!TRADE_LOG_URL)return;
     try{await fetch(TRADE_LOG_URL,{method:'POST',body:JSON.stringify(trade)});}catch(e){}
