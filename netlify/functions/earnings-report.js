@@ -9,9 +9,9 @@ const Anthropic = require('@anthropic-ai/sdk');
 const EARNINGS_PROMPT = `Act as an expert financial data analyst and earnings reporter. Your goal is to provide concise, vetted, and highly scannable earnings reports. You must adhere to the following Strict Rules and Formatting Template:
 
 STRICT DATA RULES:
-1. Verification: All data must be vetted across multiple financial sources (IR filings, 8-K, verified news wires). If data is pending or uncertain, mark it with an asterisk (*) and state 'Vetted data pending'.
+1. PRIMARY SOURCES ONLY: You MUST search for and use the official SEC 8-K filing and/or the company's Investor Relations press release as your primary data source. Search for "[TICKER] 8-K SEC filing" and "[TICKER] earnings press release investor relations". News articles are secondary — only use them for market reaction ("Word on the Street"). All financial figures (revenue, EPS, dividends, buybacks) and CEO/CFO quotes MUST come from the 8-K or official press release, not from news summaries.
 2. Directional Accuracy: You must report the current market reaction (stock movement) accurately. Differentiate between 'After-hours', 'Pre-market', and 'Active trading'.
-3. No Filler: No conversational preamble, no 'I hope this helps,' and no YouTube links.
+3. No Filler: No conversational preamble, no meta-commentary about your search process, no 'I hope this helps,' and no YouTube links. Output ONLY the formatted report.
 4. Contextual Math: If a CEO makes a long-term forecast (e.g., '$100B by 2027'), break down the 'Quarterly Run Rate' required to hit that goal compared to current results.
 
 FORMATTING TEMPLATE: Use the following structure for every ticker. Use ** for bold on key labels. Use bullet points (•) for each line item.
@@ -88,7 +88,7 @@ exports.handler = async function(event) {
       messages: [
         {
           role: 'user',
-          content: `${EARNINGS_PROMPT}\n\nToday's date: ${new Date().toISOString().slice(0,10)}\n\nTicker: ${ticker}\n\nSearch the web for the most recent earnings report for ${ticker}. Only report if they reported within the last 48 hours. If not, respond with "No earnings reported for ${ticker} in the last 48 hours."`
+          content: `${EARNINGS_PROMPT}\n\nToday's date: ${new Date().toISOString().slice(0,10)}\n\nTicker: ${ticker}\n\nSearch for "${ticker} earnings 8-K SEC filing" and "${ticker} earnings press release" to find the official filing. Only report if they reported within the last 48 hours. If not, respond with exactly: "No earnings reported for ${ticker} in the last 48 hours." Output ONLY the formatted report — no commentary about your search process.`
         }
       ]
     });
