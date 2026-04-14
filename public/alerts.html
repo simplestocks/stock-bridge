@@ -2077,12 +2077,19 @@
       });
       const data=await resp.json();
       if(!resp.ok) throw new Error(data.error||'Request failed');
-      // Convert markdown-style bold and bullets to HTML
+      // Convert markdown to clean HTML
       let html=data.report
         .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-        .replace(/^• /gm,'<br>• ')
-        .replace(/\n\n/g,'<br><br>')
-        .replace(/\n/g,'<br>');
+        .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+        .split('\n')
+        .filter(line=>line.trim()!=='.'&&line.trim()!==';'&&line.trim()!=='')
+        .map(line=>{
+          line=line.trim();
+          if(line.startsWith('•'))return '<div style="margin:4px 0 4px 8px">'+line+'</div>';
+          if(line.match(/^[A-Z]{1,5}\s*\(/)||line.match(/^\*?Data Verification/i)||line.match(/^\*?Vetted Data/i))return '<div style="margin:12px 0 6px 0;font-weight:600">'+line+'</div>';
+          return '<div style="margin:2px 0">'+line+'</div>';
+        })
+        .join('');
       body.innerHTML='<div class="earn-report">'+html+'</div>';
       copyRow.style.display='block';
     }catch(e){
