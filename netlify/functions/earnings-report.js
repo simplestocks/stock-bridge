@@ -30,6 +30,12 @@ FORMATTING TEMPLATE: Use the following structure for every ticker. Use ** for bo
 • Confirmed [Key Stat 1]: [Brief verification note].
 • Confirmed [Key Stat 2]: [Brief verification note].
 
+CRITICAL RECENCY RULE:
+- Today's date is PROVIDED BELOW. You MUST only report on earnings that were released within the last 48 hours from today's date.
+- If the company has NOT reported earnings within the last 48 hours, respond with EXACTLY this and nothing else: "No earnings reported for [TICKER] in the last 48 hours."
+- Do NOT fall back to older earnings data. Do NOT use earnings from a prior quarter or prior year. If it's not from the last 48 hours, say so.
+- The "Reported" timing in the header MUST reflect the actual date (e.g., "Reported Last Night (Q1 FY26)" or "Reported This Morning (Q4 FY25)").
+
 IMPORTANT: Keep it tight. No more than 250 words total. This is for a professional trader who scans fast.`;
 
 exports.handler = async function(event) {
@@ -74,7 +80,7 @@ exports.handler = async function(event) {
       messages: [
         {
           role: 'user',
-          content: `${EARNINGS_PROMPT}\n\nTicker: ${ticker}\n\nProvide the most recent earnings report for ${ticker}. Use the latest available data.`
+          content: `${EARNINGS_PROMPT}\n\nToday's date: ${new Date().toISOString().slice(0,10)}\n\nTicker: ${ticker}\n\nProvide the earnings report for ${ticker} ONLY if they reported within the last 48 hours from today's date. If not, respond with "No earnings reported for ${ticker} in the last 48 hours."`
         }
       ]
     });
