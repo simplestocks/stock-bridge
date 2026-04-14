@@ -1,6 +1,6 @@
 /**
- * Earnings report generator — calls Claude API with a ticker
- * and returns a formatted earnings breakdown.
+ * Earnings report generator — calls Claude API WITH WEB SEARCH
+ * to get real-time earnings data and format it.
  *
  * Query: POST with JSON body { "ticker": "GS" }
  */
@@ -31,7 +31,8 @@ FORMATTING TEMPLATE: Use the following structure for every ticker. Use ** for bo
 • Confirmed [Key Stat 2]: [Brief verification note].
 
 CRITICAL RECENCY RULE:
-- Today's date is PROVIDED BELOW. You MUST only report on earnings that were released within the last 48 hours from today's date.
+- Today's date is PROVIDED BELOW. You MUST search the web for the most recent earnings report.
+- You MUST only report on earnings that were released within the last 48 hours from today's date.
 - If the company has NOT reported earnings within the last 48 hours, respond with EXACTLY this and nothing else: "No earnings reported for [TICKER] in the last 48 hours."
 - Do NOT fall back to older earnings data. Do NOT use earnings from a prior quarter or prior year. If it's not from the last 48 hours, say so.
 - The "Reported" timing in the header MUST reflect the actual date (e.g., "Reported Last Night (Q1 FY26)" or "Reported This Morning (Q4 FY25)").
@@ -76,16 +77,27 @@ exports.handler = async function(event) {
 
     const msg = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
+      max_tokens: 2048,
+      tools: [
+        {
+          type: 'web_search_20250305',
+          name: 'web_search',
+          max_uses: 3
+        }
+      ],
       messages: [
         {
           role: 'user',
-          content: `${EARNINGS_PROMPT}\n\nToday's date: ${new Date().toISOString().slice(0,10)}\n\nTicker: ${ticker}\n\nProvide the earnings report for ${ticker} ONLY if they reported within the last 48 hours from today's date. If not, respond with "No earnings reported for ${ticker} in the last 48 hours."`
+          content: `${EARNINGS_PROMPT}\n\nToday's date: ${new Date().toISOString().slice(0,10)}\n\nTicker: ${ticker}\n\nSearch the web for the most recent earnings report for ${ticker}. Only report if they reported within the last 48 hours. If not, respond with "No earnings reported for ${ticker} in the last 48 hours."`
         }
       ]
     });
 
-    const text = msg.content[0].text;
+    // Extract text from response content blocks (skip tool_use and tool_result blocks)
+    const textParts = msg.content
+      .filter(block => block.type === 'text')
+      .map(block => block.text);
+    const text = textParts.join('\n');
 
     return {
       statusCode: 200,
