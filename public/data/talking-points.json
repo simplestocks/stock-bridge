@@ -1,21 +1,13 @@
 {
-  "generated_at": "2026-04-14T10:02:53.312889+00:00",
+  "generated_at": "2026-04-15T11:13:46.376678+00:00",
   "window": [
-    "2026-04-14",
     "2026-04-15",
     "2026-04-16",
     "2026-04-17",
-    "2026-04-20"
+    "2026-04-20",
+    "2026-04-21"
   ],
   "events": [
-    {
-      "date": "2026-04-14",
-      "time": "",
-      "category": "Econ Release",
-      "title": "PPI",
-      "source": "FRED",
-      "importance": 2
-    },
     {
       "date": "2026-04-16",
       "time": "",
@@ -31,8 +23,16 @@
       "title": "Initial Jobless Claims",
       "source": "FRED",
       "importance": 2
+    },
+    {
+      "date": "2026-04-21",
+      "time": "",
+      "category": "Econ Release",
+      "title": "Advance Retail Sales",
+      "source": "FRED",
+      "importance": 3
     }
   ],
-  "talking_points_text": "\u2014 TODAY \u2014\n\u2605\u2605 PPI\n\u2014 Thu Apr 16 \u2014\n\u2605\u2605 Industrial Production\n\u2605\u2605 Initial Jobless Claims",
+  "talking_points_text": "\u2014 TOMORROW \u2014\n\u2605\u2605 Industrial Production\n\u2605\u2605 Initial Jobless Claims\n\u2014 Tue Apr 21 \u2014\n\u2605\u2605\u2605 Advance Retail Sales",
   "errors": []
 }
