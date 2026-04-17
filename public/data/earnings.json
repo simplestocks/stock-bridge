@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-16T04:31:17.582324-07:00",
+  "generated_at": "2026-04-17T04:14:24.897473-07:00",
   "week_start": "2026-04-13",
   "week_end": "2026-04-17",
   "min_market_cap": 10000000000,
@@ -28,31 +28,37 @@
       {
         "symbol": "JPM",
         "name": "J P Morgan Chase & Co",
-        "market_cap": 834492170974,
+        "market_cap": 820571451100,
         "when": "OTH"
       },
       {
         "symbol": "JNJ",
         "name": "Johnson & Johnson",
-        "market_cap": 578308033882,
+        "market_cap": 574863716979,
         "when": "OTH"
       },
       {
         "symbol": "WFC",
         "name": "Wells Fargo & Company",
-        "market_cap": 252074817971,
+        "market_cap": 247724444736,
         "when": "OTH"
       },
       {
         "symbol": "C",
         "name": "Citigroup Inc.",
-        "market_cap": 226447140390,
+        "market_cap": 230134464562,
         "when": "OTH"
       },
       {
         "symbol": "BLK",
         "name": "BlackRock, Inc.",
-        "market_cap": 163841428614,
+        "market_cap": 162915454829,
+        "when": "OTH"
+      },
+      {
+        "symbol": "BMNR",
+        "name": "BitMine Immersion Technologies, Inc.",
+        "market_cap": 12010627816,
         "when": "OTH"
       }
     ],
@@ -110,85 +116,85 @@
       {
         "symbol": "TSM",
         "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
-        "market_cap": 1970317206109,
+        "market_cap": 1945473647665,
         "when": "BMO"
       },
       {
         "symbol": "NFLX",
         "name": "Netflix, Inc.",
-        "market_cap": 448731393302,
+        "market_cap": 454769085177,
         "when": "AMC"
       },
       {
         "symbol": "PEP",
         "name": "Pepsico, Inc.",
-        "market_cap": 212860047070,
+        "market_cap": 211670808430,
         "when": "BMO"
       },
       {
         "symbol": "ABT",
         "name": "Abbott Laboratories",
-        "market_cap": 175994472590,
+        "market_cap": 176882717825,
         "when": "BMO"
       },
       {
         "symbol": "SCHW",
         "name": "The Charles Schwab Corporation",
-        "market_cap": 170994223006,
+        "market_cap": 174279230949,
         "when": "BMO"
       },
       {
         "symbol": "PLD",
         "name": "Prologis, Inc.",
-        "market_cap": 128983436331,
+        "market_cap": 130297881585,
         "when": "BMO"
       },
       {
         "symbol": "BK",
         "name": "The Bank Of New York Mellon Corporation",
-        "market_cap": 89820503421,
+        "market_cap": 90818432545,
         "when": "BMO"
       },
       {
         "symbol": "USB",
         "name": "U.S. Bancorp",
-        "market_cap": 87146797366,
+        "market_cap": 87581832190,
         "when": "BMO"
       },
       {
         "symbol": "MRSH",
         "name": "Marsh",
-        "market_cap": 83503134612,
+        "market_cap": 84493481305,
         "when": "BMO"
       },
       {
         "symbol": "TRV",
         "name": "The Travelers Companies, Inc.",
-        "market_cap": 63705653157,
+        "market_cap": 63650366031,
         "when": "BMO"
       },
       {
         "symbol": "CFG",
         "name": "Citizens Financial Group, Inc.",
-        "market_cap": 27568689830,
-        "when": "BMO"
-      },
-      {
-        "symbol": "KEY",
-        "name": "KeyCorp",
-        "market_cap": 23202364580,
+        "market_cap": 27704684600,
         "when": "BMO"
       },
       {
         "symbol": "WIT",
         "name": "Wipro Limited",
-        "market_cap": 23143420668,
+        "market_cap": 23771748831,
+        "when": "BMO"
+      },
+      {
+        "symbol": "KEY",
+        "name": "KeyCorp",
+        "market_cap": 23138002958,
         "when": "BMO"
       },
       {
         "symbol": "AA",
         "name": "Alcoa Corporation",
-        "market_cap": 18955881425,
+        "market_cap": 18570642187,
         "when": "AMC"
       }
     ],
@@ -196,53 +202,53 @@
       {
         "symbol": "HDB",
         "name": "HDFC Bank Limited",
-        "market_cap": 137111930123,
+        "market_cap": 138903239400,
         "when": "OTH"
       },
       {
         "symbol": "IBN",
         "name": "ICICI Bank Limited",
-        "market_cap": 100932206397,
+        "market_cap": 101538727256,
         "when": "OTH"
       },
       {
         "symbol": "TFC",
         "name": "Truist Financial Corporation",
-        "market_cap": 61467213017,
+        "market_cap": 61541673602,
         "when": "BMO"
       },
       {
         "symbol": "FITB",
         "name": "Fifth Third Bancorp",
-        "market_cap": 45069895295,
+        "market_cap": 45133284740,
         "when": "BMO"
       },
       {
         "symbol": "ERIC",
         "name": "Ericsson",
-        "market_cap": 40489934337,
+        "market_cap": 40017945094,
         "when": "BMO"
       },
       {
         "symbol": "STT",
         "name": "State Street Corporation",
-        "market_cap": 39278049238,
+        "market_cap": 39544003021,
         "when": "BMO"
       },
       {
         "symbol": "RF",
         "name": "Regions Financial Corporation",
-        "market_cap": 24059717782,
+        "market_cap": 24146419467,
         "when": "BMO"
       },
       {
         "symbol": "ALLY",
         "name": "Ally Financial Inc.",
-        "market_cap": 13108079647,
+        "market_cap": 13006466627,
         "when": "BMO"
       }
     ]
   },
-  "earnings_text": "Mon Apr 13: \u2014 | (GS FAST KT)\nTue Apr 14: \u2014 | (JPM JNJ WFC C BLK)\nWed Apr 15: \u2014 | (ASML BAC MS PGR PNC MTB JBHT FHN)\nThu Apr 16: TSM PEP ABT SCHW PLD BK USB MRSH TRV CFG KEY WIT | NFLX AA\nFri Apr 17: TFC FITB ERIC STT RF ALLY | (HDB IBN)",
+  "earnings_text": "Mon Apr 13: \u2014 | (GS FAST KT)\nTue Apr 14: \u2014 | (JPM JNJ WFC C BLK BMNR)\nWed Apr 15: \u2014 | (ASML BAC MS PGR PNC MTB JBHT FHN)\nThu Apr 16: TSM PEP ABT SCHW PLD BK USB MRSH TRV CFG WIT KEY | NFLX AA\nFri Apr 17: TFC FITB ERIC STT RF ALLY | (HDB IBN)",
   "errors": []
 }
