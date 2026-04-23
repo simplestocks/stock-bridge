@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimpleStocks Drawing Entry</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #fff;
+  }
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 40px 32px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  h1 { font-size: 28px; margin-bottom: 8px; text-align: center; }
+  .sub { text-align: center; color: #94a3b8; margin-bottom: 28px; font-size: 15px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; margin-top: 16px; }
+  input {
+    width: 100%; padding: 14px 16px; border-radius: 10px;
+    border: 1px solid #475569; background: #0f172a; color: #fff;
+    font-size: 16px; outline: none; transition: border-color 0.15s;
+  }
+  input:focus { border-color: #3b82f6; }
+  button {
+    width: 100%; margin-top: 24px; padding: 14px;
+    background: #3b82f6; color: #fff; border: none; border-radius: 10px;
+    font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.15s;
+  }
+  button:hover:not(:disabled) { background: #2563eb; }
+  button:disabled { background: #475569; cursor: not-allowed; }
+  .msg { margin-top: 20px; padding: 14px; border-radius: 10px; text-align: center; font-size: 14px; display: none; }
+  .msg.ok { display: block; background: #065f46; color: #d1fae5; }
+  .msg.err { display: block; background: #7f1d1d; color: #fee2e2; }
+  .success-screen { text-align: center; padding: 20px 0; }
+  .success-screen h2 { font-size: 32px; margin-bottom: 12px; }
+  .success-screen p { color: #94a3b8; font-size: 15px; }
+  .check { font-size: 64px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div id="form-view">
+      <h1>🎯 Enter the Drawing</h1>
+      <p class="sub">Drop your email to be entered in the prize drawing.</p>
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" autocomplete="given-name" />
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="email" required />
+      <button id="submitBtn" onclick="submitEntry()">Enter Drawing</button>
+      <div id="msg" class="msg"></div>
+    </div>
+    <div id="success-view" class="success-screen" style="display:none;">
+      <div class="check">✅</div>
+      <h2>You're in!</h2>
+      <p>Good luck in the drawing.</p>
+    </div>
+  </div>
+<script>
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwHmCu8Fx9T-ABsWEz12RcTS3K5BNuIhPRegyi29C9vMUZUx-SkRl9S5ACj11CKS5tFCQ/exec';
+  function submitEntry() {
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('msg');
+    const firstName = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    msg.className = 'msg'; msg.textContent = '';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.className = 'msg err';
+      msg.textContent = 'Please enter a valid email.';
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ firstName, email })
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.ok) {
+        document.getElementById('form-view').style.display = 'none';
+        document.getElementById('success-view').style.display = 'block';
+      } else {
+        msg.className = 'msg err';
+        msg.textContent = d.error || 'Something went wrong.';
+        btn.disabled = false; btn.textContent = 'Enter Drawing';
+      }
+    })
+    .catch(err => {
+      msg.className = 'msg err';
+      msg.textContent = 'Network error. Try again.';
+      btn.disabled = false; btn.textContent = 'Enter Drawing';
+    });
+  }
+  document.getElementById('email').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitEntry();
+  });
+</script>
+</body>
+</html>
