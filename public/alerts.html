@@ -2125,9 +2125,9 @@
       body: JSON.stringify({ title, html })
     });
 
-    const data = await res.json();
-    console.log(data);
-    alert('Sent to new draft function');
+    const text = await res.text();
+    console.log(text);
+    alert('Response received');
   });
 </script>
 
