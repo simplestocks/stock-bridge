@@ -498,6 +498,7 @@
         <button class="btn-discord" onclick="sendToDiscord('mornDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('mornDoc')">Send to Slack</button>
         <button class="btn-squarespace" onclick="sendToSquarespace('mornDoc')" id="mornSqsBtn">Send to Squarespace</button>
+        <button id="testCreateDraft">Test Create Draft</button>
         <button class="btn-copy-html cb-morn" onclick="copyHTML('mornDoc','mornHtmlBtn')" id="mornHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="mornSendStatus"></div>
@@ -2108,6 +2109,26 @@
       setTimeout(()=>{btn.textContent='Copy Report';},2000);
     });
   }
+  document.getElementById('testCreateDraft').addEventListener('click', async () => {
+    const doc = document.getElementById('mornDoc'); // use existing output
+    if (!doc || !doc.innerHTML.trim()) {
+      alert('Generate content first');
+      return;
+    }
+
+    const title = (doc.querySelector('.doc-head')?.innerText || 'Test Draft').trim();
+    const html = doc.innerHTML;
+
+    const res = await fetch('/.netlify/functions/create-draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, html })
+    });
+
+    const data = await res.json();
+    console.log(data);
+    alert('Sent to new draft function');
+  });
 </script>
 
 <!-- Earnings Drawer -->
