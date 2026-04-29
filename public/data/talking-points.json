@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-28T12:15:21.260118+00:00",
+  "generated_at": "2026-04-29T10:03:26.136395+00:00",
   "window": [
-    "2026-04-28",
     "2026-04-29",
     "2026-04-30",
     "2026-05-01",
-    "2026-05-04"
+    "2026-05-04",
+    "2026-05-05"
   ],
   "events": [
     {
@@ -55,8 +55,16 @@
       "title": "Durable Goods (M3 Survey)",
       "source": "FRED",
       "importance": 3
+    },
+    {
+      "date": "2026-05-05",
+      "time": "",
+      "category": "Econ Release",
+      "title": "JOLTS (Job Openings)",
+      "source": "FRED",
+      "importance": 2
     }
   ],
-  "talking_points_text": "\u2014 TOMORROW \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2605\u2605\u2605 FOMC Meeting Day 2 \u2014 Statement + Powell Press Conference 2:00 PM ET\n\u2014 Thu Apr 30 \u2014\n\u2605\u2605\u2605 GDP\n\u2605\u2605\u2605 Personal Income & Outlays (PCE)\n\u2605\u2605 Initial Jobless Claims\n\u2014 Mon May 4 \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)",
+  "talking_points_text": "\u2014 TODAY \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2605\u2605\u2605 FOMC Meeting Day 2 \u2014 Statement + Powell Press Conference 2:00 PM ET\n\u2014 TOMORROW \u2014\n\u2605\u2605\u2605 GDP\n\u2605\u2605\u2605 Personal Income & Outlays (PCE)\n\u2605\u2605 Initial Jobless Claims\n\u2014 Mon May 4 \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2014 Tue May 5 \u2014\n\u2605\u2605 JOLTS (Job Openings)",
   "errors": []
 }
