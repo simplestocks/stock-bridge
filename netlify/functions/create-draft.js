@@ -144,8 +144,9 @@ exports.handler = async (event) => {
 
     const auth = await squarespaceLogin(siteUrl, email, password);
     const payload = JSON.stringify({
+      title: title,
       collectionId: DEFAULT_COLLECTION,
-      title,
+      workflowState: 4,
       body: {
         raw: false,
         layout: {
@@ -162,8 +163,7 @@ exports.handler = async (event) => {
             }]
           }]
         }
-      },
-      draft: true
+      }
     });
 
     const res = await request(`${siteUrl}/api/content-items?crumb=${auth.crumb}`, {
@@ -175,6 +175,10 @@ exports.handler = async (event) => {
       },
       body: payload
     });
+
+    if (res.status !== 200) {
+      throw new Error(`Create draft failed: ${res.status} ${res.body.substring(0, 200)}`);
+    }
 
     return {
       statusCode: res.status,
