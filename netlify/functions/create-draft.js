@@ -54,10 +54,19 @@ function mergeCookies(existingPairs, newSetCookies) {
   return Object.values(map);
 }
 
+function loginFailure(step, res, message) {
+  const err = new Error(message);
+  err.isLoginFailure = true;
+  err.step = step;
+  err.statusCode = res ? res.status : null;
+  err.responseText = res && res.body ? res.body.substring(0, 300) : "";
+  return err;
+}
+
 async function squarespaceLogin(siteUrl, email, password) {
   const initRes = await request(`${siteUrl}/`, { method: "GET" });
   if (initRes.status >= 400) {
-    throw new Error(`GET / failed: ${initRes.status}`);
+    throw loginFailure("GET site root", initRes, `GET / failed: ${initRes.status}`);
   }
 
   let cookiePairs = [];
@@ -83,7 +92,7 @@ async function squarespaceLogin(siteUrl, email, password) {
   });
 
   if (loginRes.status !== 200) {
-    throw new Error(`Login failed: ${loginRes.status} ${loginRes.body.substring(0, 200)}`);
+    throw loginFailure("POST /api/auth/Login", loginRes, `Login failed: ${loginRes.status}`);
   }
 
   if (loginRes.headers["set-cookie"]) {
@@ -99,7 +108,7 @@ async function squarespaceLogin(siteUrl, email, password) {
     if (finalCrumbMatch) {
       return { crumb: finalCrumbMatch[1], cookieHeader: finalCookieStr };
     }
-    throw new Error("No targetWebsite.loginUrl and no crumb found");
+    throw loginFailure("read targetWebsite.loginUrl", null, "No targetWebsite.loginUrl and no crumb found");
   }
 
   const sep = tokenLoginUrl.includes("?") ? "&" : "?";
@@ -110,7 +119,7 @@ async function squarespaceLogin(siteUrl, email, password) {
   });
 
   if (tokenRes.status < 200 || tokenRes.status >= 400) {
-    throw new Error(`Token exchange failed: ${tokenRes.status}`);
+    throw loginFailure("GET targetWebsite.loginUrl", tokenRes, `Token exchange failed: ${tokenRes.status}`);
   }
 
   if (tokenRes.headers["set-cookie"]) {
@@ -120,7 +129,7 @@ async function squarespaceLogin(siteUrl, email, password) {
   const finalCookieStr = cookiePairs.join("; ");
   const crumbMatch = finalCookieStr.match(/crumb=([^;]+)/);
   if (!crumbMatch) {
-    throw new Error("No crumb after login");
+    throw loginFailure("read final crumb", null, "No crumb after login");
   }
 
   return { crumb: crumbMatch[1], cookieHeader: finalCookieStr };
@@ -186,6 +195,23 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
+    if (err.isLoginFailure) {
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          step: err.step,
+          statusCode: err.statusCode,
+          responseText: err.responseText,
+          env: {
+            SQUARESPACE_SITE_URL: Boolean(process.env.SQUARESPACE_SITE_URL),
+            SQUARESPACE_EMAIL: Boolean(process.env.SQUARESPACE_EMAIL),
+            SQUARESPACE_PASSWORD: Boolean(process.env.SQUARESPACE_PASSWORD)
+          }
+        })
+      };
+    }
+
     return {
       statusCode: 500,
       body: err.toString()
