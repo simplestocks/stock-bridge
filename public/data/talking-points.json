@@ -1,37 +1,13 @@
 {
-  "generated_at": "2026-04-30T10:03:28.661586+00:00",
+  "generated_at": "2026-05-01T10:04:17.164953+00:00",
   "window": [
-    "2026-04-30",
     "2026-05-01",
     "2026-05-04",
     "2026-05-05",
-    "2026-05-06"
+    "2026-05-06",
+    "2026-05-07"
   ],
   "events": [
-    {
-      "date": "2026-04-30",
-      "time": "",
-      "category": "Econ Release",
-      "title": "GDP",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-30",
-      "time": "",
-      "category": "Econ Release",
-      "title": "Personal Income & Outlays (PCE)",
-      "source": "FRED",
-      "importance": 3
-    },
-    {
-      "date": "2026-04-30",
-      "time": "",
-      "category": "Econ Release",
-      "title": "Initial Jobless Claims",
-      "source": "FRED",
-      "importance": 2
-    },
     {
       "date": "2026-05-04",
       "time": "",
@@ -55,8 +31,16 @@
       "title": "ADP National Employment Report",
       "source": "FRED",
       "importance": 2
+    },
+    {
+      "date": "2026-05-07",
+      "time": "",
+      "category": "Econ Release",
+      "title": "Initial Jobless Claims",
+      "source": "FRED",
+      "importance": 2
     }
   ],
-  "talking_points_text": "\u2014 TODAY \u2014\n\u2605\u2605\u2605 GDP\n\u2605\u2605\u2605 Personal Income & Outlays (PCE)\n\u2605\u2605 Initial Jobless Claims\n\u2014 Mon May 4 \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2014 Tue May 5 \u2014\n\u2605\u2605 JOLTS (Job Openings)\n\u2014 Wed May 6 \u2014\n\u2605\u2605 ADP National Employment Report",
+  "talking_points_text": "\u2014 TOMORROW \u2014\n\u2605\u2605\u2605 Durable Goods (M3 Survey)\n\u2014 Tue May 5 \u2014\n\u2605\u2605 JOLTS (Job Openings)\n\u2014 Wed May 6 \u2014\n\u2605\u2605 ADP National Employment Report\n\u2014 Thu May 7 \u2014\n\u2605\u2605 Initial Jobless Claims",
   "errors": []
 }
