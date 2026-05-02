@@ -609,46 +609,38 @@
 
     .trade-grid {
       padding: 8px 10px 12px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(160px, 1fr));
-      gap: 8px;
       min-height: 0;
-      overflow: auto;
     }
 
-    .trade-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel-2);
-      padding: 8px;
-      min-height: 126px;
-    }
-
-    .trade-card.active {
-      border-color: rgba(47, 200, 99, 0.65);
-      background: rgba(47, 200, 99, 0.08);
-    }
-
-    .trade-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      color: var(--text);
-      font-weight: 900;
-      font-size: 12px;
-    }
-
-    .trade-lines {
-      margin-top: 7px;
+    .trade-table {
       display: grid;
-      gap: 4px;
-      color: var(--muted);
+      gap: 0;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
       font-size: 11px;
     }
 
-    .trade-card input {
+    .trade-row {
+      display: grid;
+      grid-template-columns: 118px minmax(250px, 1fr) 72px 72px 72px 64px 58px 34px;
+      align-items: center;
+      gap: 7px;
+      min-height: 29px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .trade-row.head {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .trade-row.staged {
+      color: var(--amber);
+      background: rgba(255, 189, 47, 0.08);
+    }
+
+    .trade-row input {
       width: 68px;
       height: 24px;
       border: 1px solid var(--line);
@@ -1277,16 +1269,29 @@
     function renderOpenTrades() {
       const stagedText = stagedLegs.length ? `${stagedLegs.length} staged` : "No staged legs";
       document.getElementById("stagedLegsLabel").textContent = stagedText;
-      const cards = [];
+      const rows = [`
+        <div class="trade-row head">
+          <div>Type</div>
+          <div>Legs</div>
+          <div>Entry</div>
+          <div>Current</div>
+          <div>P/L</div>
+          <div>% Max</div>
+          <div>Sold D</div>
+          <div></div>
+        </div>`];
 
       if (stagedLegs.length) {
-        cards.push(`
-          <div class="trade-card active">
-            <div class="trade-title"><span>Staging</span><button class="icon-btn" data-clear-staged="1">×</button></div>
-            <div class="trade-lines">
-              ${stagedLegs.map((leg) => `<div>${describeLeg(leg)}</div>`).join("")}
-              <div>Ctrl-click to add legs</div>
-            </div>
+        rows.push(`
+          <div class="trade-row staged">
+            <div>Staging</div>
+            <div>${stagedLegs.map(describeLeg).join(" | ")}</div>
+            <div>--</div>
+            <div>--</div>
+            <div>--</div>
+            <div>--</div>
+            <div>--</div>
+            <div><button class="icon-btn" data-clear-staged="1">X</button></div>
           </div>`);
       }
 
@@ -1294,28 +1299,35 @@
         const current = currentValueForTrade(trade);
         const pnl = Number(trade.entryCredit || 0) - current;
         const pct = trade.entryCredit > 0 ? (pnl / trade.entryCredit) * 100 : 0;
-        cards.push(`
-          <div class="trade-card">
-            <div class="trade-title"><span>${trade.kind}</span><button class="icon-btn" data-remove-trade="${trade.id}">×</button></div>
-            <div class="trade-lines">
-              <div>${trade.legs.map(describeLeg).join(" | ")}</div>
-              <div>Entry <input type="number" step="0.01" min="0" value="${Number(trade.entryCredit || 0).toFixed(2)}" data-entry-trade="${trade.id}"></div>
-              <div>Current: ${current.toFixed(2)}</div>
-              <div class="${pnl >= 0 ? "green" : "red"}">P/L: ${pnl.toFixed(2)} (${pct.toFixed(0)}%)</div>
-              <div>Sold Δ: ${soldLegDelta(trade)}</div>
-            </div>
+        rows.push(`
+          <div class="trade-row">
+            <div>${trade.kind}</div>
+            <div>${trade.legs.map(describeLeg).join(" | ")}</div>
+            <div><input type="number" step="0.01" min="0" value="${Number(trade.entryCredit || 0).toFixed(2)}" data-entry-trade="${trade.id}"></div>
+            <div>${current.toFixed(2)}</div>
+            <div class="${pnl >= 0 ? "green" : "red"}">${pnl.toFixed(2)}</div>
+            <div class="${pnl >= 0 ? "green" : "red"}">${pct.toFixed(0)}%</div>
+            <div>${soldLegDelta(trade)}</div>
+            <div><button class="icon-btn" data-remove-trade="${trade.id}">X</button></div>
           </div>`);
       });
 
-      while (cards.length < 4) {
-        cards.push(`
-          <div class="trade-card">
-            <div class="trade-title"><span>Empty Slot</span></div>
-            <div class="trade-lines"><div>Click chain marks/deltas to stage.</div></div>
+      const tradeRowCount = openTrades.length;
+      for (let index = tradeRowCount; index < 4; index += 1) {
+        rows.push(`
+          <div class="trade-row">
+            <div>Empty</div>
+            <div>Click chain marks/deltas to stage</div>
+            <div>--</div>
+            <div>--</div>
+            <div>--</div>
+            <div>--</div>
+            <div>--</div>
+            <div></div>
           </div>`);
       }
 
-      document.getElementById("openTradesGrid").innerHTML = cards.slice(0, 4).join("");
+      document.getElementById("openTradesGrid").innerHTML = `<div class="trade-table">${rows.join("")}</div>`;
       document.querySelectorAll("[data-remove-trade]").forEach((button) => {
         button.addEventListener("click", () => {
           openTrades = openTrades.filter((trade) => trade.id !== Number(button.dataset.removeTrade));
