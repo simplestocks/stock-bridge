@@ -544,6 +544,31 @@
       font-weight: 750;
     }
 
+    .chain-controls {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .chain-controls select,
+    .chain-controls input {
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .chain-controls input {
+      width: 62px;
+    }
+
     .pin-pill {
       justify-self: end;
       width: 78px;
@@ -817,7 +842,17 @@
               <div class="panel-title">0DTE OPTIONS CHAIN</div>
               <div class="label">11-delta condor strikes · magnet trade zone · PIN POWER ranking</div>
             </div>
-            <div class="chain-note">Click-to-stage order later</div>
+            <div class="chain-controls">
+              <span class="label">Rows</span>
+              <select id="rowLimitSelect">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+              </select>
+              <input id="rowLimitCustom" type="number" min="1" max="200" step="1" placeholder="Custom">
+            </div>
           </div>
           <div class="chain-table" id="chainTable"></div>
         </div>
@@ -887,6 +922,8 @@
     const MOCK_PASSWORD = "pinbox";
     const PINBOX_BASE_URL = "https://magix-production.up.railway.app/dashboard/pinbox";
     let selectedRegime = localStorage.getItem("odteRegime") || "bullish";
+    let rowLimit = Number(localStorage.getItem("odteRowLimit") || 20);
+    let lastChainRows = [];
     let refreshTimer = null;
 
     const beRows = [
@@ -981,7 +1018,24 @@
       document.getElementById("painLadder").innerHTML = html;
     }
 
+    function limitRowsAroundFocus(rows, limit) {
+      if (!Array.isArray(rows) || rows.length <= limit) return rows;
+      const best = bestPinFromRows(rows);
+      const focusStrike = best ? best.strike : rows[Math.floor(rows.length / 2)][0];
+      let focusIndex = rows.findIndex((row) => row[0] === focusStrike);
+      if (focusIndex < 0) focusIndex = Math.floor(rows.length / 2);
+      const before = Math.floor((limit - 1) / 2);
+      let start = Math.max(0, focusIndex - before);
+      let end = start + limit;
+      if (end > rows.length) {
+        end = rows.length;
+        start = Math.max(0, end - limit);
+      }
+      return rows.slice(start, end);
+    }
+
     function renderChain(rows = chainRows) {
+      const limitedRows = limitRowsAroundFocus(rows, rowLimit);
       const header = `
         <div class="chain-head">
           <div class="chain-cell">C Delta</div>
@@ -992,7 +1046,7 @@
           <div class="chain-cell">PIN POWER</div>
         </div>`;
 
-      const body = rows.map(([strike, callDelta, callMark, putMark, putDelta, pin, state]) => {
+      const body = limitedRows.map(([strike, callDelta, callMark, putMark, putDelta, pin, state]) => {
         const cls = state ? `chain-row ${state}` : "chain-row";
         const hue = pin >= 80 ? "var(--green)" : pin >= 55 ? "var(--amber)" : "var(--red)";
         const text = pin >= 55 ? "#07100a" : "#ffffff";
@@ -1095,6 +1149,7 @@
         visibleRows = chain;
         const bestLive = bestPinFromRows(visibleRows);
         if (bestLive) document.getElementById("confidenceValue").textContent = `${bestLive.pin}/100 @ ${bestLive.strike}`;
+        lastChainRows = chain;
         renderChain(chain);
         document.getElementById("dataStatus").textContent = "LIVE: Magix chain loaded.";
         document.getElementById("pinMapStatus").textContent = "Live";
@@ -1103,6 +1158,7 @@
         return;
       }
 
+      lastChainRows = chainRows;
       renderChain(chainRows);
       const bestDemo = bestPinFromRows(visibleRows);
       if (bestDemo) document.getElementById("confidenceValue").textContent = `${bestDemo.pin}/100 @ ${bestDemo.strike}`;
@@ -1121,6 +1177,7 @@
         applyPinbox(data);
       } catch (error) {
         document.getElementById("dataStatus").textContent = "Magix connection failed. Showing local visual demo.";
+        lastChainRows = chainRows;
         renderChain(chainRows);
       } finally {
         setRegimeButtons(selectedRegime, false);
@@ -1133,6 +1190,13 @@
       document.getElementById("regimeTop").textContent = regime.toUpperCase();
       setRegimeButtons(regime, true);
       loadPinbox();
+    }
+
+    function setRowLimit(value) {
+      const parsed = Number(value);
+      rowLimit = Number.isFinite(parsed) ? Math.max(1, Math.min(200, Math.round(parsed))) : 20;
+      localStorage.setItem("odteRowLimit", rowLimit);
+      renderChain(lastChainRows.length ? lastChainRows : chainRows);
     }
 
     function renderSentiment() {
@@ -1156,9 +1220,18 @@
     document.querySelectorAll("#regimeToggle button").forEach((button) => {
       button.addEventListener("click", () => setRegime(button.dataset.regime));
     });
+    document.getElementById("rowLimitSelect").addEventListener("change", (event) => {
+      document.getElementById("rowLimitCustom").value = "";
+      setRowLimit(event.target.value);
+    });
+    document.getElementById("rowLimitCustom").addEventListener("change", (event) => {
+      if (event.target.value) setRowLimit(event.target.value);
+    });
 
     renderBe();
     renderPain();
+    document.getElementById("rowLimitSelect").value = ["10", "20", "30", "40", "50"].includes(String(rowLimit)) ? String(rowLimit) : "20";
+    if (!["10", "20", "30", "40", "50"].includes(String(rowLimit))) document.getElementById("rowLimitCustom").value = rowLimit;
     renderChain();
     renderSentiment();
     setRegimeButtons(selectedRegime, false);
