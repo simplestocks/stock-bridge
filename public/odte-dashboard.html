@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>0DTE Pin Box Engine</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070a0f;
+      --panel: #111820;
+      --panel-2: #0c1219;
+      --line: #263342;
+      --text: #ecf3ff;
+      --muted: #8fa0b5;
+      --blue: #2d79ff;
+      --red: #ff4149;
+      --green: #2fc863;
+      --amber: #ffbd2f;
+      --cyan: #31d6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: #070a0f;
+    }
+
+    .gate-card {
+      width: min(420px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 22px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+    }
+
+    .gate-card h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .gate-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .gate-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .gate input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #070b10;
+      color: var(--text);
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    .gate button,
+    .primary-btn {
+      border: 0;
+      border-radius: 6px;
+      background: var(--blue);
+      color: white;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .gate-error {
+      min-height: 20px;
+      margin-top: 10px;
+      color: var(--red);
+      font-size: 13px;
+    }
+
+    .app {
+      min-height: 100vh;
+      padding: 14px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 12px;
+    }
+
+    .topbar,
+    .panel,
+    .bottom {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1.2fr) repeat(5, minmax(120px, 0.7fr));
+      gap: 1px;
+      overflow: hidden;
+    }
+
+    .top-cell {
+      padding: 13px 14px;
+      background: var(--panel);
+      border-right: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .value {
+      margin-top: 5px;
+      font-size: 22px;
+      font-weight: 850;
+    }
+
+    .small-value {
+      margin-top: 6px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .blue { color: var(--blue); }
+    .amber { color: var(--amber); }
+    .muted { color: var(--muted); }
+
+    .main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 310px minmax(430px, 1fr) 370px;
+      gap: 12px;
+    }
+
+    .panel {
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-head {
+      padding: 12px 13px 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .chip.green {
+      border-color: rgba(47, 200, 99, 0.35);
+      background: rgba(47, 200, 99, 0.11);
+      color: #8df2ae;
+    }
+
+    .chip.red {
+      border-color: rgba(255, 65, 73, 0.35);
+      background: rgba(255, 65, 73, 0.11);
+      color: #ff9ca1;
+    }
+
+    .chip.amber {
+      border-color: rgba(255, 189, 47, 0.35);
+      background: rgba(255, 189, 47, 0.12);
+      color: #ffd579;
+    }
+
+    .ladder {
+      overflow: auto;
+      padding: 8px 10px 12px;
+      scrollbar-color: #3b4b5d transparent;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 62px 66px 1fr;
+      gap: 7px;
+      align-items: center;
+      min-height: 27px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+    }
+
+    .strike {
+      color: var(--text);
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .score {
+      font-weight: 850;
+      text-align: right;
+    }
+
+    .bar-track {
+      height: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .bar {
+      height: 15px;
+      border-radius: 3px;
+      min-width: 3px;
+    }
+
+    .magnet {
+      background: rgba(47, 200, 99, 0.12);
+      outline: 1px solid rgba(47, 200, 99, 0.55);
+    }
+
+    .spot-row {
+      background: rgba(255, 189, 47, 0.12);
+      outline: 1px solid rgba(255, 189, 47, 0.72);
+    }
+
+    .center-stack {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(330px, 1fr) 170px;
+      gap: 12px;
+    }
+
+    .decision {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .hero-number {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.95;
+      font-weight: 950;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .status-card {
+      border: 1px solid rgba(47, 200, 99, 0.35);
+      border-radius: 8px;
+      background: rgba(47, 200, 99, 0.08);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-big {
+      font-size: 36px;
+      line-height: 1;
+      color: var(--green);
+      font-weight: 950;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .metric {
+      min-height: 72px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 18px;
+    }
+
+    .toggle {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 13px;
+    }
+
+    .toggle button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-2);
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .toggle button.active {
+      border-color: rgba(255, 189, 47, 0.75);
+      color: var(--amber);
+      background: rgba(255, 189, 47, 0.12);
+    }
+
+    .chart-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .pin-chart {
+      height: 100%;
+      min-height: 150px;
+      padding: 12px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 9px;
+    }
+
+    .zone {
+      position: relative;
+      min-height: 98px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(255, 65, 73, 0.08), rgba(47, 200, 99, 0.12), rgba(45, 121, 255, 0.08)),
+        repeating-linear-gradient(90deg, transparent 0, transparent 11.8%, rgba(255, 255, 255, 0.035) 12%);
+      overflow: hidden;
+    }
+
+    .zone-band {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 45%;
+      width: 14%;
+      background: rgba(47, 200, 99, 0.17);
+      border-left: 2px solid var(--green);
+      border-right: 2px solid var(--green);
+    }
+
+    .wall-line,
+    .user-line,
+    .spot-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+    }
+
+    .wall-line.left { left: 31%; background: var(--red); }
+    .wall-line.right { left: 72%; background: var(--blue); }
+    .user-line { left: 51%; background: #ffffff; }
+    .spot-line { left: 54%; background: var(--amber); }
+
+    .zone-label {
+      position: absolute;
+      top: 12px;
+      padding: 5px 7px;
+      border-radius: 5px;
+      background: rgba(7, 10, 15, 0.82);
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .zone-label.low { left: 31%; transform: translateX(-50%); color: #ff9ca1; }
+    .zone-label.pin { left: 52%; transform: translateX(-50%); color: #8df2ae; }
+    .zone-label.high { left: 72%; transform: translateX(-50%); color: #91b8ff; }
+    .zone-label.spot { left: 54%; bottom: 12px; top: auto; color: var(--amber); transform: translateX(-50%); }
+
+    .curve {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      bottom: 18px;
+      height: 42px;
+      clip-path: polygon(0 92%, 16% 78%, 31% 43%, 45% 17%, 52% 8%, 60% 17%, 72% 47%, 86% 78%, 100% 92%, 100% 100%, 0 100%);
+      background: rgba(49, 214, 255, 0.35);
+      border-top: 2px solid var(--cyan);
+    }
+
+    .chain-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chain-table {
+      min-height: 0;
+      overflow: auto;
+      padding: 8px 10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+    }
+
+    .chain-head,
+    .chain-row {
+      display: grid;
+      grid-template-columns: 58px 66px 74px 66px 58px 70px;
+      gap: 8px;
+      align-items: center;
+      min-height: 27px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .chain-head {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--panel);
+    }
+
+    .chain-row.pin {
+      background: rgba(47, 200, 99, 0.11);
+      outline: 1px solid rgba(47, 200, 99, 0.45);
+    }
+
+    .chain-row.current {
+      background: rgba(255, 189, 47, 0.12);
+      outline: 1px solid rgba(255, 189, 47, 0.6);
+    }
+
+    .chain-row.wall {
+      background: rgba(255, 65, 73, 0.08);
+    }
+
+    .chain-cell {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .chain-strike {
+      text-align: center;
+      color: #ffffff;
+      font-weight: 950;
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 22px;
+      display: grid;
+      place-items: center;
+    }
+
+    .chain-note {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .pin-pill {
+      justify-self: end;
+      width: 64px;
+      min-height: 19px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      color: #06100a;
+      font-weight: 950;
+      background: var(--green);
+    }
+
+    .right-stack {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pain-row {
+      display: grid;
+      grid-template-columns: 58px 1fr 54px;
+      align-items: center;
+      gap: 8px;
+      min-height: 25px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+    }
+
+    .pain-mid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .axis {
+      width: 1px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.35);
+      justify-self: center;
+      grid-column: 1 / 3;
+      grid-row: 1;
+    }
+
+    .pain-left,
+    .pain-right {
+      height: 14px;
+      border-radius: 3px;
+      grid-row: 1;
+    }
+
+    .pain-left {
+      justify-self: end;
+      background: var(--red);
+    }
+
+    .pain-right {
+      justify-self: start;
+      background: var(--blue);
+    }
+
+    .sentiment-body {
+      padding: 12px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .sentiment-grid {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 8px;
+      align-items: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+    }
+
+    .sent-line {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .sent-red,
+    .sent-green {
+      height: 14px;
+      border-radius: 3px;
+    }
+
+    .sent-red { justify-self: end; background: var(--red); }
+    .sent-green { justify-self: start; background: var(--green); }
+
+    .veto {
+      border: 1px solid rgba(255, 189, 47, 0.35);
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(255, 189, 47, 0.1);
+      display: grid;
+      gap: 6px;
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.3fr;
+      gap: 1px;
+      overflow: hidden;
+    }
+
+    .bottom-cell {
+      padding: 12px;
+      background: var(--panel);
+      min-height: 76px;
+    }
+
+    .mini-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 1160px) {
+      .app { padding: 10px; }
+      .topbar { grid-template-columns: repeat(3, 1fr); }
+      .main { grid-template-columns: 1fr; }
+      .right-stack { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .panel { min-height: 360px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .bottom { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .topbar,
+      .decision-grid,
+      .right-stack,
+      .bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics,
+      .toggle {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-number { font-size: 38px; }
+      .panel { min-height: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <h1>0DTE Pin Box Engine</h1>
+      <p>Private mockup gate. This is not the final security layer.</p>
+      <div class="gate-row">
+        <input id="pass" type="password" autocomplete="current-password" placeholder="Password">
+        <button id="unlock" type="button">Open</button>
+      </div>
+      <div class="gate-error" id="gateError"></div>
+    </div>
+  </div>
+
+  <main class="app hidden" id="app">
+    <section class="topbar" aria-label="Market summary">
+      <div class="top-cell">
+        <div class="label">PIN BOX ENGINE</div>
+        <div class="value">SPX 0DTE</div>
+      </div>
+      <div class="top-cell">
+        <div class="label">Current SPX</div>
+        <div class="value amber" id="spxValue">7250.80</div>
+      </div>
+      <div class="top-cell">
+        <div class="label">Recommended Fly</div>
+        <div class="value green" id="recommendedFlyTop">7250</div>
+      </div>
+      <div class="top-cell">
+        <div class="label">Your Fly</div>
+        <div class="value">7250</div>
+      </div>
+      <div class="top-cell">
+        <div class="label">Move?</div>
+        <div class="value green" id="moveTop">NO</div>
+      </div>
+      <div class="top-cell">
+        <div class="label">Headline Mode</div>
+        <div class="small-value amber" id="regimeTop">Connecting</div>
+      </div>
+    </section>
+
+    <section class="main">
+      <aside class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">BE PRESSURE MAP</div>
+            <div class="label">Blue call pressure · Red put pressure · Green low pressure</div>
+          </div>
+          <span class="chip green">Pin cluster</span>
+        </div>
+        <div class="ladder" id="beLadder"></div>
+      </aside>
+
+      <section class="center-stack">
+        <div class="decision">
+          <div class="decision-grid">
+            <div>
+              <div class="label">Recommended Structure</div>
+              <div class="hero-number">Iron Butterfly</div>
+              <div class="hero-sub">Target Pin Zone: <strong class="green" id="targetZone">7245-7255</strong> · Best center: <strong id="bestCenter">7250</strong></div>
+            </div>
+            <div class="status-card">
+              <div class="label">Trade Status</div>
+              <div class="status-big" id="tradeStatus">HOLD</div>
+              <div class="small-value">Move? <span class="green" id="moveDecision">NO</span></div>
+              <div class="muted" id="dataStatus">Connecting to Magix.</div>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="label">Confidence</div>
+              <strong class="green" id="confidenceValue">86/100</strong>
+            </div>
+            <div class="metric">
+              <div class="label">Lower Wall</div>
+              <strong class="red">7230</strong>
+            </div>
+            <div class="metric">
+              <div class="label">Upper Wall</div>
+              <strong class="blue">7275</strong>
+            </div>
+            <div class="metric">
+              <div class="label">Slow Signal</div>
+              <strong class="amber" id="sentimentValue">Connecting</strong>
+            </div>
+          </div>
+
+          <div class="toggle" aria-label="Regime toggle">
+            <button type="button">Normal</button>
+            <button type="button" class="active">Bullish Tape</button>
+            <button type="button">Bearish Tape</button>
+          </div>
+        </div>
+
+        <div class="chain-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">0DTE OPTIONS CHAIN</div>
+              <div class="label">Live data target: call delta / mark · strike · put mark / delta</div>
+            </div>
+            <div class="chain-note">Click-to-stage order later</div>
+          </div>
+          <div class="chain-table" id="chainTable"></div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="pin-chart">
+            <div class="panel-head" style="padding:0;border:0;">
+              <div>
+                <div class="panel-title">Pin Box Map</div>
+                <div class="label">Compact placement view</div>
+              </div>
+              <span class="chip green" id="pinMapStatus">Stable</span>
+            </div>
+            <div class="zone">
+              <div class="zone-band"></div>
+              <div class="curve"></div>
+              <div class="wall-line left"></div>
+              <div class="wall-line right"></div>
+              <div class="user-line"></div>
+              <div class="spot-line"></div>
+              <div class="zone-label low">Lower wall 7230</div>
+              <div class="zone-label pin">Pin zone 7245-7255</div>
+              <div class="zone-label high">Upper wall 7275</div>
+              <div class="zone-label spot">Spot 7250.8</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-stack">
+        <aside class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">XFACTOR MM PAIN</div>
+              <div class="label">Per-strike dollar pain map</div>
+            </div>
+            <span class="chip amber">No escape</span>
+          </div>
+          <div class="ladder" id="painLadder"></div>
+        </aside>
+
+        <aside class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">SENTIMENT PRESSURE</div>
+              <div class="label">Slowed veto layer</div>
+            </div>
+            <span class="chip red">Bearish</span>
+          </div>
+          <div class="sentiment-body">
+            <div class="veto">
+              <div class="label">Veto Layer</div>
+              <div class="small-value amber">No bullish fly adjustment</div>
+              <div class="muted">Signal must persist before it changes trade permission.</div>
+            </div>
+            <div class="sentiment-grid" id="sentimentGrid"></div>
+            <div class="mini-list">
+              <span class="chip red">Slow Signal: 12 min</span>
+              <span class="chip amber">Watch rallies</span>
+              <span class="chip green">Fly unchanged</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </section>
+
+    <section class="bottom" aria-label="Live trade monitor">
+      <div class="bottom-cell">
+        <div class="label">Live Trade Monitor</div>
+        <div class="small-value green" id="monitorStatus">Stable</div>
+      </div>
+      <div class="bottom-cell">
+        <div class="label">Risk Meter</div>
+        <div class="small-value amber">Watch 7275</div>
+      </div>
+      <div class="bottom-cell">
+        <div class="label">Position</div>
+        <div class="small-value" id="positionStatus">1x 7250 Fly · Size OK</div>
+      </div>
+      <div class="bottom-cell">
+        <div class="label">Alerts</div>
+        <div class="mini-list">
+          <span class="chip green">No move needed</span>
+          <span class="chip amber">Sentiment veto active</span>
+          <span class="chip">Token healthy</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const MOCK_PASSWORD = "pinbox";
+    const PINBOX_URL = "https://magix-production.up.railway.app/dashboard/pinbox?regime=neutral";
+
+    const beRows = [
+      [7330, 190, "blue"], [7325, 468, "blue"], [7320, 223, "blue"],
+      [7315, 178, "blue"], [7310, 248, "blue"], [7305, 204, "blue"],
+      [7300, 624, "blue"], [7295, 149, "blue"], [7290, 235, "blue"],
+      [7285, 166, "blue"], [7280, 190, "blue"], [7275, 108, "blue"],
+      [7270, 95, "blue"], [7265, 61.2, "blue"], [7260, 61.8, "blue"],
+      [7255, 32.3, "blue", true], [7250, 8.9, "green", true],
+      [7245, -22.8, "red", true], [7240, -70.5, "red"], [7235, -80.1, "red"],
+      [7230, -96, "red"], [7225, -81.4, "red"], [7220, -101, "red"],
+      [7215, -78, "red"], [7210, -87.2, "red"], [7205, -77.7, "red"],
+      [7200, -157, "red"], [7195, -74.4, "red"], [7190, -84.3, "red"]
+    ];
+
+    const painRows = [
+      [7330, -451], [7325, -1878], [7320, -526], [7315, -375],
+      [7310, -2871], [7305, -3797], [7300, -21174], [7295, -5229],
+      [7290, -6450], [7285, -6917], [7280, -10358], [7275, -14486],
+      [7270, -27895], [7265, -33368], [7260, -36346], [7255, -33918],
+      [7250, -42049], [7245, -25887], [7240, -16563], [7235, -3612],
+      [7230, 12], [7225, 314], [7220, 839], [7215, 911], [7210, 1986],
+      [7205, 1196], [7200, 6776], [7195, 919], [7190, 1980]
+    ];
+
+    const chainRows = [
+      [7275, 0.99, 45.10, 0.68, 0.49, 18, "wall"],
+      [7270, 0.99, 40.30, 0.73, 0.49, 34, ""],
+      [7265, 0.99, 35.35, 1.08, 0.48, 46, ""],
+      [7260, 0.99, 30.45, 1.65, 0.47, 63, ""],
+      [7255, 0.98, 25.55, 2.45, 0.44, 88, "pin"],
+      [7250, 0.97, 19.30, 3.95, 0.41, 94, "current"],
+      [7245, 0.93, 15.10, 6.35, 0.37, 82, "pin"],
+      [7240, 0.88, 10.55, 9.90, 0.32, 57, ""],
+      [7235, 0.76, 5.55, 14.20, 0.24, 39, ""],
+      [7230, 0.51, 0.73, 20.10, 0.12, 21, "wall"],
+      [7225, 0.12, 0.25, 26.50, 0.05, 16, ""],
+      [7220, 0.01, 0.03, 34.95, 0.01, 11, ""]
+    ];
+
+    const sentimentRows = [
+      [7330, -8], [7325, -12], [7320, -4], [7315, -7], [7310, -16],
+      [7305, -18], [7300, -44], [7295, -9], [7290, -13], [7285, -15],
+      [7280, -22], [7275, -31], [7270, -42], [7265, -54], [7260, -62],
+      [7255, -68], [7250, -40], [7245, -27], [7240, -15], [7235, -6],
+      [7230, 2], [7225, 5], [7220, 11], [7215, 19], [7210, 12],
+      [7205, 8], [7200, 24], [7195, 6], [7190, 14]
+    ];
+
+    function unlock() {
+      const pass = document.getElementById("pass").value.trim();
+      const error = document.getElementById("gateError");
+      if (pass !== MOCK_PASSWORD) {
+        error.textContent = "Use mock password: pinbox";
+        return;
+      }
+      document.getElementById("gate").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      sessionStorage.setItem("odteGate", "open");
+    }
+
+    function renderBe() {
+      const html = beRows.map(([strike, score, side, magnet]) => {
+        const width = Math.min(100, Math.max(4, Math.abs(score) / 6.3));
+        const cls = magnet ? "row magnet" : strike === 7250 ? "row spot-row" : "row";
+        const color = side === "blue" ? "blue" : side === "green" ? "green" : "red";
+        return `
+          <div class="${cls}">
+            <div class="score ${color}">${score}</div>
+            <div class="strike">${strike}</div>
+            <div class="bar-track"><div class="bar" style="width:${width}%;background:var(--${color});"></div></div>
+          </div>`;
+      }).join("");
+      document.getElementById("beLadder").innerHTML = html;
+    }
+
+    function renderPain() {
+      const max = Math.max(...painRows.map(([, value]) => Math.abs(value)));
+      const html = painRows.map(([strike, value]) => {
+        const width = Math.max(2, Math.abs(value) / max * 100);
+        const isNeg = value < 0;
+        return `
+          <div class="pain-row">
+            <div class="strike">${strike}</div>
+            <div class="pain-mid">
+              <div class="axis"></div>
+              <div class="${isNeg ? "pain-left" : "pain-right"}" style="width:${width}%"></div>
+            </div>
+            <div class="${isNeg ? "red" : "blue"}">${value}k</div>
+          </div>`;
+      }).join("");
+      document.getElementById("painLadder").innerHTML = html;
+    }
+
+    function renderChain(rows = chainRows) {
+      const header = `
+        <div class="chain-head">
+          <div class="chain-cell">C Delta</div>
+          <div class="chain-cell">C Mark</div>
+          <div class="chain-strike">Strike</div>
+          <div class="chain-cell">P Mark</div>
+          <div class="chain-cell">P Delta</div>
+          <div class="chain-cell">PIN</div>
+        </div>`;
+
+      const body = rows.map(([strike, callDelta, callMark, putMark, putDelta, pin, state]) => {
+        const cls = state ? `chain-row ${state}` : "chain-row";
+        const hue = pin >= 80 ? "var(--green)" : pin >= 55 ? "var(--amber)" : "var(--red)";
+        const text = pin >= 55 ? "#07100a" : "#ffffff";
+        return `
+          <div class="${cls}">
+            <div class="chain-cell blue">${callDelta.toFixed(2)}</div>
+            <div class="chain-cell blue">${callMark.toFixed(2)}</div>
+            <div class="chain-strike">${strike}</div>
+            <div class="chain-cell red">${putMark.toFixed(2)}</div>
+            <div class="chain-cell red">${putDelta.toFixed(2)}</div>
+            <div class="pin-pill" style="background:${hue};color:${text};">${pin}</div>
+          </div>`;
+      }).join("");
+
+      document.getElementById("chainTable").innerHTML = header + body;
+    }
+
+    function classifyChainRow(row, bestCenter, zone) {
+      if (row.strike === bestCenter) return "current";
+      if (Array.isArray(zone) && zone.length === 2 && row.strike >= zone[0] && row.strike <= zone[1]) return "pin";
+      if (row.pin <= 25) return "wall";
+      return "";
+    }
+
+    function applyPinbox(data) {
+      const rec = data.recommendation || {};
+      const liveRows = Array.isArray(data.chain) && data.chain.length > 0;
+      const spx = Number(data.spx_price || 0);
+      const center = rec.center || 7250;
+      const zone = rec.zone && rec.zone.length === 2 ? rec.zone : [7245, 7255];
+      const pin = rec.pin || 86;
+      const status = rec.status || (liveRows ? "WATCH" : "DEMO");
+      const move = rec.move || (liveRows ? "WAIT" : "NO");
+
+      if (spx > 0) document.getElementById("spxValue").textContent = spx.toFixed(2);
+      document.getElementById("recommendedFlyTop").textContent = center;
+      document.getElementById("moveTop").textContent = move;
+      document.getElementById("regimeTop").textContent = data.effective_regime ? data.effective_regime.toUpperCase() : "NEUTRAL";
+      document.getElementById("targetZone").textContent = `${zone[0]}-${zone[1]}`;
+      document.getElementById("bestCenter").textContent = center;
+      document.getElementById("tradeStatus").textContent = status;
+      document.getElementById("moveDecision").textContent = move;
+      document.getElementById("confidenceValue").textContent = `${pin}/100`;
+      document.getElementById("sentimentValue").textContent = data.sentiment?.net || "NEUTRAL";
+
+      if (liveRows) {
+        const chain = data.chain
+          .slice()
+          .sort((a, b) => b.strike - a.strike)
+          .map((row) => [
+            row.strike,
+            Number(row.call_delta || 0),
+            Number(row.call_mark || 0),
+            Number(row.put_mark || 0),
+            Number(row.put_delta || 0),
+            Number(row.pin || 0),
+            classifyChainRow(row, center, zone)
+          ]);
+        renderChain(chain);
+        document.getElementById("dataStatus").textContent = "LIVE: Magix chain loaded.";
+        document.getElementById("pinMapStatus").textContent = "Live";
+        document.getElementById("monitorStatus").textContent = "Live";
+        document.getElementById("positionStatus").textContent = `1x ${center} Fly · Live data`;
+        return;
+      }
+
+      renderChain(chainRows);
+      document.getElementById("dataStatus").textContent = "Magix is connected. Market chain is empty, so this page is showing the weekend visual demo.";
+      document.getElementById("pinMapStatus").textContent = "Demo";
+      document.getElementById("monitorStatus").textContent = "Demo";
+      document.getElementById("positionStatus").textContent = "1x 7250 Fly · Demo rows";
+    }
+
+    async function loadPinbox() {
+      try {
+        const response = await fetch(`${PINBOX_URL}&t=${Date.now()}`, { cache: "no-store" });
+        const data = await response.json();
+        applyPinbox(data);
+      } catch (error) {
+        document.getElementById("dataStatus").textContent = "Magix connection failed. Showing local visual demo.";
+        renderChain(chainRows);
+      }
+    }
+
+    function renderSentiment() {
+      const max = Math.max(...sentimentRows.map(([, value]) => Math.abs(value)));
+      const html = sentimentRows.map(([strike, value]) => {
+        const width = Math.max(2, Math.abs(value) / max * 100);
+        const isNeg = value < 0;
+        return `
+          <div class="muted">${strike}</div>
+          <div class="sent-line">
+            <div class="${isNeg ? "sent-red" : ""}" style="width:${isNeg ? width : 0}%"></div>
+            <div class="${isNeg ? "" : "sent-green"}" style="width:${isNeg ? 0 : width}%"></div>
+          </div>`;
+      }).join("");
+      document.getElementById("sentimentGrid").innerHTML = html;
+    }
+
+    document.getElementById("unlock").addEventListener("click", unlock);
+    document.getElementById("pass").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") unlock();
+    });
+
+    renderBe();
+    renderPain();
+    renderChain();
+    renderSentiment();
+    loadPinbox();
+    setInterval(loadPinbox, 15000);
+
+    if (sessionStorage.getItem("odteGate") === "open") {
+      document.getElementById("gate").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
