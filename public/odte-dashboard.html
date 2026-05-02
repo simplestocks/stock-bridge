@@ -20,6 +20,11 @@
       --cyan: #31d6ff;
     }
 
+    .toggle button.loading {
+      opacity: 0.7;
+      cursor: progress;
+    }
+
     * { box-sizing: border-box; }
 
     body {
@@ -797,10 +802,10 @@
           </div>
           <div class="hero-sub" id="dataStatus">Connecting to Magix.</div>
 
-          <div class="toggle" aria-label="Regime toggle">
-            <button type="button">Normal</button>
-            <button type="button" class="active">Bullish Tape</button>
-            <button type="button">Bearish Tape</button>
+          <div class="toggle" aria-label="Regime toggle" id="regimeToggle">
+            <button type="button" data-regime="neutral">Normal</button>
+            <button type="button" data-regime="bullish" class="active">Bullish Tape</button>
+            <button type="button" data-regime="bearish">Bearish Tape</button>
           </div>
         </div>
 
@@ -878,7 +883,9 @@
 
   <script>
     const MOCK_PASSWORD = "pinbox";
-    const PINBOX_URL = "https://magix-production.up.railway.app/dashboard/pinbox?regime=neutral";
+    const PINBOX_BASE_URL = "https://magix-production.up.railway.app/dashboard/pinbox";
+    let selectedRegime = localStorage.getItem("odteRegime") || "bullish";
+    let refreshTimer = null;
 
     const beRows = [
       [7330, 190, "blue"], [7325, 468, "blue"], [7320, 223, "blue"],
@@ -1008,6 +1015,14 @@
       return "";
     }
 
+    function setRegimeButtons(regime, isLoading = false) {
+      document.querySelectorAll("#regimeToggle button").forEach((button) => {
+        const active = button.dataset.regime === regime;
+        button.classList.toggle("active", active);
+        button.classList.toggle("loading", active && isLoading);
+      });
+    }
+
     function applyPinbox(data) {
       const rec = data.recommendation || {};
       const liveRows = Array.isArray(data.chain) && data.chain.length > 0;
@@ -1022,7 +1037,8 @@
       if (spx > 0) document.getElementById("spxValue").textContent = spx.toFixed(2);
       document.getElementById("recommendedFlyTop").textContent = structure;
       document.getElementById("moveTop").textContent = move;
-      document.getElementById("regimeTop").textContent = data.effective_regime ? data.effective_regime.toUpperCase() : "NEUTRAL";
+      const displayRegime = liveRows && data.effective_regime ? data.effective_regime : selectedRegime;
+      document.getElementById("regimeTop").textContent = displayRegime.toUpperCase();
       document.getElementById("targetZone").textContent = `${zone[0]}-${zone[1]}`;
       document.getElementById("bestCenter").textContent = center;
       document.getElementById("bestStructure").textContent = structure;
@@ -1060,14 +1076,26 @@
     }
 
     async function loadPinbox() {
+      setRegimeButtons(selectedRegime, true);
       try {
-        const response = await fetch(`${PINBOX_URL}&t=${Date.now()}`, { cache: "no-store" });
+        const url = `${PINBOX_BASE_URL}?regime=${encodeURIComponent(selectedRegime)}&t=${Date.now()}`;
+        const response = await fetch(url, { cache: "no-store" });
         const data = await response.json();
         applyPinbox(data);
       } catch (error) {
         document.getElementById("dataStatus").textContent = "Magix connection failed. Showing local visual demo.";
         renderChain(chainRows);
+      } finally {
+        setRegimeButtons(selectedRegime, false);
       }
+    }
+
+    function setRegime(regime) {
+      selectedRegime = regime;
+      localStorage.setItem("odteRegime", regime);
+      document.getElementById("regimeTop").textContent = regime.toUpperCase();
+      setRegimeButtons(regime, true);
+      loadPinbox();
     }
 
     function renderSentiment() {
@@ -1088,13 +1116,17 @@
     document.getElementById("pass").addEventListener("keydown", (event) => {
       if (event.key === "Enter") unlock();
     });
+    document.querySelectorAll("#regimeToggle button").forEach((button) => {
+      button.addEventListener("click", () => setRegime(button.dataset.regime));
+    });
 
     renderBe();
     renderPain();
     renderChain();
     renderSentiment();
+    setRegimeButtons(selectedRegime, false);
     loadPinbox();
-    setInterval(loadPinbox, 15000);
+    refreshTimer = setInterval(loadPinbox, 15000);
 
     if (sessionStorage.getItem("odteGate") === "open") {
       document.getElementById("gate").classList.add("hidden");
