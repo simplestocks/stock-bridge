@@ -159,7 +159,7 @@
     .main {
       min-height: 0;
       display: grid;
-      grid-template-columns: 310px minmax(430px, 1fr) 370px;
+      grid-template-columns: 270px 310px minmax(460px, 1fr) 330px;
       gap: 12px;
     }
 
@@ -270,7 +270,7 @@
     .center-stack {
       min-height: 0;
       display: grid;
-      grid-template-rows: auto minmax(330px, 1fr) 170px;
+      grid-template-rows: auto minmax(390px, 1fr) 135px;
       gap: 12px;
     }
 
@@ -289,11 +289,11 @@
     }
 
     .hero-number {
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 0.95;
+      font-size: 24px;
+      line-height: 1.1;
       font-weight: 950;
       color: #ffffff;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .hero-sub {
@@ -320,7 +320,7 @@
 
     .metrics {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-top: 13px;
     }
@@ -336,6 +336,26 @@
     .metric strong {
       display: block;
       margin-top: 7px;
+      font-size: 18px;
+    }
+
+    .trade-lanes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .trade-lane {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      padding: 11px;
+      min-height: 96px;
+    }
+
+    .trade-lane strong {
+      display: block;
+      margin-top: 6px;
       font-size: 18px;
     }
 
@@ -464,7 +484,7 @@
     .chain-head,
     .chain-row {
       display: grid;
-      grid-template-columns: 58px 66px 74px 66px 58px 70px;
+      grid-template-columns: 58px 66px 74px 66px 58px 86px;
       gap: 8px;
       align-items: center;
       min-height: 27px;
@@ -521,7 +541,7 @@
 
     .pin-pill {
       justify-self: end;
-      width: 64px;
+      width: 78px;
       min-height: 19px;
       display: grid;
       place-items: center;
@@ -648,16 +668,15 @@
       .app { padding: 10px; }
       .topbar { grid-template-columns: repeat(3, 1fr); }
       .main { grid-template-columns: 1fr; }
-      .right-stack { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
       .panel { min-height: 360px; }
       .metrics { grid-template-columns: repeat(2, 1fr); }
+      .trade-lanes { grid-template-columns: 1fr; }
       .bottom { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 720px) {
       .topbar,
       .decision-grid,
-      .right-stack,
       .bottom {
         grid-template-columns: 1fr;
       }
@@ -696,12 +715,12 @@
         <div class="value amber" id="spxValue">7250.80</div>
       </div>
       <div class="top-cell">
-        <div class="label">Recommended Fly</div>
-        <div class="value green" id="recommendedFlyTop">7250</div>
+        <div class="label">Best Setup</div>
+        <div class="value green" id="recommendedFlyTop">Pin Trade</div>
       </div>
       <div class="top-cell">
-        <div class="label">Your Fly</div>
-        <div class="value">7250</div>
+        <div class="label">Your Trade</div>
+        <div class="value">Not entered</div>
       </div>
       <div class="top-cell">
         <div class="label">Move?</div>
@@ -725,40 +744,59 @@
         <div class="ladder" id="beLadder"></div>
       </aside>
 
+      <aside class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">SENTIMENT PRESSURE</div>
+            <div class="label">Slowed veto layer</div>
+          </div>
+          <span class="chip red" id="sentimentBadge">Bearish</span>
+        </div>
+        <div class="sentiment-body">
+          <div class="veto">
+            <div class="label">Veto Layer</div>
+            <div class="small-value amber">Do not chase the tape</div>
+            <div class="muted">Sentiment adjusts permission, not the magnet.</div>
+          </div>
+          <div class="sentiment-grid" id="sentimentGrid"></div>
+          <div class="mini-list">
+            <span class="chip red">Slow Signal</span>
+            <span class="chip amber">Watch rallies</span>
+            <span class="chip green">PIN unchanged</span>
+          </div>
+        </div>
+      </aside>
+
       <section class="center-stack">
         <div class="decision">
-          <div class="decision-grid">
-            <div>
-              <div class="label">Recommended Structure</div>
-              <div class="hero-number">Iron Butterfly</div>
-              <div class="hero-sub">Target Pin Zone: <strong class="green" id="targetZone">7245-7255</strong> · Best center: <strong id="bestCenter">7250</strong></div>
+          <div class="trade-lanes">
+            <div class="trade-lane">
+              <div class="label">Opening Condor</div>
+              <strong>11-Delta IC</strong>
+              <div class="hero-sub">Target credit: <strong>$45-$60</strong> per side</div>
             </div>
-            <div class="status-card">
-              <div class="label">Trade Status</div>
-              <div class="status-big" id="tradeStatus">HOLD</div>
-              <div class="small-value">Move? <span class="green" id="moveDecision">NO</span></div>
-              <div class="muted" id="dataStatus">Connecting to Magix.</div>
+            <div class="trade-lane">
+              <div class="label">Mid-Morning Pin Trade</div>
+              <strong id="bestStructure">Fly / Condor / Wait</strong>
+              <div class="hero-sub">Target Zone: <strong class="green" id="targetZone">7245-7255</strong> · Center: <strong id="bestCenter">7250</strong></div>
             </div>
           </div>
 
           <div class="metrics">
             <div class="metric">
-              <div class="label">Confidence</div>
+              <div class="label">PIN POWER</div>
               <strong class="green" id="confidenceValue">86/100</strong>
             </div>
             <div class="metric">
-              <div class="label">Lower Wall</div>
-              <strong class="red">7230</strong>
+              <div class="label">Trade Status</div>
+              <strong class="green" id="tradeStatus">HOLD</strong>
             </div>
             <div class="metric">
-              <div class="label">Upper Wall</div>
-              <strong class="blue">7275</strong>
-            </div>
-            <div class="metric">
-              <div class="label">Slow Signal</div>
-              <strong class="amber" id="sentimentValue">Connecting</strong>
+              <div class="label">Move?</div>
+              <strong class="green" id="moveDecision">NO</strong>
             </div>
           </div>
+          <div class="hero-sub" id="dataStatus">Connecting to Magix.</div>
 
           <div class="toggle" aria-label="Regime toggle">
             <button type="button">Normal</button>
@@ -771,7 +809,7 @@
           <div class="panel-head">
             <div>
               <div class="panel-title">0DTE OPTIONS CHAIN</div>
-              <div class="label">Live data target: call delta / mark · strike · put mark / delta</div>
+              <div class="label">11-delta condor strikes · magnet trade zone · PIN POWER ranking</div>
             </div>
             <div class="chain-note">Click-to-stage order later</div>
           </div>
@@ -803,41 +841,16 @@
         </div>
       </section>
 
-      <section class="right-stack">
-        <aside class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title">XFACTOR MM PAIN</div>
-              <div class="label">Per-strike dollar pain map</div>
-            </div>
-            <span class="chip amber">No escape</span>
+      <aside class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">XFACTOR MM PAIN</div>
+            <div class="label">Per-strike dollar pain map</div>
           </div>
-          <div class="ladder" id="painLadder"></div>
-        </aside>
-
-        <aside class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title">SENTIMENT PRESSURE</div>
-              <div class="label">Slowed veto layer</div>
-            </div>
-            <span class="chip red">Bearish</span>
-          </div>
-          <div class="sentiment-body">
-            <div class="veto">
-              <div class="label">Veto Layer</div>
-              <div class="small-value amber">No bullish fly adjustment</div>
-              <div class="muted">Signal must persist before it changes trade permission.</div>
-            </div>
-            <div class="sentiment-grid" id="sentimentGrid"></div>
-            <div class="mini-list">
-              <span class="chip red">Slow Signal: 12 min</span>
-              <span class="chip amber">Watch rallies</span>
-              <span class="chip green">Fly unchanged</span>
-            </div>
-          </div>
-        </aside>
-      </section>
+          <span class="chip amber">No escape</span>
+        </div>
+        <div class="ladder" id="painLadder"></div>
+      </aside>
     </section>
 
     <section class="bottom" aria-label="Live trade monitor">
@@ -851,7 +864,7 @@
       </div>
       <div class="bottom-cell">
         <div class="label">Position</div>
-        <div class="small-value" id="positionStatus">1x 7250 Fly · Size OK</div>
+        <div class="small-value" id="positionStatus">No trade entered</div>
       </div>
       <div class="bottom-cell">
         <div class="label">Alerts</div>
@@ -968,7 +981,7 @@
           <div class="chain-strike">Strike</div>
           <div class="chain-cell">P Mark</div>
           <div class="chain-cell">P Delta</div>
-          <div class="chain-cell">PIN</div>
+          <div class="chain-cell">PIN POWER</div>
         </div>`;
 
       const body = rows.map(([strike, callDelta, callMark, putMark, putDelta, pin, state]) => {
@@ -1003,19 +1016,21 @@
       const center = rec.center || 7250;
       const zone = rec.zone && rec.zone.length === 2 ? rec.zone : [7245, 7255];
       const pin = rec.pin || 86;
+      const structure = rec.structure || (liveRows ? "Wait" : "Demo: Fly / Condor");
       const status = rec.status || (liveRows ? "WATCH" : "DEMO");
       const move = rec.move || (liveRows ? "WAIT" : "NO");
 
       if (spx > 0) document.getElementById("spxValue").textContent = spx.toFixed(2);
-      document.getElementById("recommendedFlyTop").textContent = center;
+      document.getElementById("recommendedFlyTop").textContent = structure;
       document.getElementById("moveTop").textContent = move;
       document.getElementById("regimeTop").textContent = data.effective_regime ? data.effective_regime.toUpperCase() : "NEUTRAL";
       document.getElementById("targetZone").textContent = `${zone[0]}-${zone[1]}`;
       document.getElementById("bestCenter").textContent = center;
+      document.getElementById("bestStructure").textContent = structure;
       document.getElementById("tradeStatus").textContent = status;
       document.getElementById("moveDecision").textContent = move;
       document.getElementById("confidenceValue").textContent = `${pin}/100`;
-      document.getElementById("sentimentValue").textContent = data.sentiment?.net || "NEUTRAL";
+      document.getElementById("sentimentBadge").textContent = data.sentiment?.net || "NEUTRAL";
 
       if (liveRows) {
         const chain = data.chain
@@ -1034,7 +1049,7 @@
         document.getElementById("dataStatus").textContent = "LIVE: Magix chain loaded.";
         document.getElementById("pinMapStatus").textContent = "Live";
         document.getElementById("monitorStatus").textContent = "Live";
-        document.getElementById("positionStatus").textContent = `1x ${center} Fly · Live data`;
+        document.getElementById("positionStatus").textContent = `Pin center ${center} · Live data`;
         return;
       }
 
@@ -1042,7 +1057,7 @@
       document.getElementById("dataStatus").textContent = "Magix is connected. Market chain is empty, so this page is showing the weekend visual demo.";
       document.getElementById("pinMapStatus").textContent = "Demo";
       document.getElementById("monitorStatus").textContent = "Demo";
-      document.getElementById("positionStatus").textContent = "1x 7250 Fly · Demo rows";
+      document.getElementById("positionStatus").textContent = "Weekend demo rows";
     }
 
     async function loadPinbox() {
