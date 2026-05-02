@@ -601,46 +601,51 @@
     }
 
     .sentiment-body {
-      padding: 12px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 10px;
+      padding: 8px 10px 12px;
       min-height: 0;
-    }
-
-    .sentiment-grid {
-      display: grid;
-      grid-template-columns: 70px 1fr;
-      gap: 8px;
-      align-items: center;
+      overflow: auto;
+      scrollbar-color: #3b4b5d transparent;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
       font-size: 12px;
     }
 
-    .sent-line {
+    .sentiment-scale {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 54px 1fr;
       align-items: center;
-      gap: 2px;
+      gap: 7px;
+      min-height: 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .sentiment-grid {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .sent-line {
+      position: relative;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
     }
 
     .sent-red,
     .sent-green {
       height: 14px;
       border-radius: 3px;
+      min-width: 2px;
     }
 
-    .sent-red { justify-self: end; background: var(--red); }
-    .sent-green { justify-self: start; background: var(--green); }
-
-    .veto {
-      border: 1px solid rgba(255, 189, 47, 0.35);
-      border-radius: 8px;
-      padding: 10px;
-      background: rgba(255, 189, 47, 0.1);
-      display: grid;
-      gap: 6px;
-    }
+    .sent-red { background: var(--red); }
+    .sent-green { background: var(--green); }
 
     .bottom {
       display: grid;
@@ -748,22 +753,16 @@
         <div class="panel-head">
           <div>
             <div class="panel-title">SENTIMENT PRESSURE</div>
-            <div class="label">Slowed veto layer</div>
+            <div class="label">Fast pressure read</div>
           </div>
           <span class="chip red" id="sentimentBadge">Bearish</span>
         </div>
         <div class="sentiment-body">
-          <div class="veto">
-            <div class="label">Veto Layer</div>
-            <div class="small-value amber">Do not chase the tape</div>
-            <div class="muted">Sentiment adjusts permission, not the magnet.</div>
+          <div class="sentiment-scale">
+            <div>Strike</div>
+            <div>Pressure</div>
           </div>
           <div class="sentiment-grid" id="sentimentGrid"></div>
-          <div class="mini-list">
-            <span class="chip red">Slow Signal</span>
-            <span class="chip amber">Watch rallies</span>
-            <span class="chip green">PIN unchanged</span>
-          </div>
         </div>
       </aside>
 
@@ -870,7 +869,7 @@
         <div class="label">Alerts</div>
         <div class="mini-list">
           <span class="chip green">No move needed</span>
-          <span class="chip amber">Sentiment veto active</span>
+          <span class="chip amber">Sentiment active</span>
           <span class="chip">Token healthy</span>
         </div>
       </div>
@@ -1079,8 +1078,7 @@
         return `
           <div class="muted">${strike}</div>
           <div class="sent-line">
-            <div class="${isNeg ? "sent-red" : ""}" style="width:${isNeg ? width : 0}%"></div>
-            <div class="${isNeg ? "" : "sent-green"}" style="width:${isNeg ? 0 : width}%"></div>
+            <div class="${isNeg ? "sent-red" : "sent-green"}" style="width:${width}%"></div>
           </div>`;
       }).join("");
       document.getElementById("sentimentGrid").innerHTML = html;
