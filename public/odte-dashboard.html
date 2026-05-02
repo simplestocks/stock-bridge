@@ -123,17 +123,24 @@
     }
 
     .topbar {
-      min-height: 72px;
+      min-height: 58px;
       display: grid;
-      grid-template-columns: minmax(220px, 1.2fr) repeat(5, minmax(120px, 0.7fr));
+      grid-template-columns: minmax(170px, 0.75fr) minmax(150px, 0.55fr) minmax(460px, 1.9fr);
       gap: 1px;
       overflow: hidden;
     }
 
     .top-cell {
-      padding: 13px 14px;
+      padding: 10px 12px;
       background: var(--panel);
       border-right: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .top-controls {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) auto;
+      align-items: center;
+      gap: 12px;
     }
 
     .label {
@@ -275,7 +282,7 @@
     .center-stack {
       min-height: 0;
       display: grid;
-      grid-template-rows: auto minmax(390px, 1fr) 135px;
+      grid-template-rows: auto minmax(330px, 1fr) 170px 120px;
       gap: 12px;
     }
 
@@ -368,7 +375,6 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 6px;
-      margin-top: 13px;
     }
 
     .toggle button {
@@ -526,6 +532,16 @@
       white-space: nowrap;
     }
 
+    .chain-cell.clickable {
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 3px 4px;
+    }
+
+    .chain-cell.clickable:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
     .chain-strike {
       text-align: center;
       color: #ffffff;
@@ -579,6 +595,79 @@
       color: #06100a;
       font-weight: 950;
       background: var(--green);
+    }
+
+    .open-trades {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trade-grid {
+      padding: 8px 10px 12px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 8px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .trade-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      padding: 8px;
+      min-height: 126px;
+    }
+
+    .trade-card.active {
+      border-color: rgba(47, 200, 99, 0.65);
+      background: rgba(47, 200, 99, 0.08);
+    }
+
+    .trade-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--text);
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .trade-lines {
+      margin-top: 7px;
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+    }
+
+    .trade-card input {
+      width: 68px;
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #070b10;
+      color: var(--text);
+      padding: 0 6px;
+      font: inherit;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #090f15;
+      color: var(--muted);
+      cursor: pointer;
+      min-width: 24px;
+      height: 24px;
+      font-weight: 900;
     }
 
     .right-stack {
@@ -750,20 +839,27 @@
         <div class="value amber" id="spxValue">7250.80</div>
       </div>
       <div class="top-cell">
-        <div class="label">Best Setup</div>
-        <div class="value green" id="recommendedFlyTop">Pin Trade</div>
-      </div>
-      <div class="top-cell">
-        <div class="label">Your Trade</div>
-        <div class="value">Not entered</div>
-      </div>
-      <div class="top-cell">
-        <div class="label">Move?</div>
-        <div class="value green" id="moveTop">NO</div>
-      </div>
-      <div class="top-cell">
-        <div class="label">Headline Mode</div>
-        <div class="small-value amber" id="regimeTop">Connecting</div>
+        <div class="top-controls">
+          <div>
+            <div class="label">Regime</div>
+            <div class="toggle" aria-label="Regime toggle" id="regimeToggle">
+              <button type="button" data-regime="neutral">Normal</button>
+              <button type="button" data-regime="bullish" class="active">Bullish Tape</button>
+              <button type="button" data-regime="bearish">Bearish Tape</button>
+            </div>
+          </div>
+          <div class="chain-controls">
+            <span class="label">Rows</span>
+            <select id="rowLimitSelect">
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+            </select>
+            <input id="rowLimitCustom" type="number" min="1" max="200" step="1" placeholder="Custom">
+          </div>
+        </div>
       </div>
     </section>
 
@@ -828,12 +924,6 @@
             </div>
           </div>
           <div class="hero-sub" id="dataStatus">Connecting to Magix.</div>
-
-          <div class="toggle" aria-label="Regime toggle" id="regimeToggle">
-            <button type="button" data-regime="neutral">Normal</button>
-            <button type="button" data-regime="bullish" class="active">Bullish Tape</button>
-            <button type="button" data-regime="bearish">Bearish Tape</button>
-          </div>
         </div>
 
         <div class="chain-panel">
@@ -842,19 +932,20 @@
               <div class="panel-title">0DTE OPTIONS CHAIN</div>
               <div class="label">11-delta condor strikes · magnet trade zone · PIN POWER ranking</div>
             </div>
-            <div class="chain-controls">
-              <span class="label">Rows</span>
-              <select id="rowLimitSelect">
-                <option value="10">10</option>
-                <option value="20" selected>20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-              </select>
-              <input id="rowLimitCustom" type="number" min="1" max="200" step="1" placeholder="Custom">
-            </div>
+            <span class="chain-note">Click Mark = sell · Ctrl-click Delta = buy</span>
           </div>
           <div class="chain-table" id="chainTable"></div>
+        </div>
+
+        <div class="open-trades">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">OPEN TRADES</div>
+              <div class="label">Click Mark = sell · Ctrl-click Delta = buy</div>
+            </div>
+            <span class="chip" id="stagedLegsLabel">No staged legs</span>
+          </div>
+          <div class="trade-grid" id="openTradesGrid"></div>
         </div>
 
         <div class="chart-panel">
@@ -924,6 +1015,8 @@
     let selectedRegime = localStorage.getItem("odteRegime") || "bullish";
     let rowLimit = Number(localStorage.getItem("odteRowLimit") || 20);
     let lastChainRows = [];
+    let stagedLegs = [];
+    let openTrades = [];
     let refreshTimer = null;
 
     const beRows = [
@@ -1052,16 +1145,19 @@
         const text = pin >= 55 ? "#07100a" : "#ffffff";
         return `
           <div class="${cls}">
-            <div class="chain-cell blue">${callDelta.toFixed(2)}</div>
-            <div class="chain-cell blue">${callMark.toFixed(2)}</div>
+            <div class="chain-cell clickable blue" data-action="buy" data-type="call" data-strike="${strike}" data-price="${callMark}" data-delta="${callDelta}">${callDelta.toFixed(2)}</div>
+            <div class="chain-cell clickable blue" data-action="sell" data-type="call" data-strike="${strike}" data-price="${callMark}" data-delta="${callDelta}">${callMark.toFixed(2)}</div>
             <div class="chain-strike">${strike}</div>
-            <div class="chain-cell red">${putMark.toFixed(2)}</div>
-            <div class="chain-cell red">${putDelta.toFixed(2)}</div>
+            <div class="chain-cell clickable red" data-action="sell" data-type="put" data-strike="${strike}" data-price="${putMark}" data-delta="${putDelta}">${putMark.toFixed(2)}</div>
+            <div class="chain-cell clickable red" data-action="buy" data-type="put" data-strike="${strike}" data-price="${putMark}" data-delta="${putDelta}">${putDelta.toFixed(2)}</div>
             <div class="pin-pill" style="background:${hue};color:${text};">${pin}</div>
           </div>`;
       }).join("");
 
       document.getElementById("chainTable").innerHTML = header + body;
+      document.querySelectorAll("#chainTable .clickable").forEach((cell) => {
+        cell.addEventListener("click", handleChainCellClick);
+      });
     }
 
     function classifyChainRow(row, bestCenter, zone) {
@@ -1078,6 +1174,167 @@
         if (!best || pin > best.pin) return { strike, pin };
         return best;
       }, null);
+    }
+
+    function rowForStrike(strike) {
+      return (lastChainRows.length ? lastChainRows : chainRows).find((row) => Number(row[0]) === Number(strike));
+    }
+
+    function markForLeg(leg) {
+      const row = rowForStrike(leg.strike);
+      if (!row) return Number(leg.entryMark || 0);
+      return leg.type === "call" ? Number(row[2] || 0) : Number(row[3] || 0);
+    }
+
+    function deltaForLeg(leg) {
+      const row = rowForStrike(leg.strike);
+      if (!row) return Number(leg.delta || 0);
+      return leg.type === "call" ? Number(row[1] || 0) : Number(row[4] || 0);
+    }
+
+    function tradeKind(legs) {
+      if (legs.length === 2) {
+        const sells = legs.filter((leg) => leg.action === "sell");
+        const buys = legs.filter((leg) => leg.action === "buy");
+        if (sells.length === 1 && buys.length === 1 && sells[0].type === buys[0].type) {
+          return sells[0].type === "call" ? "Credit Call Spread" : "Credit Put Spread";
+        }
+      }
+      if (legs.length === 4) {
+        const sellCall = legs.find((leg) => leg.action === "sell" && leg.type === "call");
+        const sellPut = legs.find((leg) => leg.action === "sell" && leg.type === "put");
+        const buyCall = legs.find((leg) => leg.action === "buy" && leg.type === "call");
+        const buyPut = legs.find((leg) => leg.action === "buy" && leg.type === "put");
+        if (sellCall && sellPut && buyCall && buyPut) return "Iron Butterfly";
+      }
+      return legs.length ? "Custom Trade" : "Empty";
+    }
+
+    function entryCreditFromLegs(legs) {
+      return Math.max(0, legs.reduce((sum, leg) => {
+        const mark = Number(leg.entryMark || 0);
+        return sum + (leg.action === "sell" ? mark : -mark);
+      }, 0));
+    }
+
+    function currentValueForTrade(trade) {
+      return Math.max(0, trade.legs.reduce((sum, leg) => {
+        const mark = markForLeg(leg);
+        return sum + (leg.action === "sell" ? mark : -mark);
+      }, 0));
+    }
+
+    function soldLegDelta(trade) {
+      const sold = trade.legs.find((leg) => leg.action === "sell");
+      return sold ? deltaForLeg(sold).toFixed(2) : "--";
+    }
+
+    function addOpenTrade(legs) {
+      const normalizedLegs = legs.map((leg) => ({ ...leg }));
+      const entryCredit = entryCreditFromLegs(normalizedLegs);
+      const trade = {
+        id: Date.now(),
+        kind: tradeKind(normalizedLegs),
+        legs: normalizedLegs,
+        entryCredit,
+      };
+      if (openTrades.length >= 4) openTrades.shift();
+      openTrades.push(trade);
+      stagedLegs = [];
+      renderOpenTrades();
+    }
+
+    function shouldCommitStaged(legs) {
+      if (tradeKind(legs) === "Iron Butterfly") return true;
+      if (legs.length === 2 && tradeKind(legs).startsWith("Credit")) return true;
+      return legs.length >= 4;
+    }
+
+    function handleChainCellClick(event) {
+      const cell = event.currentTarget;
+      const leg = {
+        action: cell.dataset.action,
+        type: cell.dataset.type,
+        strike: Number(cell.dataset.strike),
+        entryMark: Number(cell.dataset.price),
+        delta: Number(cell.dataset.delta),
+      };
+      if (!event.ctrlKey) stagedLegs = [];
+      stagedLegs.push(leg);
+      if (shouldCommitStaged(stagedLegs)) {
+        addOpenTrade(stagedLegs);
+      } else {
+        renderOpenTrades();
+      }
+    }
+
+    function describeLeg(leg) {
+      const side = leg.action === "sell" ? "S" : "B";
+      const type = leg.type === "call" ? "C" : "P";
+      return `${side} ${leg.strike}${type} @ ${Number(leg.entryMark || 0).toFixed(2)}`;
+    }
+
+    function renderOpenTrades() {
+      const stagedText = stagedLegs.length ? `${stagedLegs.length} staged` : "No staged legs";
+      document.getElementById("stagedLegsLabel").textContent = stagedText;
+      const cards = [];
+
+      if (stagedLegs.length) {
+        cards.push(`
+          <div class="trade-card active">
+            <div class="trade-title"><span>Staging</span><button class="icon-btn" data-clear-staged="1">×</button></div>
+            <div class="trade-lines">
+              ${stagedLegs.map((leg) => `<div>${describeLeg(leg)}</div>`).join("")}
+              <div>Ctrl-click to add legs</div>
+            </div>
+          </div>`);
+      }
+
+      openTrades.forEach((trade) => {
+        const current = currentValueForTrade(trade);
+        const pnl = Number(trade.entryCredit || 0) - current;
+        const pct = trade.entryCredit > 0 ? (pnl / trade.entryCredit) * 100 : 0;
+        cards.push(`
+          <div class="trade-card">
+            <div class="trade-title"><span>${trade.kind}</span><button class="icon-btn" data-remove-trade="${trade.id}">×</button></div>
+            <div class="trade-lines">
+              <div>${trade.legs.map(describeLeg).join(" | ")}</div>
+              <div>Entry <input type="number" step="0.01" min="0" value="${Number(trade.entryCredit || 0).toFixed(2)}" data-entry-trade="${trade.id}"></div>
+              <div>Current: ${current.toFixed(2)}</div>
+              <div class="${pnl >= 0 ? "green" : "red"}">P/L: ${pnl.toFixed(2)} (${pct.toFixed(0)}%)</div>
+              <div>Sold Δ: ${soldLegDelta(trade)}</div>
+            </div>
+          </div>`);
+      });
+
+      while (cards.length < 4) {
+        cards.push(`
+          <div class="trade-card">
+            <div class="trade-title"><span>Empty Slot</span></div>
+            <div class="trade-lines"><div>Click chain marks/deltas to stage.</div></div>
+          </div>`);
+      }
+
+      document.getElementById("openTradesGrid").innerHTML = cards.slice(0, 4).join("");
+      document.querySelectorAll("[data-remove-trade]").forEach((button) => {
+        button.addEventListener("click", () => {
+          openTrades = openTrades.filter((trade) => trade.id !== Number(button.dataset.removeTrade));
+          renderOpenTrades();
+        });
+      });
+      document.querySelectorAll("[data-entry-trade]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const trade = openTrades.find((item) => item.id === Number(input.dataset.entryTrade));
+          if (trade) trade.entryCredit = Math.max(0, Number(input.value || 0));
+          renderOpenTrades();
+        });
+      });
+      document.querySelectorAll("[data-clear-staged]").forEach((button) => {
+        button.addEventListener("click", () => {
+          stagedLegs = [];
+          renderOpenTrades();
+        });
+      });
     }
 
     function formatSpread(spread) {
@@ -1121,10 +1378,6 @@
       let visibleRows = chainRows;
 
       if (spx > 0) document.getElementById("spxValue").textContent = spx.toFixed(2);
-      document.getElementById("recommendedFlyTop").textContent = structure;
-      document.getElementById("moveTop").textContent = move;
-      const displayRegime = liveRows && data.effective_regime ? data.effective_regime : selectedRegime;
-      document.getElementById("regimeTop").textContent = displayRegime.toUpperCase();
       document.getElementById("targetZone").textContent = `${zone[0]}-${zone[1]}`;
       document.getElementById("bestCenter").textContent = center;
       document.getElementById("bestStructure").textContent = structure;
@@ -1155,6 +1408,7 @@
         document.getElementById("pinMapStatus").textContent = "Live";
         document.getElementById("monitorStatus").textContent = "Live";
         document.getElementById("positionStatus").textContent = `Pin center ${center} · Live data`;
+        renderOpenTrades();
         return;
       }
 
@@ -1166,6 +1420,7 @@
       document.getElementById("pinMapStatus").textContent = "Demo";
       document.getElementById("monitorStatus").textContent = "Demo";
       document.getElementById("positionStatus").textContent = "Weekend demo rows";
+      renderOpenTrades();
     }
 
     async function loadPinbox() {
@@ -1179,6 +1434,7 @@
         document.getElementById("dataStatus").textContent = "Magix connection failed. Showing local visual demo.";
         lastChainRows = chainRows;
         renderChain(chainRows);
+        renderOpenTrades();
       } finally {
         setRegimeButtons(selectedRegime, false);
       }
@@ -1187,7 +1443,6 @@
     function setRegime(regime) {
       selectedRegime = regime;
       localStorage.setItem("odteRegime", regime);
-      document.getElementById("regimeTop").textContent = regime.toUpperCase();
       setRegimeButtons(regime, true);
       loadPinbox();
     }
@@ -1234,6 +1489,7 @@
     if (!["10", "20", "30", "40", "50"].includes(String(rowLimit))) document.getElementById("rowLimitCustom").value = rowLimit;
     renderChain();
     renderSentiment();
+    renderOpenTrades();
     setRegimeButtons(selectedRegime, false);
     loadPinbox();
     refreshTimer = setInterval(loadPinbox, 5000);
