@@ -41,6 +41,17 @@
       font: inherit;
     }
 
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
     .gate {
       position: fixed;
       inset: 0;
@@ -621,11 +632,19 @@
 
     .trade-row {
       display: grid;
-      grid-template-columns: 118px minmax(250px, 1fr) 72px 72px 72px 64px 58px 34px;
+      grid-template-columns: 48px minmax(180px, 1fr) 58px 58px 58px 58px 64px 44px 52px 26px;
       align-items: center;
-      gap: 7px;
+      gap: 5px;
       min-height: 29px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      min-width: 0;
+    }
+
+    .trade-row > div {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .trade-row.head {
@@ -641,7 +660,7 @@
     }
 
     .trade-row input {
-      width: 68px;
+      width: 54px;
       height: 24px;
       border: 1px solid var(--line);
       border-radius: 5px;
@@ -890,8 +909,8 @@
             <div class="trade-lane">
               <div class="label">Opening Condor</div>
               <strong id="openingCondorStatus">11-Delta IC</strong>
-              <div class="hero-sub" id="openingCondorCall">Credit Call Spread: waiting</div>
-              <div class="hero-sub" id="openingCondorPut">Credit Put Spread: waiting</div>
+              <div class="hero-sub" id="openingCondorCall">CCS: waiting</div>
+              <div class="hero-sub" id="openingCondorPut">CPS: waiting</div>
               <div class="hero-sub" id="openingCondorTotal">Target: $45-$60 per side</div>
             </div>
             <div class="trade-lane">
@@ -1004,6 +1023,9 @@
   <script>
     const MOCK_PASSWORD = "pinbox";
     const PINBOX_BASE_URL = "https://magix-production.up.railway.app/dashboard/pinbox";
+    const TRADE_LOG_URL = "/.netlify/functions/log-trade";
+    const MAX_OPEN_TRADES = 12;
+    const EMPTY_TRADE_ROWS = 8;
     let selectedRegime = localStorage.getItem("odteRegime") || "bullish";
     let rowLimit = Number(localStorage.getItem("odteRowLimit") || 20);
     let lastChainRows = [];
@@ -1185,11 +1207,18 @@
     }
 
     function tradeKind(legs) {
+      if (legs.length === 1) {
+        const leg = legs[0];
+        return `${leg.action === "sell" ? "-" : "+"}${leg.type === "call" ? "C" : "P"}`;
+      }
       if (legs.length === 2) {
         const sells = legs.filter((leg) => leg.action === "sell");
         const buys = legs.filter((leg) => leg.action === "buy");
         if (sells.length === 1 && buys.length === 1 && sells[0].type === buys[0].type) {
-          return sells[0].type === "call" ? "Credit Call Spread" : "Credit Put Spread";
+          const sellStrike = Number(sells[0].strike);
+          const buyStrike = Number(buys[0].strike);
+          if (sells[0].type === "put") return sellStrike > buyStrike ? "CPS" : "DPS";
+          return sellStrike < buyStrike ? "CCS" : "DCS";
         }
       }
       if (legs.length === 4) {
@@ -1199,21 +1228,26 @@
         const buyPut = legs.find((leg) => leg.action === "buy" && leg.type === "put");
         if (sellCall && sellPut && buyCall && buyPut) return "Iron Butterfly";
       }
-      return legs.length ? "Custom Trade" : "Empty";
+      return legs.length ? "Custom" : "Empty";
+    }
+
+    function compactKind(kind) {
+      return kind === "Iron Butterfly" ? "IB" : kind;
+    }
+
+    function netFromLegs(legs, useLiveMarks = false) {
+      return legs.reduce((sum, leg) => {
+        const mark = useLiveMarks ? markForLeg(leg) : Number(leg.entryMark || 0);
+        return sum + (leg.action === "sell" ? mark : -mark);
+      }, 0);
     }
 
     function entryCreditFromLegs(legs) {
-      return Math.max(0, legs.reduce((sum, leg) => {
-        const mark = Number(leg.entryMark || 0);
-        return sum + (leg.action === "sell" ? mark : -mark);
-      }, 0));
+      return Math.abs(netFromLegs(legs, false));
     }
 
     function currentValueForTrade(trade) {
-      return Math.max(0, trade.legs.reduce((sum, leg) => {
-        const mark = markForLeg(leg);
-        return sum + (leg.action === "sell" ? mark : -mark);
-      }, 0));
+      return Math.abs(netFromLegs(trade.legs, true));
     }
 
     function soldLegDelta(trade) {
@@ -1221,16 +1255,34 @@
       return sold ? deltaForLeg(sold).toFixed(2) : "--";
     }
 
+    function tradePnl(trade, current) {
+      const entry = Number(trade.entryCredit || 0);
+      return trade.isCredit ? entry - current : current - entry;
+    }
+
+    function finalizedPnl(trade) {
+      if (trade.closePrice === "" || trade.closePrice == null) return null;
+      const entry = Number(trade.entryCredit || 0);
+      const close = Number(trade.closePrice || 0);
+      return trade.isCredit ? entry - close : close - entry;
+    }
+
     function addOpenTrade(legs) {
       const normalizedLegs = legs.map((leg) => ({ ...leg }));
       const entryCredit = entryCreditFromLegs(normalizedLegs);
+      const netEntry = netFromLegs(normalizedLegs, false);
       const trade = {
         id: Date.now(),
+        tradeId: `ODTE${Date.now()}`,
         kind: tradeKind(normalizedLegs),
         legs: normalizedLegs,
         entryCredit,
+        isCredit: netEntry >= 0,
+        closePrice: "",
+        sent: false,
+        status: "Open",
       };
-      if (openTrades.length >= 4) openTrades.shift();
+      if (openTrades.length >= MAX_OPEN_TRADES) openTrades.shift();
       openTrades.push(trade);
       stagedLegs = [];
       renderOpenTrades();
@@ -1239,6 +1291,7 @@
     function shouldCommitStaged(legs) {
       if (tradeKind(legs) === "Iron Butterfly") return true;
       if (legs.length === 2 && tradeKind(legs).startsWith("Credit")) return true;
+      if (legs.length === 2 && ["CPS", "CCS", "DPS", "DCS"].includes(tradeKind(legs))) return true;
       return legs.length >= 4;
     }
 
@@ -1261,9 +1314,71 @@
     }
 
     function describeLeg(leg) {
-      const side = leg.action === "sell" ? "S" : "B";
+      const side = leg.action === "sell" ? "-" : "+";
       const type = leg.type === "call" ? "C" : "P";
-      return `${side} ${leg.strike}${type} @ ${Number(leg.entryMark || 0).toFixed(2)}`;
+      return `${side}${type} ${leg.strike}`;
+    }
+
+    function nowParts() {
+      const now = new Date();
+      const pad = (value) => String(value).padStart(2, "0");
+      return {
+        date: `${pad(now.getMonth() + 1)}${pad(now.getDate())}`,
+        time: `${pad(now.getHours())}:${pad(now.getMinutes())}`,
+      };
+    }
+
+    function strikeFields(trade) {
+      const strikes = trade.legs.map((leg) => String(leg.strike));
+      return {
+        strike1: strikes[0] || "",
+        strike2: strikes[1] || "",
+        strike3: strikes[2] || "",
+        strike4: strikes[3] || "",
+      };
+    }
+
+    function tradeLogPayload(trade) {
+      const current = currentValueForTrade(trade);
+      const factPnl = finalizedPnl(trade);
+      const livePnl = tradePnl(trade, current);
+      const pnl = factPnl == null ? livePnl : factPnl;
+      const parts = nowParts();
+      const close = trade.closePrice === "" || trade.closePrice == null ? "" : Number(trade.closePrice || 0).toFixed(2);
+      return {
+        ...(trade.sent ? { action: "update" } : {}),
+        trade_id: trade.tradeId,
+        date: parts.date,
+        time: parts.time,
+        ticker: "SPX",
+        type: compactKind(trade.kind),
+        expiration: parts.date,
+        underlying_price: document.getElementById("spxValue").textContent || "",
+        ...strikeFields(trade),
+        credit: Number(trade.entryCredit || 0).toFixed(2),
+        max_risk: "",
+        close_price: close,
+        pnl_dollars: `${pnl >= 0 ? "+" : ""}$${(pnl * 100).toFixed(0)}/ea`,
+        pnl_percent: trade.entryCredit > 0 ? `${pnl >= 0 ? "+" : ""}${((pnl / trade.entryCredit) * 100).toFixed(1)}%` : "",
+        status: close ? "Closed" : "Open",
+        notes: trade.legs.map(describeLeg).join(" | "),
+      };
+    }
+
+    async function sendTradeLog(tradeId) {
+      const trade = openTrades.find((item) => item.id === tradeId);
+      if (!trade) return;
+      trade.status = "Sending";
+      renderOpenTrades();
+      try {
+        const response = await fetch(TRADE_LOG_URL, { method: "POST", body: JSON.stringify(tradeLogPayload(trade)) });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        trade.sent = true;
+        trade.status = trade.closePrice === "" || trade.closePrice == null ? "Sent" : "Closed";
+      } catch (error) {
+        trade.status = "Failed";
+      }
+      renderOpenTrades();
     }
 
     function renderOpenTrades() {
@@ -1275,10 +1390,12 @@
           <div>Legs</div>
           <div>Entry</div>
           <div>Current</div>
-          <div>P/L</div>
-          <div>% Max</div>
+          <div>Live</div>
+          <div>Close</div>
+          <div>Fact</div>
           <div>Sold D</div>
-          <div></div>
+          <div>Log</div>
+          <div>X</div>
         </div>`];
 
       if (stagedLegs.length) {
@@ -1291,33 +1408,40 @@
             <div>--</div>
             <div>--</div>
             <div>--</div>
+            <div>--</div>
+            <div><button class="icon-btn" data-commit-staged="1">Add</button></div>
             <div><button class="icon-btn" data-clear-staged="1">X</button></div>
           </div>`);
       }
 
       openTrades.forEach((trade) => {
         const current = currentValueForTrade(trade);
-        const pnl = Number(trade.entryCredit || 0) - current;
+        const pnl = tradePnl(trade, current);
+        const factPnl = finalizedPnl(trade);
         const pct = trade.entryCredit > 0 ? (pnl / trade.entryCredit) * 100 : 0;
         rows.push(`
           <div class="trade-row">
-            <div>${trade.kind}</div>
+            <div>${compactKind(trade.kind)}</div>
             <div>${trade.legs.map(describeLeg).join(" | ")}</div>
-            <div><input type="number" step="0.01" min="0" value="${Number(trade.entryCredit || 0).toFixed(2)}" data-entry-trade="${trade.id}"></div>
+            <div><input type="text" inputmode="decimal" value="${Number(trade.entryCredit || 0).toFixed(2)}" data-entry-trade="${trade.id}"></div>
             <div>${current.toFixed(2)}</div>
             <div class="${pnl >= 0 ? "green" : "red"}">${pnl.toFixed(2)}</div>
-            <div class="${pnl >= 0 ? "green" : "red"}">${pct.toFixed(0)}%</div>
+            <div><input type="text" inputmode="decimal" value="${trade.closePrice ?? ""}" data-close-trade="${trade.id}"></div>
+            <div class="${factPnl == null || factPnl >= 0 ? "green" : "red"}">${factPnl == null ? "--" : factPnl.toFixed(2)}</div>
             <div>${soldLegDelta(trade)}</div>
+            <div><button class="icon-btn" data-send-trade="${trade.id}" title="${trade.status || "Log"}">${trade.status === "Sending" ? "..." : trade.sent ? "Up" : "Log"}</button></div>
             <div><button class="icon-btn" data-remove-trade="${trade.id}">X</button></div>
           </div>`);
       });
 
       const tradeRowCount = openTrades.length;
-      for (let index = tradeRowCount; index < 4; index += 1) {
+      for (let index = tradeRowCount; index < EMPTY_TRADE_ROWS; index += 1) {
         rows.push(`
           <div class="trade-row">
             <div>Empty</div>
             <div>Click chain marks/deltas to stage</div>
+            <div>--</div>
+            <div>--</div>
             <div>--</div>
             <div>--</div>
             <div>--</div>
@@ -1341,6 +1465,23 @@
           renderOpenTrades();
         });
       });
+      document.querySelectorAll("[data-close-trade]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const trade = openTrades.find((item) => item.id === Number(input.dataset.closeTrade));
+          if (trade) trade.closePrice = input.value.trim();
+          renderOpenTrades();
+        });
+      });
+      document.querySelectorAll("[data-send-trade]").forEach((button) => {
+        button.addEventListener("click", () => {
+          sendTradeLog(Number(button.dataset.sendTrade));
+        });
+      });
+      document.querySelectorAll("[data-commit-staged]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (stagedLegs.length) addOpenTrade(stagedLegs);
+        });
+      });
       document.querySelectorAll("[data-clear-staged]").forEach((button) => {
         button.addEventListener("click", () => {
           stagedLegs = [];
@@ -1359,14 +1500,14 @@
     function applyOpeningCondor(condor) {
       if (!condor || !condor.call_spread || !condor.put_spread) {
         document.getElementById("openingCondorStatus").textContent = "11-Delta IC";
-        document.getElementById("openingCondorCall").textContent = "Credit Call Spread: waiting";
-        document.getElementById("openingCondorPut").textContent = "Credit Put Spread: waiting";
+        document.getElementById("openingCondorCall").textContent = "CCS: waiting";
+        document.getElementById("openingCondorPut").textContent = "CPS: waiting";
         document.getElementById("openingCondorTotal").textContent = "Target: $45-$60 per side";
         return;
       }
       document.getElementById("openingCondorStatus").textContent = condor.status || "Check";
-      document.getElementById("openingCondorCall").textContent = `Credit Call Spread: ${formatSpread(condor.call_spread)}`;
-      document.getElementById("openingCondorPut").textContent = `Credit Put Spread: ${formatSpread(condor.put_spread)}`;
+      document.getElementById("openingCondorCall").textContent = `CCS: ${formatSpread(condor.call_spread)}`;
+      document.getElementById("openingCondorPut").textContent = `CPS: ${formatSpread(condor.put_spread)}`;
       document.getElementById("openingCondorTotal").textContent = `Total Credit: $${Number(condor.total_credit || 0).toFixed(2)}`;
     }
 
