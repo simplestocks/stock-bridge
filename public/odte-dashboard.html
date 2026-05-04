@@ -1109,10 +1109,26 @@
       sessionStorage.setItem("odteGate", "open");
     }
 
-    function renderBe() {
-      const html = beRows.map(([strike, score, side, magnet]) => {
-        const width = Math.min(100, Math.max(4, Math.abs(score) / 6.3));
-        const cls = magnet ? "row magnet" : strike === 7250 ? "row spot-row" : "row";
+    function rowsNearSpot(rows, limit = 32) {
+      if (!Array.isArray(rows) || rows.length <= limit) return Array.isArray(rows) ? rows : [];
+      const spx = Number(document.getElementById("spxValue")?.textContent || 0);
+      const focus = spx > 0 ? spx : rows[Math.floor(rows.length / 2)][0];
+      const sorted = [...rows].sort((a, b) => Math.abs(Number(a[0]) - focus) - Math.abs(Number(b[0]) - focus));
+      return sorted.slice(0, limit).sort((a, b) => Number(b[0]) - Number(a[0]));
+    }
+
+    function normalizeBeRows(rows) {
+      return rows.map((row) => Array.isArray(row)
+        ? row
+        : [Number(row.strike), Number(row.be_score || 0), Number(row.be_score || 0) > 0 ? "blue" : Number(row.be_score || 0) < 0 ? "red" : "green"]);
+    }
+
+    function renderBe(rows = beRows) {
+      const visibleRows = rowsNearSpot(normalizeBeRows(rows), 34);
+      const max = Math.max(1, ...visibleRows.map(([, score]) => Math.abs(Number(score || 0))));
+      const html = visibleRows.map(([strike, score, side, magnet]) => {
+        const width = Math.min(100, Math.max(4, Math.abs(score) / max * 100));
+        const cls = magnet || Math.abs(score) <= 10 ? "row magnet" : Math.abs(Number(strike) - Number(document.getElementById("spxValue")?.textContent || 0)) <= 2.5 ? "row spot-row" : "row";
         const color = side === "blue" ? "blue" : side === "green" ? "green" : "red";
         return `
           <div class="${cls}">
@@ -1224,8 +1240,10 @@
       return "";
     }
 
-    function bestPinFromRows(rows) {
-      return rows.reduce((best, row) => {
+    function bestPinFromRows(rows, spotOnly = false) {
+      const spx = Number(document.getElementById("spxValue")?.textContent || 0);
+      const source = spotOnly && spx > 0 ? rowsNearSpot(rows, rowLimit) : rows;
+      return source.reduce((best, row) => {
         const strike = Array.isArray(row) ? row[0] : row.strike;
         const pin = Number(Array.isArray(row) ? row[5] : row.pin || 0);
         if (!best || pin > best.pin) return { strike, pin };
@@ -1605,7 +1623,9 @@
             classifyChainRow(row, center, zone)
           ]);
         visibleRows = chain;
-        const bestLive = bestPinFromRows(visibleRows);
+        renderBe(data.be_rows || beRows);
+        renderSentiment(data.sentiment_rows || sentimentRows);
+        const bestLive = bestPinFromRows(visibleRows, true);
         if (bestLive) document.getElementById("confidenceValue").textContent = `${bestLive.pin}/100 @ ${bestLive.strike}`;
         lastChainRows = chain;
         renderChain(chain);
@@ -1625,6 +1645,8 @@
       document.getElementById("pinMapStatus").textContent = "Demo";
       document.getElementById("monitorStatus").textContent = "Demo";
       document.getElementById("positionStatus").textContent = "Weekend demo rows";
+      renderBe(beRows);
+      renderSentiment(sentimentRows);
       renderOpenTrades();
     }
 
@@ -1659,15 +1681,26 @@
       renderChain(lastChainRows.length ? lastChainRows : chainRows);
     }
 
-    function renderSentiment() {
-      const max = Math.max(...sentimentRows.map(([, value]) => Math.abs(value)));
-      const html = sentimentRows.map(([strike, value]) => {
+    function normalizeSentimentRows(rows) {
+      return rows.map((row) => Array.isArray(row) ? row : [Number(row.strike), Number(row.pressure || 0)]);
+    }
+
+    function formatPressure(value) {
+      const abs = Math.abs(Number(value || 0));
+      const scaled = abs >= 1000 ? `${Math.round(abs / 1000)}k` : Math.round(abs).toString();
+      return `${value < 0 ? "-" : ""}${scaled}`;
+    }
+
+    function renderSentiment(rows = sentimentRows) {
+      const visibleRows = rowsNearSpot(normalizeSentimentRows(rows), 41);
+      const max = Math.max(1, ...visibleRows.map(([, value]) => Math.abs(value)));
+      const html = visibleRows.map(([strike, value]) => {
         const width = Math.max(2, Math.abs(value) / max * 100);
         const isNeg = value < 0;
         return `
           <div class="muted">${strike}</div>
           <div class="sent-line">
-            <div class="${isNeg ? "sent-red" : "sent-green"}" style="width:${width}%"></div>
+            <div class="${isNeg ? "sent-red" : "sent-green"}" style="width:${width}%">${formatPressure(value)}</div>
           </div>`;
       }).join("");
       document.getElementById("sentimentGrid").innerHTML = html;
