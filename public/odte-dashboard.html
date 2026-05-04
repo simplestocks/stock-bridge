@@ -529,6 +529,11 @@
       outline: 1px solid rgba(47, 200, 99, 0.45);
     }
 
+    .chain-row.top-pin-row {
+      background: rgba(47, 200, 99, 0.11);
+      outline: 1px solid rgba(47, 200, 99, 0.45);
+    }
+
     .chain-row.current {
       background: rgba(255, 189, 47, 0.12);
       outline: 1px solid rgba(255, 189, 47, 0.6);
@@ -1221,10 +1226,11 @@
         </div>`;
 
       const body = limitedRows.map(([strike, callDelta, callMark, putMark, putDelta, pin, state]) => {
-        const cls = state ? `chain-row ${state}` : "chain-row";
+        const isTopPin = topPins.has(`${Number(strike)}`);
+        const cls = ["chain-row", isTopPin ? "top-pin-row" : state].filter(Boolean).join(" ");
         const hue = pin >= 80 ? "var(--green)" : pin >= 55 ? "var(--amber)" : "var(--red)";
         const text = pin >= 55 ? "#07100a" : "#ffffff";
-        const pinClass = topPins.has(`${Number(strike)}`) ? "pin-pill top-pin" : "pin-pill";
+        const pinClass = isTopPin ? "pin-pill top-pin" : "pin-pill";
         const sourceIndex = sortedRows.findIndex((row) => Number(row[0]) === Number(strike));
         const callSpread = spreadValue(sortedRows, sourceIndex, "call");
         const putSpread = spreadValue(sortedRows, sourceIndex, "put");
