@@ -431,6 +431,13 @@
       text-overflow: ellipsis;
     }
 
+    .fly-line strong {
+      display: inline;
+      margin: 0;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
     .toggle {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1111,9 +1118,9 @@
                 <label class="fly-field label">Width <input id="flyWidthInput" type="text" inputmode="decimal" value="15"></label>
                 <label class="fly-field label">Entry <input id="flyEntryInput" type="text" inputmode="decimal" placeholder="16"></label>
               </div>
-              <div class="fly-line">Zone <strong class="green" id="targetZone">7245-7255</strong> · <span id="flyLegs">Legs waiting</span></div>
-              <div class="fly-line" id="flyValue">Value waiting</div>
-              <div class="fly-line" id="flyPnl">P/L waiting</div>
+              <div class="fly-line">Zone: <strong class="green" id="targetZone">7245-7255</strong></div>
+              <div class="fly-line" id="flyLegs">Setup waiting</div>
+              <div class="fly-line" id="flyValue">Live Value: waiting | P/L waiting</div>
             </div>
           </div>
 
@@ -1499,13 +1506,13 @@
       const value = complete ? centerCall + centerPut - upperCall - lowerPut : null;
       const pnl = value != null && Number.isFinite(entry) && entry > 0 ? entry - value : null;
 
-      document.getElementById("flyLegs").textContent = `${lower} / ${center} / ${upper}`;
+      document.getElementById("flyLegs").textContent = `${lower}/${center}/${upper}`;
+      const pnlText = pnl == null
+        ? "waiting"
+        : `<strong class="${pnl >= 0 ? "green" : "red"}">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}</strong>`;
       document.getElementById("flyValue").innerHTML = value == null
-        ? `Live waiting · width ${width}`
-        : `Live <strong class="green">$${value.toFixed(2)}</strong> · shorts C/P ${center}`;
-      document.getElementById("flyPnl").innerHTML = pnl == null
-        ? "P/L waiting"
-        : `P/L <strong class="${pnl >= 0 ? "green" : "red"}">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}</strong>`;
+        ? `Live Value: waiting | P/L ${pnlText}`
+        : `Live Value: <strong class="green">$${value.toFixed(2)}</strong> | P/L ${pnlText}`;
     }
 
     function deltaForLeg(leg) {
