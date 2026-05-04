@@ -6,3 +6,8 @@
   - Display idea: aggregate bid/ask size by price and flag unusually large liquidity levels as possible sweep magnets.
   - Notes: Schwab says TOS Bookmap uses Nasdaq Level II order-book data; public Schwab API support for Level II is thin, and third-party `schwab-py` notes level-two streams are partly reverse-engineered.
   - Do this after the main 0DTE dashboard is stable.
+
+- Revisit Open Trades width experiment.
+  - Current left-overlap version from commit `ced2e8f` looks bad.
+  - Likely revert the Open Trades `margin-left: -282px`, `width: calc(100% + 282px)`, and `z-index: 2` change.
+  - Better next attempt: keep panel aligned and solve space with table column sizing or a cleaner layout move.
