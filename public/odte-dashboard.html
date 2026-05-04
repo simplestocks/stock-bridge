@@ -293,7 +293,7 @@
     .center-stack {
       min-height: 0;
       display: grid;
-      grid-template-rows: auto minmax(260px, 1fr) auto 120px;
+      grid-template-rows: auto minmax(260px, 1fr) minmax(250px, auto);
       gap: 12px;
     }
 
@@ -642,6 +642,7 @@
 
     .open-trades .panel-head {
       padding: 8px 12px;
+      align-items: center;
     }
 
     .open-trades .panel-title {
@@ -649,7 +650,7 @@
     }
 
     .trade-grid {
-      padding: 6px 10px 8px;
+      padding: 8px 10px 10px;
       min-height: 0;
     }
 
@@ -657,7 +658,7 @@
       display: grid;
       gap: 0;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .trade-row {
@@ -665,7 +666,7 @@
       grid-template-columns: 48px minmax(180px, 1fr) 58px 58px 58px 58px 64px 44px 52px 26px;
       align-items: center;
       gap: 5px;
-      min-height: 27px;
+      min-height: 31px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       min-width: 0;
     }
@@ -679,7 +680,7 @@
 
     .trade-row.head {
       color: var(--muted);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
     }
@@ -698,6 +699,48 @@
       color: var(--text);
       padding: 0 6px;
       font: inherit;
+    }
+
+    .tab-buttons {
+      display: inline-flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .tab-button {
+      min-height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #090f15;
+      color: var(--muted);
+      padding: 0 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      border-color: rgba(255, 189, 47, 0.75);
+      color: var(--amber);
+      background: rgba(255, 189, 47, 0.12);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .open-trades .chart-panel {
+      border: 0;
+      border-top: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .open-trades .pin-chart {
+      min-height: 220px;
     }
 
     .icon-btn {
@@ -983,31 +1026,38 @@
             <div>
               <div class="panel-title">OPEN TRADES - CLICK MARK = SELL - CTRL-CLICK DELTA = BUY</div>
             </div>
+            <div class="tab-buttons" role="tablist" aria-label="Open trades panel">
+              <button class="tab-button active" data-bottom-tab="trades" type="button">Trades</button>
+              <button class="tab-button" data-bottom-tab="heat" type="button">Heat</button>
+            </div>
             <span class="chip" id="stagedLegsLabel">0/12 rows</span>
           </div>
-          <div class="trade-grid" id="openTradesGrid"></div>
-        </div>
-
-        <div class="chart-panel">
-          <div class="pin-chart">
-            <div class="panel-head" style="padding:0;border:0;">
-              <div>
-                <div class="panel-title">Pin Box Map</div>
-                <div class="label">Compact placement view</div>
+          <div class="tab-panel active" id="tradesTab">
+            <div class="trade-grid" id="openTradesGrid"></div>
+          </div>
+          <div class="tab-panel" id="heatTab">
+            <div class="chart-panel">
+              <div class="pin-chart">
+                <div class="panel-head" style="padding:0;border:0;">
+                  <div>
+                    <div class="panel-title">Pin Box Map</div>
+                    <div class="label">Compact placement view</div>
+                  </div>
+                  <span class="chip green" id="pinMapStatus">Stable</span>
+                </div>
+                <div class="zone">
+                  <div class="zone-band"></div>
+                  <div class="curve"></div>
+                  <div class="wall-line left"></div>
+                  <div class="wall-line right"></div>
+                  <div class="user-line"></div>
+                  <div class="spot-line"></div>
+                  <div class="zone-label low">Lower wall 7230</div>
+                  <div class="zone-label pin">Pin zone 7245-7255</div>
+                  <div class="zone-label high">Upper wall 7275</div>
+                  <div class="zone-label spot">Spot 7250.8</div>
+                </div>
               </div>
-              <span class="chip green" id="pinMapStatus">Stable</span>
-            </div>
-            <div class="zone">
-              <div class="zone-band"></div>
-              <div class="curve"></div>
-              <div class="wall-line left"></div>
-              <div class="wall-line right"></div>
-              <div class="user-line"></div>
-              <div class="spot-line"></div>
-              <div class="zone-label low">Lower wall 7230</div>
-              <div class="zone-label pin">Pin zone 7245-7255</div>
-              <div class="zone-label high">Upper wall 7275</div>
-              <div class="zone-label spot">Spot 7250.8</div>
             </div>
           </div>
         </div>
@@ -1060,6 +1110,7 @@
     let lastChainRows = [];
     let stagedLegs = [];
     let openTrades = [];
+    let activeBottomTab = "trades";
     let refreshTimer = null;
 
     const beRows = [
@@ -1580,6 +1631,15 @@
       });
     }
 
+    function setBottomTab(tabName) {
+      activeBottomTab = tabName === "heat" ? "heat" : "trades";
+      document.querySelectorAll("[data-bottom-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.bottomTab === activeBottomTab);
+      });
+      document.getElementById("tradesTab").classList.toggle("active", activeBottomTab === "trades");
+      document.getElementById("heatTab").classList.toggle("active", activeBottomTab === "heat");
+    }
+
     function formatSpread(spread) {
       if (!spread || !spread.short || !spread.long) return "waiting";
       const credit = Number(spread.credit || 0).toFixed(2);
@@ -1740,6 +1800,9 @@
     document.getElementById("rowLimitCustom").addEventListener("change", (event) => {
       if (event.target.value) setRowLimit(event.target.value);
     });
+    document.querySelectorAll("[data-bottom-tab]").forEach((button) => {
+      button.addEventListener("click", () => setBottomTab(button.dataset.bottomTab));
+    });
 
     renderBe();
     renderPain();
@@ -1748,6 +1811,7 @@
     renderChain();
     renderSentiment();
     renderOpenTrades();
+    setBottomTab(activeBottomTab);
     setRegimeButtons(selectedRegime, false);
     loadPinbox();
     refreshTimer = setInterval(loadPinbox, 5000);
