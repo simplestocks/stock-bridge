@@ -1144,9 +1144,13 @@
 
     function limitRowsAroundFocus(rows, limit) {
       if (!Array.isArray(rows) || rows.length <= limit) return rows;
-      const best = bestPinFromRows(rows);
-      const focusStrike = best ? best.strike : rows[Math.floor(rows.length / 2)][0];
-      let focusIndex = rows.findIndex((row) => row[0] === focusStrike);
+      const spx = Number(document.getElementById("spxValue")?.textContent || 0);
+      const focusStrike = spx > 0 ? spx : rows[Math.floor(rows.length / 2)][0];
+      let focusIndex = rows.reduce((bestIndex, row, index) => {
+        const currentDistance = Math.abs(Number(row[0]) - focusStrike);
+        const bestDistance = Math.abs(Number(rows[bestIndex][0]) - focusStrike);
+        return currentDistance < bestDistance ? index : bestIndex;
+      }, 0);
       if (focusIndex < 0) focusIndex = Math.floor(rows.length / 2);
       const before = Math.floor((limit - 1) / 2);
       let start = Math.max(0, focusIndex - before);
