@@ -11,3 +11,9 @@
   - Current left-overlap version from commit `ced2e8f` looks bad.
   - Likely revert the Open Trades `margin-left: -282px`, `width: calc(100% + 282px)`, and `z-index: 2` change.
   - Better next attempt: keep panel aligned and solve space with table column sizing or a cleaner layout move.
+
+- Continue tablet polish on IC/IB box layout.
+  - Keep labels short: IC and IB.
+  - Keep font sizes consistent inside the box.
+  - Keep center/width/entry inputs compact.
+  - Recheck fit on tablet-sized viewport after next visual pass.

@@ -369,24 +369,37 @@
     }
 
     .trade-lane {
+      position: relative;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel-2);
-      padding: 11px;
+      padding: 10px 44px 10px 11px;
       min-height: 96px;
     }
 
     .trade-lane strong {
       display: block;
-      margin-top: 6px;
-      font-size: 18px;
+      margin-top: 0;
+      font-size: 15px;
+      line-height: 1.15;
+    }
+
+    .lane-code {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      color: var(--green);
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 950;
     }
 
     .fly-controls {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      margin-top: 7px;
+      grid-template-columns: 76px 42px 76px;
+      gap: 6px;
+      margin-top: 6px;
+      align-items: end;
     }
 
     .fly-field {
@@ -396,21 +409,23 @@
 
     .fly-field input {
       width: 100%;
-      height: 25px;
+      height: 23px;
       border: 1px solid var(--line);
       border-radius: 5px;
       background: #070b10;
       color: var(--text);
-      padding: 0 7px;
+      padding: 0 6px;
+      font-size: 13px;
       font-weight: 900;
       outline: none;
     }
 
     .fly-line {
-      margin-top: 6px;
+      margin-top: 5px;
       color: var(--muted);
       font-weight: 800;
-      line-height: 1.15;
+      line-height: 1.12;
+      font-size: 13px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1082,21 +1097,23 @@
         <div class="decision">
           <div class="trade-lanes">
             <div class="trade-lane">
-              <div class="label">Opening Condor</div>
+              <div class="lane-code">IC</div>
               <strong id="openingCondorStatus">11-Delta IC</strong>
               <div class="hero-sub" id="openingCondorCall">CCS: waiting</div>
               <div class="hero-sub" id="openingCondorPut">CPS: waiting</div>
               <div class="hero-sub" id="openingCondorTotal">Target: $45-$60 per side</div>
             </div>
             <div class="trade-lane">
-              <div class="label">Mid-Morning Pin Trade</div>
-              <strong id="bestStructure">Iron Butterfly</strong>
+              <div class="lane-code">IB</div>
+              <span id="bestStructure" hidden>Setup</span>
               <div class="fly-controls">
                 <label class="fly-field label">Center <input id="flyCenterInput" type="text" inputmode="decimal" placeholder="7250"></label>
                 <label class="fly-field label">Width <input id="flyWidthInput" type="text" inputmode="decimal" value="15"></label>
+                <label class="fly-field label">Entry <input id="flyEntryInput" type="text" inputmode="decimal" placeholder="16"></label>
               </div>
               <div class="fly-line">Zone <strong class="green" id="targetZone">7245-7255</strong> · <span id="flyLegs">Legs waiting</span></div>
               <div class="fly-line" id="flyValue">Value waiting</div>
+              <div class="fly-line" id="flyPnl">P/L waiting</div>
             </div>
           </div>
 
@@ -1463,12 +1480,15 @@
     function renderButterfly() {
       const centerInput = document.getElementById("flyCenterInput");
       const widthInput = document.getElementById("flyWidthInput");
-      if (!centerInput || !widthInput) return;
+      const entryInput = document.getElementById("flyEntryInput");
+      if (!centerInput || !widthInput || !entryInput) return;
       if (!centerInput.value) centerInput.value = recommendedFlyCenter;
       if (!widthInput.value) widthInput.value = localStorage.getItem("odteFlyWidth") || "15";
+      if (!entryInput.value) entryInput.value = localStorage.getItem("odteFlyEntry") || "";
 
       const center = normalizeFlyCenter(flyInputNumber("flyCenterInput", recommendedFlyCenter));
       const width = flyInputNumber("flyWidthInput", 15);
+      const entry = Number(entryInput.value || 0);
       const lower = center - width;
       const upper = center + width;
       const centerCall = optionMark(center, "call");
@@ -1477,11 +1497,15 @@
       const lowerPut = optionMark(lower, "put");
       const complete = [centerCall, centerPut, upperCall, lowerPut].every((value) => value != null);
       const value = complete ? centerCall + centerPut - upperCall - lowerPut : null;
+      const pnl = value != null && Number.isFinite(entry) && entry > 0 ? entry - value : null;
 
       document.getElementById("flyLegs").textContent = `${lower} / ${center} / ${upper}`;
       document.getElementById("flyValue").innerHTML = value == null
-        ? `Value waiting · width ${width}`
-        : `Live value <strong class="green">$${value.toFixed(2)}</strong> · shorts C/P ${center}`;
+        ? `Live waiting · width ${width}`
+        : `Live <strong class="green">$${value.toFixed(2)}</strong> · shorts C/P ${center}`;
+      document.getElementById("flyPnl").innerHTML = pnl == null
+        ? "P/L waiting"
+        : `P/L <strong class="${pnl >= 0 ? "green" : "red"}">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}</strong>`;
     }
 
     function deltaForLeg(leg) {
@@ -1835,7 +1859,7 @@
 
       if (spx > 0) document.getElementById("spxValue").textContent = spx.toFixed(2);
       document.getElementById("targetZone").textContent = `${zone[0]}-${zone[1]}`;
-      document.getElementById("bestStructure").textContent = "Iron Butterfly";
+      document.getElementById("bestStructure").textContent = "Setup";
       document.getElementById("tradeStatus").textContent = status;
       document.getElementById("moveDecision").textContent = move;
       document.getElementById("sentimentBadge").textContent = data.sentiment?.net || "NEUTRAL";
@@ -1992,12 +2016,17 @@
     });
     document.getElementById("flyCenterInput").value = localStorage.getItem("odteFlyCenter") || "";
     document.getElementById("flyWidthInput").value = localStorage.getItem("odteFlyWidth") || "15";
+    document.getElementById("flyEntryInput").value = localStorage.getItem("odteFlyEntry") || "";
     document.getElementById("flyCenterInput").addEventListener("change", (event) => {
       localStorage.setItem("odteFlyCenter", event.target.value.trim());
       renderButterfly();
     });
     document.getElementById("flyWidthInput").addEventListener("change", (event) => {
       localStorage.setItem("odteFlyWidth", event.target.value.trim() || "15");
+      renderButterfly();
+    });
+    document.getElementById("flyEntryInput").addEventListener("change", (event) => {
+      localStorage.setItem("odteFlyEntry", event.target.value.trim());
       renderButterfly();
     });
     document.querySelectorAll("[data-bottom-tab]").forEach((button) => {
