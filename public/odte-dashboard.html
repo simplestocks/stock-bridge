@@ -506,7 +506,7 @@
     .chain-head,
     .chain-row {
       display: grid;
-      grid-template-columns: 58px 58px 66px 74px 66px 58px 58px 86px;
+      grid-template-columns: 58px 58px 66px 74px 66px 58px 58px 112px;
       gap: 8px;
       align-items: center;
       min-height: 27px;
@@ -605,7 +605,7 @@
 
     .pin-pill {
       justify-self: end;
-      width: 78px;
+      width: 104px;
       min-height: 19px;
       display: grid;
       place-items: center;
@@ -1204,7 +1204,7 @@
           <div class="chain-cell">P Mark</div>
           <div class="chain-spread">CPS</div>
           <div class="chain-cell">P Delta</div>
-          <div class="chain-cell">PIN POWER</div>
+          <div class="chain-cell">PIN / STRIKE</div>
         </div>`;
 
       const body = limitedRows.map(([strike, callDelta, callMark, putMark, putDelta, pin, state]) => {
@@ -1223,7 +1223,7 @@
             <div class="chain-cell clickable red" data-action="sell" data-type="put" data-strike="${strike}" data-price="${putMark}" data-delta="${putDelta}">${putMark.toFixed(2)}</div>
             <div class="chain-spread">${putSpread}</div>
             <div class="chain-cell clickable red" data-action="buy" data-type="put" data-strike="${strike}" data-price="${putMark}" data-delta="${putDelta}">${putDelta.toFixed(2)}</div>
-            <div class="pin-pill" style="background:${hue};color:${text};">${pin}</div>
+            <div class="pin-pill" style="background:${hue};color:${text};">${pin} / ${strike}</div>
           </div>`;
       }).join("");
 
