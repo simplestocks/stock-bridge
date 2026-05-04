@@ -1,1724 +1,1676 @@
 {
-  "generated_at": "2026-05-01T04:33:35.176902-07:00",
-  "week_start": "2026-04-27",
-  "week_end": "2026-05-01",
+  "generated_at": "2026-05-03T23:08:08.333222-07:00",
+  "week_start": "2026-05-04",
+  "week_end": "2026-05-08",
   "min_market_cap": 10000000000,
   "events_by_day": {
-    "2026-04-27": [
-      {
-        "symbol": "VZ",
-        "name": "Verizon Communications Inc.",
-        "market_cap": 196586259070,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CDNS",
-        "name": "Cadence Design Systems, Inc.",
-        "market_cap": 91096577837,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PSA",
-        "name": "Public Storage",
-        "market_cap": 51626249029,
-        "when": "OTH"
-      },
-      {
-        "symbol": "NUE",
-        "name": "Nucor Corporation",
-        "market_cap": 50646129869,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CLS",
-        "name": "Celestica, Inc.",
-        "market_cap": 43295707514,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VTR",
-        "name": "Ventas, Inc.",
-        "market_cap": 42476648699,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AVB",
-        "name": "AvalonBay Communities, Inc.",
-        "market_cap": 25647938581,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CINF",
-        "name": "Cincinnati Financial Corporation",
-        "market_cap": 25247970029,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BRO",
-        "name": "Brown & Brown, Inc.",
-        "market_cap": 20892744919,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AMKR",
-        "name": "Amkor Technology, Inc.",
-        "market_cap": 17501039133,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SUI",
-        "name": "Sun Communities, Inc.",
-        "market_cap": 15596084606,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ARCC",
-        "name": "Ares Capital Corporation",
-        "market_cap": 13405486516,
-        "when": "OTH"
-      },
-      {
-        "symbol": "RMBS",
-        "name": "Rambus, Inc.",
-        "market_cap": 12128642219,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TFII",
-        "name": "TFI International Inc.",
-        "market_cap": 11564497059,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SANM",
-        "name": "Sanmina Corporation",
-        "market_cap": 11184239362,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CCK",
-        "name": "Crown Holdings, Inc.",
-        "market_cap": 11114199077,
-        "when": "OTH"
-      },
-      {
-        "symbol": "DPZ",
-        "name": "Domino's Pizza Inc",
-        "market_cap": 11053252020,
-        "when": "OTH"
-      },
-      {
-        "symbol": "UHS",
-        "name": "Universal Health Services, Inc.",
-        "market_cap": 10251163412,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CR",
-        "name": "Crane Company",
-        "market_cap": 10181398629,
-        "when": "OTH"
-      }
-    ],
-    "2026-04-28": [
-      {
-        "symbol": "V",
-        "name": "Visa Inc.",
-        "market_cap": 641594876207,
-        "when": "OTH"
-      },
-      {
-        "symbol": "KO",
-        "name": "Coca-Cola Company (The)",
-        "market_cap": 339468537409,
-        "when": "OTH"
-      },
-      {
-        "symbol": "NVS",
-        "name": "Novartis AG",
-        "market_cap": 272751200996,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TMUS",
-        "name": "T-Mobile US, Inc.",
-        "market_cap": 214460508768,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WELL",
-        "name": "Welltower Inc.",
-        "market_cap": 149423871412,
-        "when": "OTH"
-      },
-      {
-        "symbol": "STX",
-        "name": "Seagate Technology Holdings PLC",
-        "market_cap": 140286404001,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BKNG",
-        "name": "Booking Holdings Inc.",
-        "market_cap": 134813350295,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GLW",
-        "name": "Corning Incorporated",
-        "market_cap": 130490619312,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SPGI",
-        "name": "S&P Global Inc.",
-        "market_cap": 128224240000,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BP",
-        "name": "BP p.l.c.",
-        "market_cap": 122522001394,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SBUX",
-        "name": "Starbucks Corporation",
-        "market_cap": 120238350000,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WM",
-        "name": "Waste Management, Inc.",
-        "market_cap": 92795010258,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SPOT",
-        "name": "Spotify Technology S.A.",
-        "market_cap": 91301134001,
-        "when": "OTH"
-      },
-      {
-        "symbol": "UPS",
-        "name": "United Parcel Service, Inc.",
-        "market_cap": 90538318299,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EPD",
-        "name": "Enterprise Products Partners L.P.",
-        "market_cap": 83854696894,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AMT",
-        "name": "American Tower Corporation (REIT)",
-        "market_cap": 83017485965,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BE",
-        "name": "Bloom Energy Corporation",
-        "market_cap": 81909926475,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BCS",
-        "name": "Barclays PLC",
-        "market_cap": 80219844689,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SHW",
-        "name": "Sherwin-Williams Company (The)",
-        "market_cap": 78393132135,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MDLZ",
-        "name": "Mondelez International, Inc.",
-        "market_cap": 78353981717,
-        "when": "OTH"
-      },
-      {
-        "symbol": "NXPI",
-        "name": "NXP Semiconductors N.V.",
-        "market_cap": 73027259601,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ECL",
-        "name": "Ecolab Inc.",
-        "market_cap": 72472763106,
-        "when": "OTH"
-      },
-      {
-        "symbol": "HLT",
-        "name": "Hilton Worldwide Holdings Inc.",
-        "market_cap": 71595412994,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GM",
-        "name": "General Motors Company",
-        "market_cap": 69085587241,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VALE",
-        "name": "VALE S.A.",
-        "market_cap": 67671802495,
-        "when": "OTH"
-      },
-      {
-        "symbol": "HOOD",
-        "name": "Robinhood Markets, Inc.",
-        "market_cap": 64139258763,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PCAR",
-        "name": "PACCAR Inc.",
-        "market_cap": 62172706685,
-        "when": "OTH"
-      },
-      {
-        "symbol": "OKE",
-        "name": "ONEOK, Inc.",
-        "market_cap": 56274335336,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TER",
-        "name": "Teradyne, Inc.",
-        "market_cap": 47958849579,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SYY",
-        "name": "Sysco Corporation",
-        "market_cap": 35426500107,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ACGL",
-        "name": "Arch Capital Group Ltd.",
-        "market_cap": 33033617818,
-        "when": "OTH"
-      },
-      {
-        "symbol": "KMB",
-        "name": "Kimberly-Clark Corporation",
-        "market_cap": 31899468308,
-        "when": "OTH"
-      },
-      {
-        "symbol": "IR",
-        "name": "Ingersoll Rand Inc.",
-        "market_cap": 30312599726,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EXR",
-        "name": "Extra Space Storage Inc",
-        "market_cap": 29679559380,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FE",
-        "name": "FirstEnergy Corp.",
-        "market_cap": 28308421705,
-        "when": "OTH"
-      },
-      {
-        "symbol": "XYL",
-        "name": "Xylem Inc.",
-        "market_cap": 27429829092,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CNC",
-        "name": "Centene Corporation",
-        "market_cap": 26655162060,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EIX",
-        "name": "Edison International",
-        "market_cap": 26142900352,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EQR",
-        "name": "Equity Residential",
-        "market_cap": 24514966864,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FICO",
-        "name": "Fair Isaac Corporation",
-        "market_cap": 24201333774,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EXE",
-        "name": "Expand Energy Corporation",
-        "market_cap": 24159721461,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PPG",
-        "name": "PPG Industries, Inc.",
-        "market_cap": 23429480669,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CMS",
-        "name": "CMS Energy Corporation",
-        "market_cap": 23085561857,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MKL",
-        "name": "Markel Group Inc.",
-        "market_cap": 22014243769,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VLTO",
-        "name": "Veralto Corp.",
-        "market_cap": 21970711018,
-        "when": "OTH"
-      },
-      {
-        "symbol": "OMC",
-        "name": "Omnicom Group Inc.",
-        "market_cap": 21713310081,
-        "when": "OTH"
-      },
-      {
-        "symbol": "INCY",
-        "name": "Incyte Corporation",
-        "market_cap": 19795992827,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FFIV",
-        "name": "F5, Inc.",
-        "market_cap": 18546799435,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WSO",
-        "name": "Watsco, Inc.",
-        "market_cap": 17421119044,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WSO.B",
-        "name": "Watsco, Inc.",
-        "market_cap": 17421119044,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ESS",
-        "name": "Essex Property Trust, Inc.",
-        "market_cap": 17081281015,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WPC",
-        "name": "W. P. Carey Inc.",
-        "market_cap": 15801919798,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ZBH",
-        "name": "Zimmer Biomet Holdings, Inc.",
-        "market_cap": 15499076396,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BEN",
-        "name": "Franklin Resources, Inc.",
-        "market_cap": 15303314421,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CSGP",
-        "name": "CoStar Group, Inc.",
-        "market_cap": 14331743296,
-        "when": "OTH"
-      },
-      {
-        "symbol": "OHI",
-        "name": "Omega Healthcare Investors, Inc.",
-        "market_cap": 13916186290,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TRU",
-        "name": "TransUnion",
-        "market_cap": 13586616000,
-        "when": "OTH"
-      },
-      {
-        "symbol": "RNR",
-        "name": "RenaissanceRe Holdings Ltd.",
-        "market_cap": 13107969180,
-        "when": "OTH"
-      },
-      {
-        "symbol": "UNM",
-        "name": "Unum Group",
-        "market_cap": 13085595238,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PNR",
-        "name": "Pentair plc.",
-        "market_cap": 13064191934,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AVY",
-        "name": "Avery Dennison Corporation",
-        "market_cap": 12533630201,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ALLE",
-        "name": "Allegion plc",
-        "market_cap": 11805009226,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WBS",
-        "name": "Webster Financial Corporation",
-        "market_cap": 11590579196,
-        "when": "OTH"
-      },
-      {
-        "symbol": "IVZ",
-        "name": "Invesco Plc",
-        "market_cap": 11366746004,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AIT",
-        "name": "Applied Industrial Technologies, Inc.",
-        "market_cap": 10961091074,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SFD",
-        "name": "Smithfield Foods, Inc.",
-        "market_cap": 10395669288,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ESI",
-        "name": "Element Solutions Inc.",
-        "market_cap": 10366697300,
-        "when": "OTH"
-      }
-    ],
-    "2026-04-29": [
-      {
-        "symbol": "GOOG",
-        "name": "Alphabet Inc.",
-        "market_cap": 4233379607251,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GOOGL",
-        "name": "Alphabet Inc.",
-        "market_cap": 4233379607251,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MSFT",
-        "name": "Microsoft Corporation",
-        "market_cap": 3151882517599,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AMZN",
-        "name": "Amazon.com, Inc.",
-        "market_cap": 2828798393209,
-        "when": "OTH"
-      },
-      {
-        "symbol": "META",
-        "name": "Meta Platforms, Inc.",
-        "market_cap": 1698509801172,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AZN",
-        "name": "AstraZeneca PLC",
-        "market_cap": 583024218444,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ABBV",
-        "name": "AbbVie Inc.",
-        "market_cap": 360632961047,
-        "when": "OTH"
-      },
-      {
-        "symbol": "UBS",
-        "name": "UBS AG",
-        "market_cap": 293726100510,
-        "when": "OTH"
-      },
-      {
-        "symbol": "KLAC",
-        "name": "KLA Corporation",
-        "market_cap": 238062651664,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SAN",
-        "name": "Banco Santander, S.A.",
-        "market_cap": 200327184187,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TTE",
-        "name": "TotalEnergies SE",
-        "market_cap": 199989766597,
-        "when": "OTH"
-      },
-      {
-        "symbol": "APH",
-        "name": "Amphenol Corporation",
-        "market_cap": 182422928601,
-        "when": "OTH"
-      },
-      {
-        "symbol": "QCOM",
-        "name": "QUALCOMM Incorporated",
-        "market_cap": 166452000000,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SCCO",
-        "name": "Southern Copper Corporation",
-        "market_cap": 139134134856,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GSK",
-        "name": "GSK plc",
-        "market_cap": 111869011948,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EQIX",
-        "name": "Equinix, Inc.",
-        "market_cap": 107407880987,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GD",
-        "name": "General Dynamics Corporation",
-        "market_cap": 91743618835,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CVNA",
-        "name": "Carvana Co.",
-        "market_cap": 86894153952,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ADP",
-        "name": "Automatic Data Processing, Inc.",
-        "market_cap": 86592696922,
-        "when": "OTH"
-      },
-      {
-        "symbol": "LYG",
-        "name": "Lloyds Banking Group Plc",
-        "market_cap": 79029535729,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ORLY",
-        "name": "O'Reilly Automotive, Inc.",
-        "market_cap": 76716974588,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CP",
-        "name": "Canadian Pacific Kansas City Limited",
-        "market_cap": 75625241812,
-        "when": "OTH"
-      },
-      {
-        "symbol": "REGN",
-        "name": "Regeneron Pharmaceuticals, Inc.",
-        "market_cap": 71957318004,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PSX",
-        "name": "Phillips 66",
-        "market_cap": 69566469713,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ASX",
-        "name": "ASE Technology Holding Co., Ltd.",
-        "market_cap": 68120834017,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CNI",
-        "name": "Canadian National Railway Company",
-        "market_cap": 66036085580,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AFL",
-        "name": "Aflac Incorporated",
-        "market_cap": 60007294017,
-        "when": "OTH"
-      },
-      {
-        "symbol": "DB",
-        "name": "Deutsche Bank AG",
-        "market_cap": 58361123007,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ALL",
-        "name": "Allstate Corporation (The)",
-        "market_cap": 54829405157,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ETR",
-        "name": "Entergy Corporation",
-        "market_cap": 52495769246,
-        "when": "OTH"
-      },
-      {
-        "symbol": "F",
-        "name": "Ford Motor Company",
-        "market_cap": 49095646875,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GRMN",
-        "name": "Garmin Ltd.",
-        "market_cap": 48814922014,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EBAY",
-        "name": "eBay Inc.",
-        "market_cap": 46497920000,
-        "when": "OTH"
-      },
-      {
-        "symbol": "YUM",
-        "name": "Yum! Brands, Inc.",
-        "market_cap": 44143536276,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ODFL",
-        "name": "Old Dominion Freight Line, Inc.",
-        "market_cap": 43605955950,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CMG",
-        "name": "Chipotle Mexican Grill, Inc.",
-        "market_cap": 42405285265,
-        "when": "OTH"
-      },
-      {
-        "symbol": "HLN",
-        "name": "Haleon plc",
-        "market_cap": 42254409267,
-        "when": "BMO"
-      },
-      {
-        "symbol": "TEVA",
-        "name": "Teva Pharmaceutical Industries Limited",
-        "market_cap": 41196585393,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VMC",
-        "name": "Vulcan Materials Company",
-        "market_cap": 38627263276,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EME",
-        "name": "EMCOR Group, Inc.",
-        "market_cap": 37035194477,
-        "when": "OTH"
-      },
-      {
-        "symbol": "KGC",
-        "name": "Kinross Gold Corporation",
-        "market_cap": 35836105492,
-        "when": "OTH"
-      },
-      {
-        "symbol": "UMC",
-        "name": "United Microelectronics Corporation",
-        "market_cap": 32029826833,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AMRZ",
-        "name": "Amrize Ltd",
-        "market_cap": 31419363369,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VICI",
-        "name": "VICI Properties Inc.",
-        "market_cap": 30573085371,
-        "when": "OTH"
-      },
-      {
-        "symbol": "HUM",
-        "name": "Humana Inc.",
-        "market_cap": 29319291497,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BIIB",
-        "name": "Biogen Inc.",
-        "market_cap": 28697702802,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TW",
-        "name": "Tradeweb Markets Inc.",
-        "market_cap": 27849148620,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GEHC",
-        "name": "GE HealthCare Technologies Inc.",
-        "market_cap": 27142419156,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CTSH",
-        "name": "Cognizant Technology Solutions Corporation",
-        "market_cap": 25920567566,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AWK",
-        "name": "American Water Works",
-        "market_cap": 25771116645,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AER",
-        "name": "AerCap Holdings N.V.",
-        "market_cap": 24727730793,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VRSK",
-        "name": "Verisk Analytics, Inc.",
-        "market_cap": 24652990870,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BG",
-        "name": "Bunge Global SA",
-        "market_cap": 24429447339,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SBAC",
-        "name": "SBA Communications Corporation",
-        "market_cap": 22906298040,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CHRW",
-        "name": "C.H. Robinson Worldwide, Inc.",
-        "market_cap": 21970852496,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FTAI",
-        "name": "FTAI Aviation Ltd.",
-        "market_cap": 21860964453,
-        "when": "OTH"
-      },
-      {
-        "symbol": "WWD",
-        "name": "Woodward, Inc.",
-        "market_cap": 21520136392,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CRS",
-        "name": "Carpenter Technology Corporation",
-        "market_cap": 20249144252,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SOFI",
-        "name": "SoFi Technologies, Inc.",
-        "market_cap": 19798471271,
-        "when": "OTH"
-      },
-      {
-        "symbol": "LII",
-        "name": "Lennox International, Inc.",
-        "market_cap": 18003502717,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AGI",
-        "name": "Alamos Gold Inc.",
-        "market_cap": 17165989429,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EG",
-        "name": "Everest Group, Ltd.",
-        "market_cap": 17111096961,
-        "when": "OTH"
-      },
-      {
-        "symbol": "INVH",
-        "name": "Invitation Homes Inc.",
-        "market_cap": 17105467631,
-        "when": "OTH"
-      },
-      {
-        "symbol": "YUMC",
-        "name": "Yum China Holdings, Inc.",
-        "market_cap": 17099792301,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TLK",
-        "name": "PT Telekomunikasi Indonesia, Tbk",
-        "market_cap": 16533483951,
-        "when": "OTH"
-      },
-      {
-        "symbol": "IEX",
-        "name": "IDEX Corporation",
-        "market_cap": 16127196561,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BIP",
-        "name": "Brookfield Infrastructure Partners LP",
-        "market_cap": 16082857516,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TYL",
-        "name": "Tyler Technologies, Inc.",
-        "market_cap": 15113941737,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MAA",
-        "name": "Mid-America Apartment Communities, Inc.",
-        "market_cap": 15091451866,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GNRC",
-        "name": "Generac Holdings Inc.",
-        "market_cap": 14840290165,
-        "when": "OTH"
-      },
-      {
-        "symbol": "REG",
-        "name": "Regency Centers Corporation",
-        "market_cap": 14533157831,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GFL",
-        "name": "GFL Environmental Inc.",
-        "market_cap": 14493060957,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TTMI",
-        "name": "TTM Technologies, Inc.",
-        "market_cap": 14278437663,
-        "when": "OTH"
-      },
-      {
-        "symbol": "GIB",
-        "name": "CGI Inc.",
-        "market_cap": 14093755922,
-        "when": "OTH"
-      },
-      {
-        "symbol": "EVR",
-        "name": "Evercore Inc.",
-        "market_cap": 12837709915,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ALGN",
-        "name": "Align Technology, Inc.",
-        "market_cap": 12776521860,
-        "when": "OTH"
-      },
-      {
-        "symbol": "IONS",
-        "name": "Ionis Pharmaceuticals, Inc.",
-        "market_cap": 12354595680,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AR",
-        "name": "Antero Resources Corporation",
-        "market_cap": 12086287411,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SCI",
-        "name": "Service Corporation International",
-        "market_cap": 11984120926,
-        "when": "OTH"
-      },
-      {
-        "symbol": "UDR",
-        "name": "UDR, Inc.",
-        "market_cap": 11784327799,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SWK",
-        "name": "Stanley Black & Decker, Inc.",
-        "market_cap": 11768980827,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SUZ",
-        "name": "Suzano S.A.",
-        "market_cap": 11288570302,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PAG",
-        "name": "Penske Automotive Group, Inc.",
-        "market_cap": 11286517113,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FLS",
-        "name": "Flowserve Corporation",
-        "market_cap": 10766763545,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AFG",
-        "name": "American Financial Group, Inc.",
-        "market_cap": 10753028299,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FORM",
-        "name": "FormFactor, Inc.",
-        "market_cap": 10565165253,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VIAV",
-        "name": "Viavi Solutions Inc.",
-        "market_cap": 10535156878,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AM",
-        "name": "Antero Midstream Corporation",
-        "market_cap": 10393643206,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MGM",
-        "name": "MGM Resorts International",
-        "market_cap": 10047097710,
-        "when": "OTH"
-      }
-    ],
-    "2026-04-30": [
-      {
-        "symbol": "AAPL",
-        "name": "Apple Inc.",
-        "market_cap": 3966403593800,
+    "2026-05-04": [
+      {
+        "symbol": "PLTR",
+        "name": "Palantir Technologies Inc.",
+        "market_cap": 333468525433,
         "when": "AMC"
       },
       {
-        "symbol": "LLY",
-        "name": "Eli Lilly and Company",
-        "market_cap": 804239279696,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MA",
-        "name": "Mastercard Incorporated",
-        "market_cap": 461036741304,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CAT",
-        "name": "Caterpillar, Inc.",
-        "market_cap": 376906003287,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MRK",
-        "name": "Merck & Company, Inc.",
-        "market_cap": 274189046341,
-        "when": "BMO"
-      },
-      {
-        "symbol": "AMGN",
-        "name": "Amgen Inc.",
-        "market_cap": 182424493724,
+        "symbol": "VRTX",
+        "name": "Vertex Pharmaceuticals Incorporated",
+        "market_cap": 108749815992,
         "when": "AMC"
       },
       {
-        "symbol": "SNDK",
-        "name": "Sandisk Corporation",
-        "market_cap": 157078430412,
+        "symbol": "WMB",
+        "name": "Williams Companies, Inc. (The)",
+        "market_cap": 93314224300,
         "when": "AMC"
       },
       {
-        "symbol": "COP",
-        "name": "ConocoPhillips",
-        "market_cap": 156568596887,
-        "when": "BMO"
-      },
-      {
-        "symbol": "WDC",
-        "name": "Western Digital Corporation",
-        "market_cap": 139941292685,
+        "symbol": "FANG",
+        "name": "Diamondback Energy, Inc.",
+        "market_cap": 57846131040,
         "when": "AMC"
       },
       {
-        "symbol": "SYK",
-        "name": "Stryker Corporation",
-        "market_cap": 120689827648,
+        "symbol": "ON",
+        "name": "ON Semiconductor Corporation",
+        "market_cap": 39651326928,
         "when": "AMC"
       },
       {
-        "symbol": "PH",
-        "name": "Parker-Hannifin Corporation",
-        "market_cap": 119590161228,
-        "when": "BMO"
-      },
-      {
-        "symbol": "BMY",
-        "name": "Bristol-Myers Squibb Company",
-        "market_cap": 117583544853,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MO",
-        "name": "Altria Group",
-        "market_cap": 113983585065,
-        "when": "BMO"
-      },
-      {
-        "symbol": "TT",
-        "name": "Trane Technologies plc",
-        "market_cap": 105999290051,
-        "when": "BMO"
-      },
-      {
-        "symbol": "SO",
-        "name": "Southern Company (The)",
-        "market_cap": 105509186836,
-        "when": "BMO"
-      },
-      {
-        "symbol": "ITUB",
-        "name": "Itau Unibanco Banco Holding SA",
-        "market_cap": 96880948720,
-        "when": "BMO"
-      },
-      {
-        "symbol": "PWR",
-        "name": "Quanta Services, Inc.",
-        "market_cap": 94325654192,
-        "when": "BMO"
-      },
-      {
-        "symbol": "AEM",
-        "name": "Agnico Eagle Mines Limited",
-        "market_cap": 91994851727,
-        "when": "AMC"
-      },
-      {
-        "symbol": "ICE",
-        "name": "Intercontinental Exchange Inc.",
-        "market_cap": 88470820561,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CI",
-        "name": "The Cigna Group",
-        "market_cap": 77034585933,
-        "when": "BMO"
-      },
-      {
-        "symbol": "ITW",
-        "name": "Illinois Tool Works Inc.",
-        "market_cap": 76533702451,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CRH",
-        "name": "CRH PLC",
-        "market_cap": 75929865166,
-        "when": "BMO"
-      },
-      {
-        "symbol": "VLO",
-        "name": "Valero Energy Corporation",
-        "market_cap": 75127057522,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MPWR",
-        "name": "Monolithic Power Systems, Inc.",
-        "market_cap": 74995327120,
-        "when": "AMC"
-      },
-      {
-        "symbol": "RCL",
-        "name": "Royal Caribbean Cruises Ltd.",
-        "market_cap": 68123633061,
-        "when": "BMO"
-      },
-      {
-        "symbol": "APD",
-        "name": "Air Products and Chemicals, Inc.",
-        "market_cap": 67353442420,
-        "when": "BMO"
-      },
-      {
-        "symbol": "LHX",
-        "name": "L3Harris Technologies, Inc.",
-        "market_cap": 60032986653,
-        "when": "BMO"
-      },
-      {
-        "symbol": "AJG",
-        "name": "Arthur J. Gallagher & Co.",
-        "market_cap": 54411460412,
-        "when": "AMC"
-      },
-      {
-        "symbol": "AME",
-        "name": "AMTEK, Inc.",
-        "market_cap": 52197139306,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CARR",
-        "name": "Carrier Global Corporation",
-        "market_cap": 51605001275,
-        "when": "BMO"
-      },
-      {
-        "symbol": "XEL",
-        "name": "Xcel Energy Inc.",
-        "market_cap": 49196464052,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CAH",
-        "name": "Cardinal Health, Inc.",
-        "market_cap": 47726794365,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MT",
-        "name": "ArcelorMittal",
-        "market_cap": 42562155798,
-        "when": "BMO"
-      },
-      {
-        "symbol": "ALNY",
-        "name": "Alnylam Pharmaceuticals, Inc.",
-        "market_cap": 40187152213,
-        "when": "BMO"
-      },
-      {
-        "symbol": "RBLX",
-        "name": "Roblox Corporation",
-        "market_cap": 39956890926,
-        "when": "AMC"
-      },
-      {
-        "symbol": "AIG",
-        "name": "American International Group, Inc.",
-        "market_cap": 39467818958,
-        "when": "AMC"
-      },
-      {
-        "symbol": "HSY",
-        "name": "Hershey Company (The)",
-        "market_cap": 38341020480,
-        "when": "BMO"
-      },
-      {
-        "symbol": "FMX",
-        "name": "Fomento Economico Mexicano S.A.B. de C.V.",
-        "market_cap": 38159731231,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MLM",
-        "name": "Martin Marietta Materials, Inc.",
-        "market_cap": 36928017073,
-        "when": "BMO"
-      },
-      {
-        "symbol": "IRM",
-        "name": "Iron Mountain Incorporated",
-        "market_cap": 34067274123,
-        "when": "BMO"
-      },
-      {
-        "symbol": "FTI",
-        "name": "TechnipFMC plc",
-        "market_cap": 30916049660,
-        "when": "BMO"
-      },
-      {
-        "symbol": "RMD",
-        "name": "ResMed Inc.",
-        "market_cap": 30873623524,
-        "when": "AMC"
-      },
-      {
-        "symbol": "DTE",
-        "name": "DTE Energy Company",
-        "market_cap": 30586374043,
-        "when": "BMO"
-      },
-      {
-        "symbol": "MTZ",
-        "name": "MasTec, Inc.",
-        "market_cap": 29209642031,
-        "when": "AMC"
-      },
-      {
-        "symbol": "HUBB",
-        "name": "Hubbell Inc",
-        "market_cap": 28947793033,
-        "when": "BMO"
-      },
-      {
-        "symbol": "RDDT",
-        "name": "Reddit, Inc.",
-        "market_cap": 28432293265,
-        "when": "AMC"
-      },
-      {
-        "symbol": "WTW",
-        "name": "Willis Towers Watson Public Limited Company",
-        "market_cap": 27329261631,
-        "when": "BMO"
-      },
-      {
-        "symbol": "LPLA",
-        "name": "LPL Financial Holdings Inc.",
-        "market_cap": 26533433791,
-        "when": "AMC"
-      },
-      {
-        "symbol": "XPO",
-        "name": "XPO, Inc.",
-        "market_cap": 25443556594,
-        "when": "BMO"
-      },
-      {
-        "symbol": "PKX",
-        "name": "POSCO HOLDINGS INC.",
-        "market_cap": 25253314586,
+        "symbol": "CTRA",
+        "name": "Coterra Energy Inc.",
+        "market_cap": 27265483196,
         "when": "OTH"
       },
       {
-        "symbol": "ENTG",
-        "name": "Entegris, Inc.",
-        "market_cap": 22741418641,
-        "when": "BMO"
-      },
-      {
-        "symbol": "DXCM",
-        "name": "DexCom, Inc.",
-        "market_cap": 22210848556,
+        "symbol": "FN",
+        "name": "Fabrinet",
+        "market_cap": 24486076186,
         "when": "AMC"
       },
       {
-        "symbol": "TROW",
-        "name": "T. Rowe Price Group, Inc.",
-        "market_cap": 21862863869,
+        "symbol": "L",
+        "name": "Loews Corporation",
+        "market_cap": 23171500472,
         "when": "BMO"
       },
       {
-        "symbol": "TWLO",
-        "name": "Twilio Inc.",
-        "market_cap": 21386454613,
+        "symbol": "TSN",
+        "name": "Tyson Foods, Inc.",
+        "market_cap": 22557699352,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BWXT",
+        "name": "BWX Technologies, Inc.",
+        "market_cap": 19823903369,
         "when": "AMC"
       },
       {
-        "symbol": "LH",
-        "name": "Labcorp Holdings Inc.",
-        "market_cap": 21133577008,
-        "when": "BMO"
-      },
-      {
-        "symbol": "APG",
-        "name": "APi Group Corporation",
-        "market_cap": 21047634639,
-        "when": "BMO"
-      },
-      {
-        "symbol": "SW",
-        "name": "Smurfit WestRock plc",
-        "market_cap": 20802388205,
-        "when": "BMO"
-      },
-      {
-        "symbol": "FSLR",
-        "name": "First Solar, Inc.",
-        "market_cap": 20481189364,
+        "symbol": "RBA",
+        "name": "RB Global, Inc.",
+        "market_cap": 19275389272,
         "when": "AMC"
       },
       {
-        "symbol": "RIVN",
-        "name": "Rivian Automotive, Inc.",
-        "market_cap": 20242392962,
+        "symbol": "VNOM",
+        "name": "Viper Energy, Inc.",
+        "market_cap": 17733469297,
         "when": "AMC"
       },
       {
-        "symbol": "ATI",
-        "name": "ATI Inc.",
-        "market_cap": 19954895290,
-        "when": "BMO"
-      },
-      {
-        "symbol": "FTV",
-        "name": "Fortive Corporation",
-        "market_cap": 19010304983,
-        "when": "BMO"
-      },
-      {
-        "symbol": "BR",
-        "name": "Broadridge Financial Solutions, Inc.",
-        "market_cap": 18767355936,
-        "when": "BMO"
-      },
-      {
-        "symbol": "LNT",
-        "name": "Alliant Energy Corporation",
-        "market_cap": 18595906776,
+        "symbol": "LSCC",
+        "name": "Lattice Semiconductor Corporation",
+        "market_cap": 16736393534,
         "when": "AMC"
       },
       {
-        "symbol": "TEAM",
-        "name": "Atlassian Corporation",
-        "market_cap": 18591319776,
+        "symbol": "STRL",
+        "name": "Sterling Infrastructure, Inc.",
+        "market_cap": 15819600065,
         "when": "AMC"
       },
       {
-        "symbol": "ILMN",
-        "name": "Illumina, Inc.",
-        "market_cap": 18285035359,
+        "symbol": "GRAB",
+        "name": "Grab Holdings Limited",
+        "market_cap": 15663840411,
         "when": "AMC"
       },
       {
-        "symbol": "IP",
-        "name": "International Paper Company",
-        "market_cap": 17780146965,
-        "when": "BMO"
-      },
-      {
-        "symbol": "WY",
-        "name": "Weyerhaeuser Company",
-        "market_cap": 17485283268,
+        "symbol": "AEIS",
+        "name": "Advanced Energy Industries, Inc.",
+        "market_cap": 14530342773,
         "when": "AMC"
       },
       {
-        "symbol": "ROKU",
-        "name": "Roku, Inc.",
-        "market_cap": 16633270238,
+        "symbol": "CRBG",
+        "name": "Corebridge Financial Inc.",
+        "market_cap": 13265629438,
         "when": "AMC"
       },
       {
-        "symbol": "KIM",
-        "name": "Kimco Realty Corporation",
-        "market_cap": 15942891932,
+        "symbol": "CNA",
+        "name": "CNA Financial Corporation",
+        "market_cap": 13018163033,
         "when": "BMO"
       },
       {
-        "symbol": "THC",
-        "name": "Tenet Healthcare Corporation",
-        "market_cap": 15778267257,
+        "symbol": "PNW",
+        "name": "Pinnacle West Capital Corporation",
+        "market_cap": 12552780625,
         "when": "BMO"
       },
       {
-        "symbol": "JLL",
-        "name": "Jones Lang LaSalle Incorporated",
-        "market_cap": 15711491987,
-        "when": "BMO"
-      },
-      {
-        "symbol": "TXT",
-        "name": "Textron Inc.",
-        "market_cap": 15636303594,
-        "when": "BMO"
-      },
-      {
-        "symbol": "BSAC",
-        "name": "Banco Santander Chile",
-        "market_cap": 15122801676,
-        "when": "BMO"
-      },
-      {
-        "symbol": "H",
-        "name": "Hyatt Hotels Corporation",
-        "market_cap": 14959782474,
-        "when": "BMO"
-      },
-      {
-        "symbol": "WCC",
-        "name": "WESCO International, Inc.",
-        "market_cap": 14880139492,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CHKP",
-        "name": "Check Point Software Technologies Ltd.",
-        "market_cap": 14779221059,
-        "when": "BMO"
-      },
-      {
-        "symbol": "DTM",
-        "name": "DT Midstream, Inc.",
-        "market_cap": 14158539437,
-        "when": "BMO"
-      },
-      {
-        "symbol": "LECO",
-        "name": "Lincoln Electric Holdings, Inc.",
-        "market_cap": 14117666953,
-        "when": "BMO"
-      },
-      {
-        "symbol": "OWL",
-        "name": "Blue Owl Capital Inc.",
-        "market_cap": 13844366744,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CNH",
-        "name": "CNH Industrial N.V.",
-        "market_cap": 12505983971,
-        "when": "BMO"
-      },
-      {
-        "symbol": "CLX",
-        "name": "Clorox Company (The)",
-        "market_cap": 11458817257,
+        "symbol": "EQH",
+        "name": "Equitable Holdings, Inc.",
+        "market_cap": 11830678890,
         "when": "AMC"
       },
       {
-        "symbol": "GDDY",
-        "name": "GoDaddy Inc.",
-        "market_cap": 11380085544,
+        "symbol": "PSKY",
+        "name": "Paramount Skydance Corporation",
+        "market_cap": 11384228956,
         "when": "AMC"
       },
       {
-        "symbol": "SAIA",
-        "name": "Saia, Inc.",
-        "market_cap": 11255605065,
+        "symbol": "PINS",
+        "name": "Pinterest, Inc.",
+        "market_cap": 11320256212,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ALSN",
+        "name": "Allison Transmission Holdings, Inc.",
+        "market_cap": 11168437443,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AXSM",
+        "name": "Axsome Therapeutics, Inc.",
+        "market_cap": 10686650028,
         "when": "BMO"
       },
       {
-        "symbol": "ENSG",
-        "name": "The Ensign Group, Inc.",
-        "market_cap": 10888364194,
+        "symbol": "BMRN",
+        "name": "BioMarin Pharmaceutical Inc.",
+        "market_cap": 10419187209,
         "when": "AMC"
       },
       {
-        "symbol": "SPXC",
-        "name": "SPX Technologies, Inc.",
-        "market_cap": 10605362107,
-        "when": "AMC"
-      },
-      {
-        "symbol": "CPT",
-        "name": "Camden Property Trust",
-        "market_cap": 10586738174,
-        "when": "AMC"
-      },
-      {
-        "symbol": "GIL",
-        "name": "Gildan Activewear, Inc.",
-        "market_cap": 10418559617,
-        "when": "BMO"
-      },
-      {
-        "symbol": "EHC",
-        "name": "Encompass Health Corporation",
-        "market_cap": 10201092383,
+        "symbol": "POWL",
+        "name": "Powell Industries, Inc.",
+        "market_cap": 10100082404,
         "when": "AMC"
       }
     ],
-    "2026-05-01": [
+    "2026-05-05": [
       {
-        "symbol": "XOM",
-        "name": "Exxon Mobil Corporation",
-        "market_cap": 644473303276,
+        "symbol": "AMD",
+        "name": "Advanced Micro Devices, Inc.",
+        "market_cap": 577938793768,
+        "when": "AMC"
+      },
+      {
+        "symbol": "HSBC",
+        "name": "HSBC Holdings plc",
+        "market_cap": 308350404651,
+        "when": "OTH"
+      },
+      {
+        "symbol": "ANET",
+        "name": "Arista Networks, Inc.",
+        "market_cap": 217471153637,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ETN",
+        "name": "Eaton Corporation, PLC",
+        "market_cap": 168001532073,
         "when": "BMO"
       },
       {
-        "symbol": "CVX",
-        "name": "Chevron Corporation",
-        "market_cap": 382957130343,
+        "symbol": "SHOP",
+        "name": "Shopify Inc.",
+        "market_cap": 157271133778,
         "when": "BMO"
       },
       {
-        "symbol": "LIN",
-        "name": "Linde plc",
-        "market_cap": 233879664475,
+        "symbol": "PFE",
+        "name": "Pfizer, Inc.",
+        "market_cap": 151879108644,
         "when": "BMO"
       },
       {
-        "symbol": "AON",
-        "name": "Aon plc",
-        "market_cap": 68875338332,
+        "symbol": "BUD",
+        "name": "Anheuser-Busch Inbev SA",
+        "market_cap": 135778459547,
         "when": "BMO"
       },
       {
-        "symbol": "CL",
-        "name": "Colgate-Palmolive Company",
-        "market_cap": 67696727383,
+        "symbol": "DUK",
+        "name": "Duke Energy Corporation",
+        "market_cap": 100805138319,
         "when": "BMO"
       },
       {
-        "symbol": "TRP",
-        "name": "TC Energy Corporation",
-        "market_cap": 66674776141,
+        "symbol": "KKR",
+        "name": "KKR & Co. Inc.",
+        "market_cap": 93024420280,
         "when": "BMO"
       },
       {
-        "symbol": "NWG",
-        "name": "NatWest Group plc",
-        "market_cap": 64265464953,
+        "symbol": "CMI",
+        "name": "Cummins Inc.",
+        "market_cap": 92772111394,
         "when": "BMO"
       },
       {
-        "symbol": "IMO",
-        "name": "Imperial Oil Limited",
-        "market_cap": 63193535633,
+        "symbol": "RACE",
+        "name": "Ferrari N.V.",
+        "market_cap": 81248936658,
         "when": "BMO"
       },
       {
-        "symbol": "D",
-        "name": "Dominion Energy, Inc.",
-        "market_cap": 54935294813,
+        "symbol": "SU",
+        "name": "Suncor Energy  Inc.",
+        "market_cap": 80805489702,
+        "when": "AMC"
+      },
+      {
+        "symbol": "EMR",
+        "name": "Emerson Electric Company",
+        "market_cap": 78927280000,
+        "when": "AMC"
+      },
+      {
+        "symbol": "EOG",
+        "name": "EOG Resources, Inc.",
+        "market_cap": 75305571974,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AEP",
+        "name": "American Electric Power Company, Inc.",
+        "market_cap": 74527988743,
         "when": "BMO"
       },
       {
-        "symbol": "ARES",
-        "name": "Ares Management Corporation",
-        "market_cap": 36179486152,
+        "symbol": "MPC",
+        "name": "Marathon Petroleum Corporation",
+        "market_cap": 73291422074,
         "when": "BMO"
       },
       {
-        "symbol": "EL",
-        "name": "Estee Lauder Companies, Inc. (The)",
-        "market_cap": 27379119885,
+        "symbol": "ET",
+        "name": "Energy Transfer L.P.",
+        "market_cap": 69459951269,
         "when": "BMO"
       },
       {
-        "symbol": "LYB",
-        "name": "LyondellBasell Industries NV",
-        "market_cap": 23655760971,
+        "symbol": "TDG",
+        "name": "Transdigm Group Incorporated",
+        "market_cap": 65508203609,
         "when": "BMO"
       },
       {
-        "symbol": "CHD",
-        "name": "Church & Dwight Company, Inc.",
-        "market_cap": 22787384043,
+        "symbol": "LITE",
+        "name": "Lumentum Holdings Inc.",
+        "market_cap": 64425648000,
+        "when": "AMC"
+      },
+      {
+        "symbol": "OXY",
+        "name": "Occidental Petroleum Corporation",
+        "market_cap": 60076894065,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MSTR",
+        "name": "Strategy Inc",
+        "market_cap": 57382406537,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MPLX",
+        "name": "MPLX LP",
+        "market_cap": 57125548043,
         "when": "BMO"
       },
       {
-        "symbol": "NVT",
-        "name": "nVent Electric plc",
-        "market_cap": 22212495334,
+        "symbol": "CTVA",
+        "name": "Corteva, Inc.",
+        "market_cap": 54386590227,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CCJ",
+        "name": "Cameco Corporation",
+        "market_cap": 53192678307,
         "when": "BMO"
       },
       {
-        "symbol": "BEP",
-        "name": "Brookfield Renewable Partners L.P.",
-        "market_cap": 21833370588,
+        "symbol": "FERG",
+        "name": "Ferguson Enterprises Inc.",
+        "market_cap": 52349608148,
         "when": "BMO"
       },
       {
-        "symbol": "MRNA",
-        "name": "Moderna, Inc.",
-        "market_cap": 18131951331,
+        "symbol": "EA",
+        "name": "Electronic Arts Inc.",
+        "market_cap": 50643843900,
+        "when": "AMC"
+      },
+      {
+        "symbol": "PYPL",
+        "name": "PayPal Holdings, Inc.",
+        "market_cap": 46162120136,
         "when": "BMO"
       },
       {
-        "symbol": "MGA",
-        "name": "Magna International, Inc.",
-        "market_cap": 17423229197,
+        "symbol": "ROK",
+        "name": "Rockwell Automation, Inc.",
+        "market_cap": 45944272160,
         "when": "BMO"
       },
       {
-        "symbol": "TPG",
-        "name": "TPG Inc.",
-        "market_cap": 15890854752,
+        "symbol": "IDXX",
+        "name": "IDEXX Laboratories, Inc.",
+        "market_cap": 44594220991,
         "when": "BMO"
       },
       {
-        "symbol": "DINO",
-        "name": "HF Sinclair Corporation",
-        "market_cap": 11885428756,
+        "symbol": "TRI",
+        "name": "Thomson Reuters Corp",
+        "market_cap": 42289506854,
         "when": "BMO"
       },
       {
-        "symbol": "CBOE",
-        "name": "Cboe Global Markets, Inc.",
-        "market_cap": 11636977312,
+        "symbol": "PEG",
+        "name": "Public Service Enterprise Group Incorporated",
+        "market_cap": 40727101051,
         "when": "BMO"
       },
       {
-        "symbol": "IESC",
-        "name": "IES Holdings, Inc.",
-        "market_cap": 11399014708,
+        "symbol": "WEC",
+        "name": "WEC Energy Group, Inc.",
+        "market_cap": 38413011768,
         "when": "BMO"
+      },
+      {
+        "symbol": "ALC",
+        "name": "Alcon Inc.",
+        "market_cap": 37412539000,
+        "when": "AMC"
+      },
+      {
+        "symbol": "LYV",
+        "name": "Live Nation Entertainment, Inc.",
+        "market_cap": 37135612649,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CPNG",
+        "name": "Coupang, Inc.",
+        "market_cap": 36099712691,
+        "when": "AMC"
+      },
+      {
+        "symbol": "GFS",
+        "name": "GlobalFoundries Inc.",
+        "market_cap": 35944554738,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ADM",
+        "name": "Archer-Daniels-Midland Company",
+        "market_cap": 35920460754,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PRU",
+        "name": "Prudential Financial, Inc.",
+        "market_cap": 34124492951,
+        "when": "AMC"
+      },
+      {
+        "symbol": "FISV",
+        "name": "Fiserv, Inc.",
+        "market_cap": 33392386034,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ALAB",
+        "name": "Astera Labs, Inc.",
+        "market_cap": 33355447332,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DVN",
+        "name": "Devon Energy Corporation",
+        "market_cap": 31924153008,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AEE",
+        "name": "Ameren Corporation",
+        "market_cap": 31441638339,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WAT",
+        "name": "Waters Corporation",
+        "market_cap": 30355714782,
+        "when": "BMO"
+      },
+      {
+        "symbol": "IQV",
+        "name": "IQVIA Holdings, Inc.",
+        "market_cap": 26878186448,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BNTX",
+        "name": "BioNTech SE",
+        "market_cap": 25999606423,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PAAS",
+        "name": "Pan American Silver Corp.",
+        "market_cap": 21933428170,
+        "when": "AMC"
+      },
+      {
+        "symbol": "EXPD",
+        "name": "Expeditors International of Washington, Inc.",
+        "market_cap": 19667004795,
+        "when": "OTH"
+      },
+      {
+        "symbol": "BCH",
+        "name": "Banco De Chile",
+        "market_cap": 19127584325,
+        "when": "OTH"
+      },
+      {
+        "symbol": "LDOS",
+        "name": "Leidos Holdings, Inc.",
+        "market_cap": 18819344225,
+        "when": "BMO"
+      },
+      {
+        "symbol": "DD",
+        "name": "DuPont de Nemours, Inc.",
+        "market_cap": 18713946060,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ULS",
+        "name": "UL Solutions Inc.",
+        "market_cap": 18206737761,
+        "when": "BMO"
+      },
+      {
+        "symbol": "IFF",
+        "name": "International Flavors & Fragrances, Inc.",
+        "market_cap": 17934519587,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TLN",
+        "name": "Talen Energy Corporation",
+        "market_cap": 16906008507,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SMCI",
+        "name": "Super Micro Computer, Inc.",
+        "market_cap": 16412310327,
+        "when": "AMC"
+      },
+      {
+        "symbol": "BALL",
+        "name": "Ball Corporation",
+        "market_cap": 16256628783,
+        "when": "BMO"
+      },
+      {
+        "symbol": "J",
+        "name": "Jacobs Solutions Inc.",
+        "market_cap": 15198779129,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WLK",
+        "name": "Westlake Corporation",
+        "market_cap": 14765464727,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ONTO",
+        "name": "Onto Innovation Inc.",
+        "market_cap": 14677336879,
+        "when": "AMC"
+      },
+      {
+        "symbol": "LOGI",
+        "name": "Logitech International S.A.",
+        "market_cap": 14553350559,
+        "when": "AMC"
+      },
+      {
+        "symbol": "HII",
+        "name": "Huntington Ingalls Industries, Inc.",
+        "market_cap": 14344709624,
+        "when": "BMO"
+      },
+      {
+        "symbol": "SUN",
+        "name": "Sunoco LP",
+        "market_cap": 14265903284,
+        "when": "BMO"
+      },
+      {
+        "symbol": "LTM",
+        "name": "LATAM Airlines Group S.A.",
+        "market_cap": 13646242860,
+        "when": "OTH"
+      },
+      {
+        "symbol": "NBIX",
+        "name": "Neurocrine Biosciences, Inc.",
+        "market_cap": 13243630755,
+        "when": "AMC"
+      },
+      {
+        "symbol": "APTV",
+        "name": "Aptiv PLC",
+        "market_cap": 12843896245,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ENLT",
+        "name": "Enlight Renewable Energy Ltd.",
+        "market_cap": 12639209598,
+        "when": "BMO"
+      },
+      {
+        "symbol": "FMS",
+        "name": "Fresenius Medical Care AG",
+        "market_cap": 12607100269,
+        "when": "BMO"
+      },
+      {
+        "symbol": "JAZZ",
+        "name": "Jazz Pharmaceuticals plc",
+        "market_cap": 12497982257,
+        "when": "AMC"
+      },
+      {
+        "symbol": "BLD",
+        "name": "TopBuild Corp.",
+        "market_cap": 12459852150,
+        "when": "BMO"
+      },
+      {
+        "symbol": "TIMB",
+        "name": "TIM S.A.",
+        "market_cap": 12410349117,
+        "when": "AMC"
+      },
+      {
+        "symbol": "HL",
+        "name": "Hecla Mining Company",
+        "market_cap": 12083597356,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AIZ",
+        "name": "Assurant, Inc.",
+        "market_cap": 11743780503,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SOLV",
+        "name": "Solventum Corporation",
+        "market_cap": 11680577909,
+        "when": "AMC"
+      },
+      {
+        "symbol": "EMBJ",
+        "name": "Embraer S.A.",
+        "market_cap": 11329359245,
+        "when": "OTH"
+      },
+      {
+        "symbol": "EXEL",
+        "name": "Exelixis, Inc.",
+        "market_cap": 11293203416,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DOC",
+        "name": "Healthpeak Properties, Inc.",
+        "market_cap": 11242300192,
+        "when": "AMC"
+      },
+      {
+        "symbol": "JKHY",
+        "name": "Jack Henry & Associates, Inc.",
+        "market_cap": 11095732830,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DRS",
+        "name": "Leonardo DRS, Inc.",
+        "market_cap": 10807372218,
+        "when": "BMO"
+      },
+      {
+        "symbol": "SWKS",
+        "name": "Skyworks Solutions, Inc.",
+        "market_cap": 10553982214,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DVA",
+        "name": "DaVita Inc.",
+        "market_cap": 10230605218,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DOCN",
+        "name": "DigitalOcean Holdings, Inc.",
+        "market_cap": 10062802412,
+        "when": "BMO"
+      },
+      {
+        "symbol": "IT",
+        "name": "Gartner, Inc.",
+        "market_cap": 10024588262,
+        "when": "BMO"
+      }
+    ],
+    "2026-05-06": [
+      {
+        "symbol": "ARM",
+        "name": "Arm Holdings plc",
+        "market_cap": 222784404270,
+        "when": "AMC"
+      },
+      {
+        "symbol": "NVO",
+        "name": "Novo Nordisk A/S",
+        "market_cap": 188512300000,
+        "when": "BMO"
+      },
+      {
+        "symbol": "DIS",
+        "name": "Walt Disney Company (The)",
+        "market_cap": 183795184541,
+        "when": "BMO"
+      },
+      {
+        "symbol": "UBER",
+        "name": "Uber Technologies, Inc.",
+        "market_cap": 152424226651,
+        "when": "BMO"
+      },
+      {
+        "symbol": "APP",
+        "name": "Applovin Corporation",
+        "market_cap": 150105021955,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CVS",
+        "name": "CVS Health Corporation",
+        "market_cap": 106744830726,
+        "when": "BMO"
+      },
+      {
+        "symbol": "EQNR",
+        "name": "Equinor ASA",
+        "market_cap": 101886044473,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MAR",
+        "name": "Marriott International",
+        "market_cap": 95823252548,
+        "when": "BMO"
+      },
+      {
+        "symbol": "JCI",
+        "name": "Johnson Controls International plc",
+        "market_cap": 89371011586,
+        "when": "BMO"
+      },
+      {
+        "symbol": "APO",
+        "name": "Apollo Global Management, Inc.",
+        "market_cap": 74209550780,
+        "when": "BMO"
+      },
+      {
+        "symbol": "DASH",
+        "name": "DoorDash, Inc.",
+        "market_cap": 73703341711,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WBD",
+        "name": "Warner Bros. Discovery, Inc.",
+        "market_cap": 67082093381,
+        "when": "AMC"
+      },
+      {
+        "symbol": "FTNT",
+        "name": "Fortinet, Inc.",
+        "market_cap": 61723523583,
+        "when": "AMC"
+      },
+      {
+        "symbol": "COHR",
+        "name": "Coherent Corp.",
+        "market_cap": 59939822903,
+        "when": "AMC"
+      },
+      {
+        "symbol": "COR",
+        "name": "Cencora, Inc.",
+        "market_cap": 59917395363,
+        "when": "BMO"
+      },
+      {
+        "symbol": "O",
+        "name": "Realty Income Corporation",
+        "market_cap": 59900628728,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MDLN",
+        "name": "Medline Inc.",
+        "market_cap": 58419946032,
+        "when": "BMO"
+      },
+      {
+        "symbol": "CVE",
+        "name": "Cenovus Energy Inc",
+        "market_cap": 54634558139,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MET",
+        "name": "MetLife, Inc.",
+        "market_cap": 51828400780,
+        "when": "AMC"
+      },
+      {
+        "symbol": "EXC",
+        "name": "Exelon Corporation",
+        "market_cap": 47055822435,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BBD",
+        "name": "Banco Bradesco Sa",
+        "market_cap": 41038806669,
+        "when": "AMC"
+      },
+      {
+        "symbol": "BBDO",
+        "name": "Banco Bradesco Sa",
+        "market_cap": 41038806669,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SLF",
+        "name": "Sun Life Financial Inc.",
+        "market_cap": 39658467063,
+        "when": "AMC"
+      },
+      {
+        "symbol": "QSR",
+        "name": "Restaurant Brands International Inc.",
+        "market_cap": 36841379410,
+        "when": "BMO"
+      },
+      {
+        "symbol": "NTR",
+        "name": "Nutrien Ltd.",
+        "market_cap": 36397321489,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SYM",
+        "name": "Symbotic Inc.",
+        "market_cap": 35588352907,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TKO",
+        "name": "TKO Group Holdings, Inc.",
+        "market_cap": 35566690934,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TS",
+        "name": "Tenaris S.A.",
+        "market_cap": 34250238014,
+        "when": "AMC"
+      },
+      {
+        "symbol": "FLEX",
+        "name": "Flex Ltd.",
+        "market_cap": 33660547742,
+        "when": "BMO"
+      },
+      {
+        "symbol": "NRG",
+        "name": "NRG Energy, Inc.",
+        "market_cap": 33380714117,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ONC",
+        "name": "BeOne Medicines Ltd.",
+        "market_cap": 32812988375,
+        "when": "BMO"
+      },
+      {
+        "symbol": "AXON",
+        "name": "Axon Enterprise, Inc.",
+        "market_cap": 32370687474,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ATO",
+        "name": "Atmos Energy Corporation",
+        "market_cap": 31430090961,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TPL",
+        "name": "Texas Pacific Land Corporation",
+        "market_cap": 30587299263,
+        "when": "AMC"
+      },
+      {
+        "symbol": "EC",
+        "name": "Ecopetrol S.A.",
+        "market_cap": 29110619848,
+        "when": "OTH"
+      },
+      {
+        "symbol": "FTS",
+        "name": "Fortis Inc.",
+        "market_cap": 28927227849,
+        "when": "BMO"
+      },
+      {
+        "symbol": "RPRX",
+        "name": "Royalty Pharma plc",
+        "market_cap": 28898783697,
+        "when": "BMO"
+      },
+      {
+        "symbol": "RVMD",
+        "name": "Revolution Medicines, Inc.",
+        "market_cap": 28848545654,
+        "when": "AMC"
+      },
+      {
+        "symbol": "KHC",
+        "name": "The Kraft Heinz Company",
+        "market_cap": 26869373831,
+        "when": "BMO"
+      },
+      {
+        "symbol": "CW",
+        "name": "Curtiss-Wright Corporation",
+        "market_cap": 26580544554,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ES",
+        "name": "Eversource Energy",
+        "market_cap": 26572265892,
+        "when": "AMC"
+      },
+      {
+        "symbol": "PHG",
+        "name": "Koninklijke Philips N.V.",
+        "market_cap": 25056950522,
+        "when": "BMO"
+      },
+      {
+        "symbol": "UTHR",
+        "name": "United Therapeutics Corporation",
+        "market_cap": 24246513075,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ALB",
+        "name": "Albemarle Corporation",
+        "market_cap": 23188350673,
+        "when": "AMC"
+      },
+      {
+        "symbol": "NI",
+        "name": "NiSource, Inc",
+        "market_cap": 23143393956,
+        "when": "BMO"
+      },
+      {
+        "symbol": "GPN",
+        "name": "Global Payments Inc.",
+        "market_cap": 19806487215,
+        "when": "BMO"
+      },
+      {
+        "symbol": "RGLD",
+        "name": "Royal Gold, Inc.",
+        "market_cap": 19799749625,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ITT",
+        "name": "ITT Inc.",
+        "market_cap": 19162563144,
+        "when": "BMO"
+      },
+      {
+        "symbol": "FLUT",
+        "name": "Flutter Entertainment plc",
+        "market_cap": 19125559112,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MKSI",
+        "name": "MKS Inc.",
+        "market_cap": 19102531808,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CF",
+        "name": "CF Industries Holdings, Inc.",
+        "market_cap": 19079161103,
+        "when": "AMC"
+      },
+      {
+        "symbol": "PR",
+        "name": "Permian Resources Corporation",
+        "market_cap": 18211940964,
+        "when": "AMC"
+      },
+      {
+        "symbol": "YPF",
+        "name": "YPF Sociedad Anonima",
+        "market_cap": 17762005732,
+        "when": "OTH"
+      },
+      {
+        "symbol": "CDW",
+        "name": "CDW Corporation",
+        "market_cap": 17621395988,
+        "when": "BMO"
+      },
+      {
+        "symbol": "AMCR",
+        "name": "Amcor plc",
+        "market_cap": 17576218048,
+        "when": "BMO"
+      },
+      {
+        "symbol": "WES",
+        "name": "Western Midstream Partners, LP",
+        "market_cap": 17116660030,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CLH",
+        "name": "Clean Harbors, Inc.",
+        "market_cap": 16670053298,
+        "when": "BMO"
+      },
+      {
+        "symbol": "IONQ",
+        "name": "IonQ, Inc.",
+        "market_cap": 16542830911,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SN",
+        "name": "SharkNinja, Inc.",
+        "market_cap": 16355457905,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PTC",
+        "name": "PTC Inc.",
+        "market_cap": 16219170611,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TRMB",
+        "name": "Trimble Inc.",
+        "market_cap": 15624213371,
+        "when": "BMO"
+      },
+      {
+        "symbol": "SITM",
+        "name": "SiTime Corporation",
+        "market_cap": 14838976860,
+        "when": "AMC"
+      },
+      {
+        "symbol": "HST",
+        "name": "Host Hotels & Resorts, Inc.",
+        "market_cap": 14523352608,
+        "when": "AMC"
+      },
+      {
+        "symbol": "APA",
+        "name": "APA Corporation",
+        "market_cap": 14393998862,
+        "when": "AMC"
+      },
+      {
+        "symbol": "RRX",
+        "name": "Regal Rexnord Corporation",
+        "market_cap": 14313574949,
+        "when": "AMC"
+      },
+      {
+        "symbol": "PFGC",
+        "name": "Performance Food Group Company",
+        "market_cap": 14226882814,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PAYP",
+        "name": "PayPay Corporation",
+        "market_cap": 14115826368,
+        "when": "AMC"
+      },
+      {
+        "symbol": "FNF",
+        "name": "Fidelity National Financial, Inc.",
+        "market_cap": 14076939342,
+        "when": "AMC"
+      },
+      {
+        "symbol": "COKE",
+        "name": "Coca-Cola Consolidated, Inc.",
+        "market_cap": 13650339771,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SOLS",
+        "name": "Solstice Advanced Materials Inc.",
+        "market_cap": 13013293765,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PEN",
+        "name": "Penumbra, Inc.",
+        "market_cap": 12840923634,
+        "when": "OTH"
+      },
+      {
+        "symbol": "NYT",
+        "name": "New York Times Company (The)",
+        "market_cap": 12796296717,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PODD",
+        "name": "Insulet Corporation",
+        "market_cap": 11923055728,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MDGL",
+        "name": "Madrigal Pharmaceuticals, Inc.",
+        "market_cap": 11921657954,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BWA",
+        "name": "BorgWarner Inc.",
+        "market_cap": 11739322971,
+        "when": "BMO"
+      },
+      {
+        "symbol": "AMH",
+        "name": "American Homes 4 Rent",
+        "market_cap": 11583257826,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CDE",
+        "name": "Coeur Mining, Inc.",
+        "market_cap": 11533899698,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AUR",
+        "name": "Aurora Innovation, Inc.",
+        "market_cap": 11525790780,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ELAN",
+        "name": "Elanco Animal Health Incorporated",
+        "market_cap": 11171118050,
+        "when": "BMO"
+      },
+      {
+        "symbol": "EQX",
+        "name": "Equinox Gold Corp.",
+        "market_cap": 10955123771,
+        "when": "AMC"
+      },
+      {
+        "symbol": "HLI",
+        "name": "Houlihan Lokey, Inc.",
+        "market_cap": 10799275020,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SNAP",
+        "name": "Snap Inc.",
+        "market_cap": 10251938579,
+        "when": "AMC"
+      },
+      {
+        "symbol": "Z",
+        "name": "Zillow Group, Inc.",
+        "market_cap": 10219395530,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ZG",
+        "name": "Zillow Group, Inc.",
+        "market_cap": 10219395530,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CART",
+        "name": "Maplebear Inc.",
+        "market_cap": 10169866576,
+        "when": "BMO"
+      },
+      {
+        "symbol": "LFUS",
+        "name": "Littelfuse, Inc.",
+        "market_cap": 10169771211,
+        "when": "BMO"
+      },
+      {
+        "symbol": "WTS",
+        "name": "Watts Water Technologies, Inc.",
+        "market_cap": 10020177346,
+        "when": "AMC"
+      }
+    ],
+    "2026-05-07": [
+      {
+        "symbol": "SHEL",
+        "name": "Shell PLC",
+        "market_cap": 257111021521,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MCD",
+        "name": "McDonald's Corporation",
+        "market_cap": 208691884185,
+        "when": "BMO"
+      },
+      {
+        "symbol": "GILD",
+        "name": "Gilead Sciences, Inc.",
+        "market_cap": 162427461884,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MCK",
+        "name": "McKesson Corporation",
+        "market_cap": 99851774131,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CNQ",
+        "name": "Canadian Natural Resources Limited",
+        "market_cap": 98927682950,
+        "when": "BMO"
+      },
+      {
+        "symbol": "HWM",
+        "name": "Howmet Aerospace Inc.",
+        "market_cap": 97389422893,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MELI",
+        "name": "MercadoLibre, Inc.",
+        "market_cap": 90881289369,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ABNB",
+        "name": "Airbnb, Inc.",
+        "market_cap": 83447564371,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MNST",
+        "name": "Monster Beverage Corporation",
+        "market_cap": 75367217116,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MSI",
+        "name": "Motorola Solutions, Inc.",
+        "market_cap": 72968371337,
+        "when": "AMC"
+      },
+      {
+        "symbol": "NET",
+        "name": "Cloudflare, Inc.",
+        "market_cap": 72145401681,
+        "when": "AMC"
+      },
+      {
+        "symbol": "RSG",
+        "name": "Republic Services, Inc.",
+        "market_cap": 64639814490,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SRE",
+        "name": "Sempra",
+        "market_cap": 62144992727,
+        "when": "BMO"
+      },
+      {
+        "symbol": "CRWV",
+        "name": "CoreWeave, Inc.",
+        "market_cap": 60595123003,
+        "when": "AMC"
+      },
+      {
+        "symbol": "LNG",
+        "name": "Cheniere Energy, Inc.",
+        "market_cap": 57777142855,
+        "when": "BMO"
+      },
+      {
+        "symbol": "WPM",
+        "name": "Wheaton Precious Metals Corp.",
+        "market_cap": 56980233591,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TRGP",
+        "name": "Targa Resources, Inc.",
+        "market_cap": 55865696098,
+        "when": "BMO"
+      },
+      {
+        "symbol": "GWW",
+        "name": "W.W. Grainger, Inc.",
+        "market_cap": 54966678080,
+        "when": "BMO"
+      },
+      {
+        "symbol": "VST",
+        "name": "Vistra Corp.",
+        "market_cap": 53436620249,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MCHP",
+        "name": "Microchip Technology Incorporated",
+        "market_cap": 50276895403,
+        "when": "AMC"
+      },
+      {
+        "symbol": "COIN",
+        "name": "Coinbase Global, Inc.",
+        "market_cap": 49460704876,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ARGX",
+        "name": "argenx SE",
+        "market_cap": 48515800807,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ZTS",
+        "name": "Zoetis Inc.",
+        "market_cap": 48360981260,
+        "when": "BMO"
+      },
+      {
+        "symbol": "RKLB",
+        "name": "Rocket Lab Corporation",
+        "market_cap": 47506559923,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DDOG",
+        "name": "Datadog, Inc.",
+        "market_cap": 47052002458,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BDX",
+        "name": "Becton, Dickinson and Company",
+        "market_cap": 42437919213,
+        "when": "BMO"
+      },
+      {
+        "symbol": "XYZ",
+        "name": "Block, Inc.",
+        "market_cap": 41978954595,
+        "when": "AMC"
+      },
+      {
+        "symbol": "RKT",
+        "name": "Rocket Companies, Inc.",
+        "market_cap": 41360793179,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ED",
+        "name": "Consolidated Edison Inc",
+        "market_cap": 41075284717,
+        "when": "AMC"
+      },
+      {
+        "symbol": "KVUE",
+        "name": "Kenvue Inc.",
+        "market_cap": 33656132862,
+        "when": "BMO"
+      },
+      {
+        "symbol": "EXPE",
+        "name": "Expedia Group, Inc.",
+        "market_cap": 29809883264,
+        "when": "AMC"
+      },
+      {
+        "symbol": "NTRA",
+        "name": "Natera, Inc.",
+        "market_cap": 29435214117,
+        "when": "AMC"
+      },
+      {
+        "symbol": "INSM",
+        "name": "Insmed Incorporated",
+        "market_cap": 29427123473,
+        "when": "BMO"
+      },
+      {
+        "symbol": "TPR",
+        "name": "Tapestry, Inc.",
+        "market_cap": 29365410904,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MTD",
+        "name": "Mettler-Toledo International, Inc.",
+        "market_cap": 25849443968,
+        "when": "AMC"
+      },
+      {
+        "symbol": "BCE",
+        "name": "BCE, Inc.",
+        "market_cap": 22017132026,
+        "when": "BMO"
+      },
+      {
+        "symbol": "AFRM",
+        "name": "Affirm Holdings, Inc.",
+        "market_cap": 21412352646,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MTSI",
+        "name": "MACOM Technology Solutions Holdings, Inc.",
+        "market_cap": 21124120872,
+        "when": "BMO"
+      },
+      {
+        "symbol": "USFD",
+        "name": "US Foods Holding Corp.",
+        "market_cap": 20590452160,
+        "when": "BMO"
+      },
+      {
+        "symbol": "CPAY",
+        "name": "Corpay, Inc.",
+        "market_cap": 20267470975,
+        "when": "AMC"
+      },
+      {
+        "symbol": "FWONA",
+        "name": "Liberty Media Corporation",
+        "market_cap": 19837602338,
+        "when": "BMO"
+      },
+      {
+        "symbol": "FWONK",
+        "name": "Liberty Media Corporation",
+        "market_cap": 19837602338,
+        "when": "BMO"
+      },
+      {
+        "symbol": "EVRG",
+        "name": "Evergy, Inc.",
+        "market_cap": 19076738903,
+        "when": "BMO"
+      },
+      {
+        "symbol": "CG",
+        "name": "The Carlyle Group Inc.",
+        "market_cap": 18017149445,
+        "when": "BMO"
+      },
+      {
+        "symbol": "VTRS",
+        "name": "Viatris Inc.",
+        "market_cap": 17396448380,
+        "when": "BMO"
+      },
+      {
+        "symbol": "NWS",
+        "name": "News Corporation",
+        "market_cap": 16927923269,
+        "when": "AMC"
+      },
+      {
+        "symbol": "NWSA",
+        "name": "News Corporation",
+        "market_cap": 16927923269,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TOST",
+        "name": "Toast, Inc.",
+        "market_cap": 16533014767,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SGI",
+        "name": "Somnigroup International Inc.",
+        "market_cap": 15956439737,
+        "when": "BMO"
+      },
+      {
+        "symbol": "AKAM",
+        "name": "Akamai Technologies, Inc.",
+        "market_cap": 15161029483,
+        "when": "AMC"
+      },
+      {
+        "symbol": "IREN",
+        "name": "IREN Limited",
+        "market_cap": 15122080230,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WMG",
+        "name": "Warner Music Group Corp.",
+        "market_cap": 14766726169,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ASND",
+        "name": "Ascendis Pharma A/S",
+        "market_cap": 14216377847,
+        "when": "OTH"
+      },
+      {
+        "symbol": "LAMR",
+        "name": "Lamar Advertising Company",
+        "market_cap": 13982702011,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BBIO",
+        "name": "BridgeBio Pharma, Inc.",
+        "market_cap": 13923781869,
+        "when": "AMC"
+      },
+      {
+        "symbol": "RGA",
+        "name": "Reinsurance Group of America, Incorporated",
+        "market_cap": 13852582622,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AAOI",
+        "name": "Applied Optoelectronics, Inc.",
+        "market_cap": 13156633891,
+        "when": "AMC"
+      },
+      {
+        "symbol": "GMED",
+        "name": "Globus Medical, Inc.",
+        "market_cap": 12234316864,
+        "when": "AMC"
+      },
+      {
+        "symbol": "MP",
+        "name": "MP Materials Corp.",
+        "market_cap": 11756374166,
+        "when": "AMC"
+      },
+      {
+        "symbol": "GEN",
+        "name": "Gen Digital Inc.",
+        "market_cap": 11683254200,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DKNG",
+        "name": "DraftKings Inc.",
+        "market_cap": 11560722189,
+        "when": "AMC"
+      },
+      {
+        "symbol": "GH",
+        "name": "Guardant Health, Inc.",
+        "market_cap": 11544493762,
+        "when": "AMC"
+      },
+      {
+        "symbol": "U",
+        "name": "Unity Software Inc.",
+        "market_cap": 11527839340,
+        "when": "BMO"
+      },
+      {
+        "symbol": "HUBS",
+        "name": "HubSpot, Inc.",
+        "market_cap": 11415823151,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WYNN",
+        "name": "Wynn Resorts, Limited",
+        "market_cap": 11144088146,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TTD",
+        "name": "The Trade Desk, Inc.",
+        "market_cap": 11089606371,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WTRG",
+        "name": "Essential Utilities, Inc.",
+        "market_cap": 10822201225,
+        "when": "BMO"
+      },
+      {
+        "symbol": "TXRH",
+        "name": "Texas Roadhouse, Inc.",
+        "market_cap": 10601764624,
+        "when": "AMC"
+      },
+      {
+        "symbol": "AES",
+        "name": "The AES Corporation",
+        "market_cap": 10303884952,
+        "when": "OTH"
+      },
+      {
+        "symbol": "ARWR",
+        "name": "Arrowhead Pharmaceuticals, Inc.",
+        "market_cap": 10289565321,
+        "when": "AMC"
+      }
+    ],
+    "2026-05-08": [
+      {
+        "symbol": "ENB",
+        "name": "Enbridge Inc",
+        "market_cap": 120257938635,
+        "when": "BMO"
+      },
+      {
+        "symbol": "BAM",
+        "name": "Brookfield Asset Management",
+        "market_cap": 78194710627,
+        "when": "BMO"
+      },
+      {
+        "symbol": "UI",
+        "name": "Ubiquiti Inc.",
+        "market_cap": 61247648736,
+        "when": "OTH"
+      },
+      {
+        "symbol": "AU",
+        "name": "AngloGold Ashanti PLC",
+        "market_cap": 47195590584,
+        "when": "BMO"
+      },
+      {
+        "symbol": "SATS",
+        "name": "EchoStar Corporation",
+        "market_cap": 35572173277,
+        "when": "OTH"
+      },
+      {
+        "symbol": "PPL",
+        "name": "PPL Corporation",
+        "market_cap": 28161061232,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PBA",
+        "name": "Pembina Pipeline Corp.",
+        "market_cap": 26883961659,
+        "when": "BMO"
+      },
+      {
+        "symbol": "FIS",
+        "name": "Fidelity National Information Services, Inc.",
+        "market_cap": 24049922899,
+        "when": "BMO"
+      },
+      {
+        "symbol": "TU",
+        "name": "TELUS Corporation",
+        "market_cap": 19047845546,
+        "when": "BMO"
+      },
+      {
+        "symbol": "PAA",
+        "name": "Plains All American Pipeline, L.P.",
+        "market_cap": 17585981465,
+        "when": "OTH"
+      },
+      {
+        "symbol": "EMA",
+        "name": "Emera Incorporated",
+        "market_cap": 16208324116,
+        "when": "BMO"
+      },
+      {
+        "symbol": "RDY",
+        "name": "Dr. Reddy's Laboratories Ltd",
+        "market_cap": 11381971179,
+        "when": "OTH"
       }
     ]
   },
-  "earnings_text": "Mon Apr 27: \u2014 | (VZ CDNS PSA NUE CLS VTR AVB CINF BRO AMKR SUI ARCC RMBS TFII SANM CCK DPZ UHS CR)\nTue Apr 28: \u2014 | (V KO NVS TMUS WELL STX BKNG GLW SPGI BP SBUX WM SPOT UPS EPD AMT BE BCS SHW MDLZ NXPI ECL HLT GM VALE HOOD PCAR OKE TER SYY ACGL KMB IR EXR FE XYL CNC EIX EQR FICO EXE PPG CMS MKL VLTO OMC INCY FFIV WSO WSO.B ESS WPC ZBH BEN CSGP OHI TRU RNR UNM PNR AVY ALLE WBS IVZ AIT SFD ESI)\nWed Apr 29: HLN | (GOOG GOOGL MSFT AMZN META AZN ABBV UBS KLAC SAN TTE APH QCOM SCCO GSK EQIX GD CVNA ADP LYG ORLY CP REGN PSX ASX CNI AFL DB ALL ETR F GRMN EBAY YUM ODFL CMG TEVA VMC EME KGC UMC AMRZ VICI HUM BIIB TW GEHC CTSH AWK AER VRSK BG SBAC CHRW FTAI WWD CRS SOFI LII AGI EG INVH YUMC TLK IEX BIP TYL MAA GNRC REG GFL TTMI GIB EVR ALGN IONS AR SCI UDR SWK SUZ PAG FLS AFG FORM VIAV AM MGM)\nThu Apr 30: LLY MA CAT MRK COP PH BMY MO TT SO ITUB PWR ICE CI ITW CRH VLO RCL APD LHX AME CARR XEL CAH MT ALNY HSY FMX MLM IRM FTI DTE HUBB WTW XPO ENTG TROW LH APG SW ATI FTV BR IP KIM THC JLL TXT BSAC H WCC CHKP DTM LECO OWL CNH SAIA GIL | AAPL AMGN SNDK WDC SYK AEM MPWR AJG RBLX AIG RMD MTZ RDDT LPLA DXCM TWLO FSLR RIVN LNT TEAM ILMN WY ROKU CLX GDDY ENSG SPXC CPT EHC (PKX)\nFri May 1: XOM CVX LIN AON CL TRP NWG IMO D ARES EL LYB CHD NVT BEP MRNA MGA TPG DINO CBOE IESC | \u2014",
+  "earnings_text": "Mon May 4: L TSN CNA PNW AXSM | PLTR VRTX WMB FANG ON FN BWXT RBA VNOM LSCC STRL GRAB AEIS CRBG EQH PSKY PINS ALSN BMRN POWL (CTRA)\nTue May 5: ETN SHOP PFE BUD DUK KKR CMI RACE AEP MPC ET TDG MPLX CCJ FERG PYPL ROK IDXX TRI PEG WEC GFS ADM FISV WAT IQV BNTX LDOS DD ULS BALL WLK HII SUN APTV ENLT FMS BLD DRS DOCN IT | AMD ANET SU EMR EOG LITE OXY MSTR CTVA EA ALC LYV CPNG PRU ALAB DVN AEE PAAS IFF TLN SMCI J ONTO LOGI NBIX JAZZ TIMB HL AIZ SOLV EXEL DOC JKHY SWKS DVA (HSBC EXPD BCH LTM EMBJ)\nWed May 6: NVO DIS UBER CVS EQNR MAR JCI APO COR MDLN CVE EXC QSR FLEX NRG ONC FTS RPRX KHC PHG UTHR NI GPN ITT CDW AMCR CLH SN TRMB PFGC SOLS NYT PODD MDGL BWA ELAN CART LFUS | ARM APP DASH WBD FTNT COHR O MET BBD BBDO SLF NTR SYM TKO TS AXON ATO TPL RVMD CW ES ALB RGLD FLUT MKSI CF PR WES IONQ PTC SITM HST APA RRX PAYP FNF COKE AMH CDE AUR EQX HLI SNAP Z ZG WTS (EC YPF PEN)\nThu May 7: SHEL MCD CNQ HWM SRE LNG TRGP GWW VST ARGX ZTS DDOG BDX KVUE INSM TPR BCE MTSI USFD FWONA FWONK EVRG CG VTRS SGI LAMR U WTRG | GILD MCK MELI ABNB MNST MSI NET RSG CRWV WPM MCHP COIN RKLB XYZ RKT ED EXPE NTRA MTD AFRM CPAY NWS NWSA TOST AKAM IREN WMG BBIO RGA AAOI GMED MP GEN DKNG GH HUBS WYNN TTD TXRH ARWR (ASND AES)\nFri May 8: ENB BAM AU PPL PBA FIS TU EMA | (UI SATS PAA RDY)",
   "errors": []
 }
