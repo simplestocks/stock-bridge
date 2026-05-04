@@ -615,6 +615,10 @@
       background: var(--green);
     }
 
+    .pin-pill.top-pin {
+      color: var(--red) !important;
+    }
+
     .open-trades {
       min-height: 0;
       border: 1px solid var(--line);
@@ -1195,6 +1199,12 @@
     function renderChain(rows = chainRows) {
       const sortedRows = sortChainAscending(rows);
       const limitedRows = limitRowsAroundFocus(sortedRows, rowLimit);
+      const topPins = new Set(
+        [...limitedRows]
+          .sort((a, b) => Number(b[5] || 0) - Number(a[5] || 0))
+          .slice(0, 3)
+          .map((row) => `${Number(row[0])}`)
+      );
       const header = `
         <div class="chain-head">
           <div class="chain-cell">C Delta</div>
@@ -1211,6 +1221,7 @@
         const cls = state ? `chain-row ${state}` : "chain-row";
         const hue = pin >= 80 ? "var(--green)" : pin >= 55 ? "var(--amber)" : "var(--red)";
         const text = pin >= 55 ? "#07100a" : "#ffffff";
+        const pinClass = topPins.has(`${Number(strike)}`) ? "pin-pill top-pin" : "pin-pill";
         const sourceIndex = sortedRows.findIndex((row) => Number(row[0]) === Number(strike));
         const callSpread = spreadValue(sortedRows, sourceIndex, "call");
         const putSpread = spreadValue(sortedRows, sourceIndex, "put");
@@ -1223,7 +1234,7 @@
             <div class="chain-cell clickable red" data-action="sell" data-type="put" data-strike="${strike}" data-price="${putMark}" data-delta="${putDelta}">${putMark.toFixed(2)}</div>
             <div class="chain-spread">${putSpread}</div>
             <div class="chain-cell clickable red" data-action="buy" data-type="put" data-strike="${strike}" data-price="${putMark}" data-delta="${putDelta}">${putDelta.toFixed(2)}</div>
-            <div class="pin-pill" style="background:${hue};color:${text};">${pin} / ${strike}</div>
+            <div class="${pinClass}" style="background:${hue};color:${text};">${pin} / ${strike}</div>
           </div>`;
       }).join("");
 
