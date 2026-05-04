@@ -382,6 +382,40 @@
       font-size: 18px;
     }
 
+    .fly-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 7px;
+    }
+
+    .fly-field {
+      display: grid;
+      gap: 3px;
+    }
+
+    .fly-field input {
+      width: 100%;
+      height: 25px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #070b10;
+      color: var(--text);
+      padding: 0 7px;
+      font-weight: 900;
+      outline: none;
+    }
+
+    .fly-line {
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .toggle {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1056,8 +1090,13 @@
             </div>
             <div class="trade-lane">
               <div class="label">Mid-Morning Pin Trade</div>
-              <strong id="bestStructure">Fly / Condor / Wait</strong>
-              <div class="hero-sub">Target Zone: <strong class="green" id="targetZone">7245-7255</strong> · Center: <strong id="bestCenter">7250</strong></div>
+              <strong id="bestStructure">Iron Butterfly</strong>
+              <div class="fly-controls">
+                <label class="fly-field label">Center <input id="flyCenterInput" type="text" inputmode="decimal" placeholder="7250"></label>
+                <label class="fly-field label">Width <input id="flyWidthInput" type="text" inputmode="decimal" value="15"></label>
+              </div>
+              <div class="fly-line">Zone <strong class="green" id="targetZone">7245-7255</strong> · <span id="flyLegs">Legs waiting</span></div>
+              <div class="fly-line" id="flyValue">Value waiting</div>
             </div>
           </div>
 
@@ -1181,6 +1220,7 @@
     let activeBeRows = [];
     let activeSentimentRows = [];
     let activeBottomTab = "trades";
+    let recommendedFlyCenter = 7250;
     let refreshTimer = null;
 
     const beRows = [
@@ -1374,6 +1414,7 @@
       document.querySelectorAll("#chainTable .clickable").forEach((cell) => {
         cell.addEventListener("click", handleChainCellClick);
       });
+      renderButterfly();
     }
 
     function classifyChainRow(row, bestCenter, zone) {
@@ -1402,6 +1443,45 @@
       const row = rowForStrike(leg.strike);
       if (!row) return Number(leg.entryMark || 0);
       return leg.type === "call" ? Number(row[2] || 0) : Number(row[3] || 0);
+    }
+
+    function flyInputNumber(id, fallback) {
+      const value = Number(document.getElementById(id)?.value || "");
+      return Number.isFinite(value) && value > 0 ? value : fallback;
+    }
+
+    function normalizeFlyCenter(value) {
+      return value > 0 && value < 1000 ? Math.round(value * 100) : value;
+    }
+
+    function optionMark(strike, type) {
+      const row = rowForStrike(strike);
+      if (!row) return null;
+      return type === "call" ? Number(row[2] || 0) : Number(row[3] || 0);
+    }
+
+    function renderButterfly() {
+      const centerInput = document.getElementById("flyCenterInput");
+      const widthInput = document.getElementById("flyWidthInput");
+      if (!centerInput || !widthInput) return;
+      if (!centerInput.value) centerInput.value = recommendedFlyCenter;
+      if (!widthInput.value) widthInput.value = localStorage.getItem("odteFlyWidth") || "15";
+
+      const center = normalizeFlyCenter(flyInputNumber("flyCenterInput", recommendedFlyCenter));
+      const width = flyInputNumber("flyWidthInput", 15);
+      const lower = center - width;
+      const upper = center + width;
+      const centerCall = optionMark(center, "call");
+      const centerPut = optionMark(center, "put");
+      const upperCall = optionMark(upper, "call");
+      const lowerPut = optionMark(lower, "put");
+      const complete = [centerCall, centerPut, upperCall, lowerPut].every((value) => value != null);
+      const value = complete ? centerCall + centerPut - upperCall - lowerPut : null;
+
+      document.getElementById("flyLegs").textContent = `${lower} / ${center} / ${upper}`;
+      document.getElementById("flyValue").innerHTML = value == null
+        ? `Value waiting · width ${width}`
+        : `Live value <strong class="green">$${value.toFixed(2)}</strong> · shorts C/P ${center}`;
     }
 
     function deltaForLeg(leg) {
@@ -1751,11 +1831,11 @@
       const status = rec.status || (liveRows ? "WATCH" : "DEMO");
       const move = rec.move || (liveRows ? "WAIT" : "NO");
       let visibleRows = chainRows;
+      recommendedFlyCenter = Number(center || recommendedFlyCenter);
 
       if (spx > 0) document.getElementById("spxValue").textContent = spx.toFixed(2);
       document.getElementById("targetZone").textContent = `${zone[0]}-${zone[1]}`;
-      document.getElementById("bestCenter").textContent = center;
-      document.getElementById("bestStructure").textContent = structure;
+      document.getElementById("bestStructure").textContent = "Iron Butterfly";
       document.getElementById("tradeStatus").textContent = status;
       document.getElementById("moveDecision").textContent = move;
       document.getElementById("sentimentBadge").textContent = data.sentiment?.net || "NEUTRAL";
@@ -1909,6 +1989,16 @@
     });
     document.getElementById("rowLimitCustom").addEventListener("change", (event) => {
       if (event.target.value) setRowLimit(event.target.value);
+    });
+    document.getElementById("flyCenterInput").value = localStorage.getItem("odteFlyCenter") || "";
+    document.getElementById("flyWidthInput").value = localStorage.getItem("odteFlyWidth") || "15";
+    document.getElementById("flyCenterInput").addEventListener("change", (event) => {
+      localStorage.setItem("odteFlyCenter", event.target.value.trim());
+      renderButterfly();
+    });
+    document.getElementById("flyWidthInput").addEventListener("change", (event) => {
+      localStorage.setItem("odteFlyWidth", event.target.value.trim() || "15");
+      renderButterfly();
     });
     document.querySelectorAll("[data-bottom-tab]").forEach((button) => {
       button.addEventListener("click", () => setBottomTab(button.dataset.bottomTab));
