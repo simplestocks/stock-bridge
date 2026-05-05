@@ -15,5 +15,6 @@
 - Continue tablet polish on IC/IB box layout.
   - Keep labels short: IC and IB.
   - Keep font sizes consistent inside the box.
+  - IC text currently reads larger than IB text; normalize after seeing live use.
   - Keep center/width/entry inputs compact.
   - Recheck fit on tablet-sized viewport after next visual pass.
