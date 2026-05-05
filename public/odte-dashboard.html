@@ -928,8 +928,21 @@
       background: var(--blue);
     }
 
+    .be-block.half {
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+
+    .be-bar {
+      width: 3px;
+      height: 13px;
+      border-radius: 2px;
+      background: var(--blue);
+    }
+
     .be-block.red { background: var(--red); }
     .be-block.green { background: var(--green); }
+    .be-bar.red { background: var(--red); }
+    .be-bar.green { background: var(--green); }
 
     .be-value {
       width: 30px;
@@ -1988,15 +2001,19 @@
 
     function beBlocks(score) {
       const abs = Math.abs(Number(score || 0));
-      if (abs <= 10) return 1;
-      if (abs >= 150) return 5;
-      return Math.max(1, Math.ceil(abs / 25));
+      if (abs < 22) return { mode: "bars", count: Math.max(0, Math.round(abs / 5)) };
+      return { mode: "blocks", count: Math.max(1, Math.round((abs / 25) * 2) / 2) };
     }
 
     function renderBeBlockCell(score) {
       const value = Number(score || 0);
       const color = Math.abs(value) <= 10 ? "green" : value < 0 ? "red" : "";
-      const blocks = Array.from({ length: beBlocks(value) }, () => `<span class="be-block ${color}"></span>`).join("");
+      const visual = beBlocks(value);
+      const fullBlocks = visual.mode === "blocks" ? Math.floor(visual.count) : 0;
+      const hasHalf = visual.mode === "blocks" && visual.count % 1 !== 0;
+      const blocks = visual.mode === "bars"
+        ? Array.from({ length: visual.count }, () => `<span class="be-bar ${color}"></span>`).join("")
+        : `${Array.from({ length: fullBlocks }, () => `<span class="be-block ${color}"></span>`).join("")}${hasHalf ? `<span class="be-block half ${color}"></span>` : ""}`;
       return `
         <div class="be-block-cell">
           <div class="be-blocks">${blocks}</div>
