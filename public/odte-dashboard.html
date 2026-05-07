@@ -905,53 +905,40 @@
       text-transform: uppercase;
     }
 
-    .be-block-cell {
+    .be-wall-cell {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 2px;
       min-width: 0;
+      height: 17px;
     }
 
-    .be-blocks {
+    .be-wall-track {
       display: flex;
-      flex-direction: row-reverse;
-      gap: 3px;
-      min-width: 62px;
-      justify-content: flex-start;
-    }
-
-    .be-box {
-      width: 56px;
-      height: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.72);
-      border-radius: 2px;
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      justify-content: flex-end;
       align-items: center;
-      direction: rtl;
-      padding: 0 1px;
-      background: rgba(255, 255, 255, 0.03);
+      width: 68px;
+      height: 14px;
     }
 
-    .be-tick {
-      width: 2px;
-      height: 10px;
+    .be-wall-bar {
+      height: 14px;
       border-radius: 2px;
-      justify-self: center;
       background: var(--blue);
-    }
-
-    .be-tick.red { background: var(--red); }
-    .be-tick.green { background: var(--green); }
-    .be-tick.empty { visibility: hidden; }
-
-    .be-value {
-      width: 30px;
-      text-align: right;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 3px;
       font-size: 10px;
-      font-weight: 900;
+      font-weight: 1000;
+      line-height: 1;
+      overflow: hidden;
+      white-space: nowrap;
     }
+
+    .be-wall-bar.red { background: var(--red); }
+    .be-wall-bar.green { background: var(--green); color: #001b0c; }
 
     .sent-line {
       position: relative;
@@ -2001,32 +1988,16 @@
       return `${value < 0 ? "-" : ""}${scaled}`;
     }
 
-    function beBlocks(score) {
-      const abs = Math.abs(Number(score || 0));
-      const ticks = Math.ceil(abs / 10);
-      return {
-        ticks,
-        boxes: ticks > 0 ? Math.ceil(ticks / 10) : 0
-      };
-    }
-
-    function renderBeBlockCell(score) {
+    function renderBeWallCell(score, maxBe) {
       const value = Number(score || 0);
       const color = Math.abs(value) <= 10 ? "green" : value < 0 ? "red" : "";
-      const visual = beBlocks(value);
-      const boxes = Array.from({ length: visual.boxes }, (_, boxIndex) => {
-        const filled = Math.max(0, Math.min(10, visual.ticks - (boxIndex * 10)));
-        const ticks = Array.from({ length: 10 }, (_, tickIndex) =>
-          tickIndex < filled
-            ? `<span class="be-tick ${color}"></span>`
-            : `<span class="be-tick empty"></span>`
-        ).join("");
-        return `<span class="be-box">${ticks}</span>`;
-      }).join("");
+      const width = value === 0 ? 0 : Math.max(20, Math.min(68, Math.abs(value) / Math.max(1, maxBe) * 68));
+      const label = value.toFixed(Math.abs(value) < 10 && value !== 0 ? 2 : 0);
       return `
-        <div class="be-block-cell">
-          <div class="be-blocks">${boxes}</div>
-          <div class="be-value ${color || "blue"}">${value.toFixed(Math.abs(value) < 10 && value !== 0 ? 2 : 0)}</div>
+        <div class="be-wall-cell">
+          <div class="be-wall-track">
+            ${value === 0 ? "" : `<div class="be-wall-bar ${color}" style="width:${width}px;">${label}</div>`}
+          </div>
         </div>`;
     }
 
@@ -2038,13 +2009,14 @@
       const beByStrike = new Map(beSource.map(([strike, score]) => [Number(strike), Number(score || 0)]));
       const visibleRows = rowsNearSpot(sentimentSource, 41);
       const max = Math.max(1, ...visibleRows.map(([, value]) => Math.abs(value)));
+      const maxBe = Math.max(1, ...visibleRows.map(([strike]) => Math.abs(beByStrike.get(Number(strike)) || 0)));
       grid.innerHTML = visibleRows.map(([strike, value]) => {
         const width = Math.max(2, Math.abs(value) / max * 100);
         const cls = value < 0 ? "sent-red" : "sent-green";
         return `
           <div class="strike">${strike}</div>
           <div class="sent-line"><div class="${cls}" style="width:${width}%;">${formatPressure(value)}</div></div>
-          ${renderBeBlockCell(beByStrike.get(Number(strike)) || 0)}`;
+          ${renderBeWallCell(beByStrike.get(Number(strike)) || 0, maxBe)}`;
       }).join("");
     }
 
