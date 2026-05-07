@@ -917,33 +917,34 @@
       display: flex;
       flex-direction: row-reverse;
       gap: 3px;
-      min-width: 68px;
+      min-width: 62px;
       justify-content: flex-start;
     }
 
     .be-box {
-      width: 28px;
+      width: 56px;
       height: 14px;
       border: 1px solid rgba(255, 255, 255, 0.72);
       border-radius: 2px;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(10, 1fr);
       align-items: center;
+      direction: rtl;
       padding: 0 1px;
       background: rgba(255, 255, 255, 0.03);
     }
 
-    .be-slash {
-      color: var(--blue);
-      font-size: 11px;
-      font-weight: 1000;
-      line-height: 1;
-      text-align: center;
+    .be-tick {
+      width: 2px;
+      height: 10px;
+      border-radius: 2px;
+      justify-self: center;
+      background: var(--blue);
     }
 
-    .be-slash.red { color: var(--red); }
-    .be-slash.green { color: var(--green); }
-    .be-slash.empty { visibility: hidden; }
+    .be-tick.red { background: var(--red); }
+    .be-tick.green { background: var(--green); }
+    .be-tick.empty { visibility: hidden; }
 
     .be-value {
       width: 30px;
@@ -2002,10 +2003,10 @@
 
     function beBlocks(score) {
       const abs = Math.abs(Number(score || 0));
-      const slashes = Math.ceil(abs / 10);
+      const ticks = Math.ceil(abs / 10);
       return {
-        slashes,
-        boxes: slashes > 0 ? Math.ceil(slashes / 5) : 0
+        ticks,
+        boxes: ticks > 0 ? Math.ceil(ticks / 10) : 0
       };
     }
 
@@ -2014,13 +2015,13 @@
       const color = Math.abs(value) <= 10 ? "green" : value < 0 ? "red" : "";
       const visual = beBlocks(value);
       const boxes = Array.from({ length: visual.boxes }, (_, boxIndex) => {
-        const filled = Math.max(0, Math.min(5, visual.slashes - (boxIndex * 5)));
-        const slashes = Array.from({ length: 5 }, (_, slashIndex) =>
-          slashIndex < filled
-            ? `<span class="be-slash ${color}">/</span>`
-            : `<span class="be-slash empty">/</span>`
+        const filled = Math.max(0, Math.min(10, visual.ticks - (boxIndex * 10)));
+        const ticks = Array.from({ length: 10 }, (_, tickIndex) =>
+          tickIndex < filled
+            ? `<span class="be-tick ${color}"></span>`
+            : `<span class="be-tick empty"></span>`
         ).join("");
-        return `<span class="be-box">${slashes}</span>`;
+        return `<span class="be-box">${ticks}</span>`;
       }).join("");
       return `
         <div class="be-block-cell">
