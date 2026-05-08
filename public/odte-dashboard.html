@@ -186,6 +186,19 @@
       gap: 12px;
     }
 
+    .main.compact-tape {
+      grid-template-columns: 700px minmax(760px, 1fr) 150px;
+    }
+
+    .main.compact-tape .source-panel {
+      display: none;
+    }
+
+    .main.compact-tape .combo-scale,
+    .main.compact-tape .combo-grid {
+      grid-template-columns: 64px minmax(260px, 1fr) minmax(260px, 1fr);
+    }
+
     .panel {
       min-height: 0;
       overflow: hidden;
@@ -238,6 +251,17 @@
       border-color: rgba(255, 189, 47, 0.35);
       background: rgba(255, 189, 47, 0.12);
       color: #ffd579;
+    }
+
+    .chip.button-chip {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .chip.button-chip.active {
+      border-color: rgba(47, 200, 99, 0.65);
+      background: rgba(47, 200, 99, 0.18);
+      color: #8df2ae;
     }
 
     .ladder {
@@ -1061,8 +1085,8 @@
       </div>
     </section>
 
-    <section class="main">
-      <aside class="panel">
+    <section class="main" id="mainGrid">
+      <aside class="panel source-panel">
         <div class="panel-head">
           <div>
             <div class="panel-title">BE PRESSURE MAP</div>
@@ -1073,7 +1097,7 @@
         <div class="ladder" id="beLadder"></div>
       </aside>
 
-      <aside class="panel">
+      <aside class="panel source-panel">
         <div class="panel-head">
           <div>
             <div class="panel-title">SENTIMENT PRESSURE</div>
@@ -1096,7 +1120,7 @@
             <div class="panel-title">TAPE + WALLS</div>
             <div class="label">Sentiment read with BE wall blocks</div>
           </div>
-          <span class="chip amber">Test</span>
+          <button type="button" class="chip amber button-chip" id="compactTapeToggle">Compact Tape</button>
         </div>
         <div class="sentiment-body">
           <div class="combo-scale">
@@ -1870,6 +1894,14 @@
       });
     }
 
+    function setCompactTape(enabled) {
+      const isEnabled = Boolean(enabled);
+      document.getElementById("mainGrid").classList.toggle("compact-tape", isEnabled);
+      document.getElementById("compactTapeToggle").classList.toggle("active", isEnabled);
+      localStorage.setItem("odteCompactTape", isEnabled ? "1" : "0");
+      renderCombo();
+    }
+
     function applyPinbox(data) {
       const rec = data.recommendation || {};
       const liveRows = Array.isArray(data.chain) && data.chain.length > 0;
@@ -2054,6 +2086,9 @@
     document.querySelectorAll("#regimeToggle button").forEach((button) => {
       button.addEventListener("click", () => setRegime(button.dataset.regime));
     });
+    document.getElementById("compactTapeToggle").addEventListener("click", () => {
+      setCompactTape(!document.getElementById("mainGrid").classList.contains("compact-tape"));
+    });
     document.getElementById("rowLimitSelect").addEventListener("change", (event) => {
       document.getElementById("rowLimitCustom").value = "";
       setRowLimit(event.target.value);
@@ -2095,6 +2130,7 @@
     renderOpenTrades();
     setBottomTab(activeBottomTab);
     setRegimeButtons(selectedRegime, false);
+    setCompactTape(localStorage.getItem("odteCompactTape") === "1");
     loadPinbox();
     refreshTimer = setInterval(loadPinbox, 5000);
 
