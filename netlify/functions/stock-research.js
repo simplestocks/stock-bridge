@@ -1,7 +1,19 @@
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async (event, context) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
@@ -9,15 +21,34 @@ exports.handler = async (event, context) => {
   try {
     const body = JSON.parse(event.body);
     const ticker = body.ticker;
+    const researchQuestion = body.question || 'What matters most before putting money to work?';
     
     if (!ticker) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ error: 'Ticker symbol required' })
       };
     }
 
     const alphaVantageApiKey = process.env.ALPHA_VANTAGE_API_KEY;
+    const claudeApiKey = process.env.CLAUDE_API_KEY;
+    const claudeModel = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+
+    if (!alphaVantageApiKey || !claudeApiKey) {
+      return {
+        statusCode: 503,
+        headers,
+        body: JSON.stringify({
+          error: 'Research backend is missing required environment variables',
+          env: {
+            ALPHA_VANTAGE_API_KEY: Boolean(alphaVantageApiKey),
+            CLAUDE_API_KEY: Boolean(claudeApiKey)
+          }
+        })
+      };
+    }
+
     console.log('Starting analysis for ticker:', ticker);
 
     // Build API URLs - only 3 calls
@@ -83,17 +114,28 @@ ANALYST CONSENSUS:
 
 Operating Cash Flow: $${latestCashFlow.operatingCashflow || 'N/A'}
 
-Provide professional trading analysis for subscribers with comprehensive valuation insights.`;
+USER RESEARCH QUESTION:
+${researchQuestion}
+
+Write a concise SimpleStocks market research brief. Include:
+1. What the company does
+2. How it makes money
+3. Industry and competitor context
+4. Bull case
+5. Bear case
+6. Hidden risks
+7. What changed recently
+8. Final decision brief`;
 
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.CLAUDE_API_KEY,
+        'x-api-key': claudeApiKey,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: claudeModel,
         max_tokens: 1500,
         messages: [{
           role: 'user',
@@ -104,13 +146,20 @@ Provide professional trading analysis for subscribers with comprehensive valuati
 
     const claudeData = await claudeResponse.json();
 
+    if (!claudeResponse.ok) {
+      return {
+        statusCode: claudeResponse.status,
+        headers,
+        body: JSON.stringify({
+          error: 'Claude research request failed',
+          details: claudeData.error?.message || claudeData
+        })
+      };
+    }
+
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST'
-      },
+      headers,
       body: JSON.stringify({
         research: claudeData.content?.[0]?.text || 'Analysis failed',
         ticker: ticker,
@@ -148,11 +197,7 @@ Provide professional trading analysis for subscribers with comprehensive valuati
     console.error('Function error:', error);
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST'
-      },
+      headers,
       body: JSON.stringify({ 
         error: 'Analysis failed', 
         details: error.message 
