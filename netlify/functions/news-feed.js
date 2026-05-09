@@ -60,19 +60,15 @@ exports.handler = async function(event) {
       };
     }
 
-    const keywordTerms = parseTerms(keyword).map(t => t.toLowerCase());
-    const feed = Array.isArray(data.feed) ? data.feed : [];
-    const items = feed
-      .filter(item => {
-        if (!keywordTerms.length) return true;
-        const hay = `${item.title || ''} ${item.summary || ''} ${item.source || ''}`.toLowerCase();
-        return keywordTerms.some(term => hay.includes(term.toLowerCase()));
-      })
-      .slice(0, limit)
+  const keywordTerms = parseTerms(keyword).map(t => t.toLowerCase());
+  const feed = Array.isArray(data.feed) ? data.feed : [];
+    let items = feed
       .map((item, idx) => {
         const tickerSentiment = (item.ticker_sentiment || []).find(t => String(t.ticker || '').toUpperCase() === ticker);
         const score = Number(tickerSentiment?.ticker_sentiment_score ?? item.overall_sentiment_score ?? 0);
         const sentiment = score > 0.15 ? 'Bullish' : score < -0.15 ? 'Bearish' : 'Neutral';
+        const hay = `${item.title || ''} ${item.summary || ''} ${item.source || ''}`.toLowerCase();
+        const matchedTerms = keywordTerms.filter(term => hay.includes(term));
         return {
           id: `${Date.now()}-${idx}`,
           time: normalizeTime(item.time_published),
@@ -83,11 +79,19 @@ exports.handler = async function(event) {
           url: item.url || '',
           sentiment,
           score,
-          why: keywordTerms.length
-            ? `Matched ${ticker} and keyword filter: ${keyword}`
+          matched: matchedTerms.length > 0,
+          why: matchedTerms.length
+            ? `Matched ${ticker} and keyword: ${matchedTerms.join(', ')}`
             : `Matched ${ticker} news feed`
         };
       });
+
+    if (keywordTerms.length) {
+      const exact = items.filter(item => item.matched);
+      items = (exact.length ? exact : items).slice(0, limit);
+    } else {
+      items = items.slice(0, limit);
+    }
 
     return {
       statusCode: 200,
