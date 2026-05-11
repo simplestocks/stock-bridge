@@ -1098,6 +1098,13 @@
               <option value="SPX">SPX</option>
               <option value="RUT">RUT</option>
             </select>
+            <span class="label">DTE</span>
+            <select id="dteSelect">
+              <option value="0">0DTE</option>
+              <option value="1">1DTE</option>
+              <option value="2">2DTE</option>
+              <option value="3">3DTE</option>
+            </select>
             <span class="label">Rows</span>
             <select id="rowLimitSelect">
               <option value="10">10</option>
@@ -1148,6 +1155,7 @@
             <div class="label">Sentiment read with BE wall blocks</div>
           </div>
           <div class="wall-header-actions">
+            <span class="chip amber" id="skewChip">Skew --</span>
             <button type="button" class="font-chip" id="wallFontDown" title="Smaller BE labels">A-</button>
             <button type="button" class="font-chip" id="wallFontUp" title="Bigger BE labels">A+</button>
             <button type="button" class="chip amber button-chip" id="compactTapeToggle">Compact Tape</button>
@@ -1302,6 +1310,8 @@
     const TICKER_SYMBOLS = { SPX: "$SPX", RUT: "$RUT" };
     let selectedRegime = localStorage.getItem("odteRegime") || "bullish";
     let selectedTicker = localStorage.getItem("odteTicker") || "SPX";
+    let selectedDte = Number(localStorage.getItem("odteDte") || 0);
+    if (!Number.isFinite(selectedDte) || selectedDte < 0 || selectedDte > 3) selectedDte = 0;
     let rowLimit = Number(localStorage.getItem("odteRowLimit") || 20);
     let lastChainRows = [];
     let stagedLegs = [];
@@ -1945,7 +1955,8 @@
       const spx = Number(data.spx_price || 0);
       const responseTicker = (data.symbol || TICKER_SYMBOLS[selectedTicker] || "$SPX").replace("$", "");
       if (responseTicker !== selectedTicker && TICKER_SYMBOLS[responseTicker]) selectedTicker = responseTicker;
-      document.getElementById("tickerTitle").textContent = `${selectedTicker} 0DTE`;
+      const responseDte = Number.isFinite(Number(data.dte)) ? Number(data.dte) : selectedDte;
+      document.getElementById("tickerTitle").textContent = `${selectedTicker} ${responseDte}DTE`;
       document.getElementById("priceLabel").textContent = `Current ${selectedTicker}`;
       const center = rec.center || 7250;
       const zone = rec.zone && rec.zone.length === 2 ? rec.zone : [7245, 7255];
@@ -2008,7 +2019,7 @@
       setRegimeButtons(selectedRegime, true);
       try {
         const symbol = TICKER_SYMBOLS[selectedTicker] || "$SPX";
-        const url = `${PINBOX_BASE_URL}?symbol=${encodeURIComponent(symbol)}&regime=${encodeURIComponent(selectedRegime)}&t=${Date.now()}`;
+        const url = `${PINBOX_BASE_URL}?symbol=${encodeURIComponent(symbol)}&regime=${encodeURIComponent(selectedRegime)}&dte=${encodeURIComponent(selectedDte)}&t=${Date.now()}`;
         const response = await fetch(url, { cache: "no-store" });
         const data = await response.json();
         applyPinbox(data);
@@ -2033,11 +2044,20 @@
       selectedTicker = TICKER_SYMBOLS[ticker] ? ticker : "SPX";
       localStorage.setItem("odteTicker", selectedTicker);
       document.getElementById("tickerSelect").value = selectedTicker;
-      document.getElementById("tickerTitle").textContent = `${selectedTicker} 0DTE`;
+      document.getElementById("tickerTitle").textContent = `${selectedTicker} ${selectedDte}DTE`;
       document.getElementById("priceLabel").textContent = `Current ${selectedTicker}`;
       lastChainRows = [];
       stagedLegs = [];
       renderOpenTrades();
+      loadPinbox();
+    }
+
+    function setDte(value) {
+      const parsed = Number(value);
+      selectedDte = Number.isFinite(parsed) ? Math.max(0, Math.min(3, Math.round(parsed))) : 0;
+      localStorage.setItem("odteDte", selectedDte);
+      document.getElementById("dteSelect").value = String(selectedDte);
+      document.getElementById("tickerTitle").textContent = `${selectedTicker} ${selectedDte}DTE`;
       loadPinbox();
     }
 
@@ -2080,11 +2100,45 @@
       return Math.max(sorted[Math.floor(sorted.length * 0.9)] || sorted[sorted.length - 1], 1);
     }
 
+    function valleyCenter(rows, threshold = null) {
+      const normalized = (Array.isArray(rows) ? rows : [])
+        .map((row) => [Number(row[0]), Number(row[1] || 0)])
+        .filter(([strike, value]) => Number.isFinite(strike) && Number.isFinite(value));
+      if (!normalized.length) return null;
+      let pool = threshold === null ? [] : normalized.filter(([, value]) => Math.abs(value) <= threshold);
+      if (!pool.length) {
+        pool = [...normalized]
+          .sort((a, b) => Math.abs(a[1]) - Math.abs(b[1]))
+          .slice(0, Math.min(5, normalized.length));
+      }
+      const weighted = pool.reduce((acc, [strike, value]) => {
+        const weight = 1 / (Math.abs(value) + 1);
+        acc.total += strike * weight;
+        acc.weight += weight;
+        return acc;
+      }, { total: 0, weight: 0 });
+      return weighted.weight ? weighted.total / weighted.weight : null;
+    }
+
+    function updateSkew(sentimentSource, beSource) {
+      const chip = document.getElementById("skewChip");
+      if (!chip) return;
+      const sentimentCenter = valleyCenter(rowsNearSpot(sentimentSource, 41));
+      const beCenter = valleyCenter(rowsNearSpot(beSource, 41), 10);
+      if (!Number.isFinite(sentimentCenter) || !Number.isFinite(beCenter)) {
+        chip.textContent = "Skew --";
+        return;
+      }
+      const skew = Math.round(beCenter - sentimentCenter);
+      chip.textContent = `Skew ${skew > 0 ? "+" : ""}${skew}`;
+    }
+
     function renderCombo() {
       const grid = document.getElementById("comboGrid");
       if (!grid) return;
       const sentimentSource = activeSentimentRows.length ? activeSentimentRows : normalizeSentimentRows(sentimentRows);
       const beSource = activeBeRows.length ? activeBeRows : normalizeBeRows(beRows);
+      updateSkew(sentimentSource, beSource);
       const beByStrike = new Map(beSource.map(([strike, score]) => [Number(strike), Number(score || 0)]));
       const visibleRows = rowsNearSpot(sentimentSource, 41);
       const max = Math.max(1, ...visibleRows.map(([, value]) => Math.abs(value)));
@@ -2139,6 +2193,9 @@
     document.getElementById("tickerSelect").addEventListener("change", (event) => {
       setTicker(event.target.value);
     });
+    document.getElementById("dteSelect").addEventListener("change", (event) => {
+      setDte(event.target.value);
+    });
     document.getElementById("rowLimitCustom").addEventListener("change", (event) => {
       if (event.target.value) setRowLimit(event.target.value);
     });
@@ -2164,7 +2221,8 @@
     renderBe();
     renderPain();
     document.getElementById("tickerSelect").value = TICKER_SYMBOLS[selectedTicker] ? selectedTicker : "SPX";
-    document.getElementById("tickerTitle").textContent = `${selectedTicker} 0DTE`;
+    document.getElementById("dteSelect").value = String(selectedDte);
+    document.getElementById("tickerTitle").textContent = `${selectedTicker} ${selectedDte}DTE`;
     document.getElementById("priceLabel").textContent = `Current ${selectedTicker}`;
     document.getElementById("rowLimitSelect").value = ["10", "20", "30", "40", "50"].includes(String(rowLimit)) ? String(rowLimit) : "20";
     if (!["10", "20", "30", "40", "50"].includes(String(rowLimit))) document.getElementById("rowLimitCustom").value = rowLimit;
