@@ -18,6 +18,7 @@
       --green: #2fc863;
       --amber: #ffbd2f;
       --cyan: #31d6ff;
+      --tape-wall-font-size: 10px;
     }
 
     .toggle button.loading {
@@ -262,6 +263,32 @@
       border-color: rgba(47, 200, 99, 0.65);
       background: rgba(47, 200, 99, 0.18);
       color: #8df2ae;
+    }
+
+    .wall-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .font-chip {
+      min-width: 28px;
+      min-height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-2);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 950;
+      line-height: 1;
+      padding: 0 7px;
+    }
+
+    .font-chip:hover {
+      border-color: rgba(255, 189, 47, 0.7);
+      color: var(--amber);
     }
 
     .ladder {
@@ -954,7 +981,7 @@
       align-items: center;
       justify-content: flex-end;
       padding: 0 3px;
-      font-size: 10px;
+      font-size: var(--tape-wall-font-size);
       font-weight: 1000;
       line-height: 1;
       overflow: hidden;
@@ -1120,7 +1147,11 @@
             <div class="panel-title">TAPE + WALLS</div>
             <div class="label">Sentiment read with BE wall blocks</div>
           </div>
-          <button type="button" class="chip amber button-chip" id="compactTapeToggle">Compact Tape</button>
+          <div class="wall-header-actions">
+            <button type="button" class="font-chip" id="wallFontDown" title="Smaller BE labels">A-</button>
+            <button type="button" class="font-chip" id="wallFontUp" title="Bigger BE labels">A+</button>
+            <button type="button" class="chip amber button-chip" id="compactTapeToggle">Compact Tape</button>
+          </div>
         </div>
         <div class="sentiment-body">
           <div class="combo-scale">
@@ -1902,6 +1933,12 @@
       renderCombo();
     }
 
+    function setTapeWallFont(size) {
+      const next = Math.max(8, Math.min(14, Number(size) || 10));
+      document.documentElement.style.setProperty("--tape-wall-font-size", `${next}px`);
+      localStorage.setItem("odteTapeWallFont", String(next));
+    }
+
     function applyPinbox(data) {
       const rec = data.recommendation || {};
       const liveRows = Array.isArray(data.chain) && data.chain.length > 0;
@@ -2089,6 +2126,12 @@
     document.getElementById("compactTapeToggle").addEventListener("click", () => {
       setCompactTape(!document.getElementById("mainGrid").classList.contains("compact-tape"));
     });
+    document.getElementById("wallFontDown").addEventListener("click", () => {
+      setTapeWallFont((Number(localStorage.getItem("odteTapeWallFont")) || 10) - 1);
+    });
+    document.getElementById("wallFontUp").addEventListener("click", () => {
+      setTapeWallFont((Number(localStorage.getItem("odteTapeWallFont")) || 10) + 1);
+    });
     document.getElementById("rowLimitSelect").addEventListener("change", (event) => {
       document.getElementById("rowLimitCustom").value = "";
       setRowLimit(event.target.value);
@@ -2130,6 +2173,7 @@
     renderOpenTrades();
     setBottomTab(activeBottomTab);
     setRegimeButtons(selectedRegime, false);
+    setTapeWallFont(Number(localStorage.getItem("odteTapeWallFont")) || 10);
     setCompactTape(localStorage.getItem("odteCompactTape") === "1");
     loadPinbox();
     refreshTimer = setInterval(loadPinbox, 5000);
