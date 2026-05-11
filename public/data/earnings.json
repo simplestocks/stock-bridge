@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T23:35:51.440565-07:00",
+  "generated_at": "2026-05-11T05:49:43.029579-07:00",
   "week_start": "2026-05-11",
   "week_end": "2026-05-15",
   "min_market_cap": 10000000000,
@@ -70,12 +70,6 @@
         "name": "Fox Corporation",
         "market_cap": 24034878407,
         "when": "BMO"
-      },
-      {
-        "symbol": "SBS",
-        "name": "Companhia de saneamento Basico Do Estado De Sao Paulo - Sabesp",
-        "market_cap": 22451281739,
-        "when": "OTH"
       },
       {
         "symbol": "STE",
@@ -220,12 +214,6 @@
         "when": "OTH"
       },
       {
-        "symbol": "SONY",
-        "name": "Sony Group Corporation",
-        "market_cap": 119837295648,
-        "when": "OTH"
-      },
-      {
         "symbol": "MFC",
         "name": "Manulife Financial Corp",
         "market_cap": 66467749264,
@@ -244,6 +232,12 @@
         "when": "BMO"
       },
       {
+        "symbol": "EC",
+        "name": "Ecopetrol S.A.",
+        "market_cap": 26725851555,
+        "when": "OTH"
+      },
+      {
         "symbol": "TSEM",
         "name": "Tower Semiconductor Ltd.",
         "market_cap": 23693238240,
@@ -260,6 +254,12 @@
         "name": "Dynatrace, Inc.",
         "market_cap": 12040397472,
         "when": "BMO"
+      },
+      {
+        "symbol": "AG",
+        "name": "First Majestic Silver Corp.",
+        "market_cap": 10477980221,
+        "when": "OTH"
       },
       {
         "symbol": "STN",
@@ -286,12 +286,6 @@
         "name": "Applied Materials, Inc.",
         "market_cap": 325887955785,
         "when": "AMC"
-      },
-      {
-        "symbol": "TM",
-        "name": "Toyota Motor Corp Ltd Ord",
-        "market_cap": 246624772653,
-        "when": "OTH"
       },
       {
         "symbol": "BN",
@@ -369,6 +363,6 @@
       }
     ]
   },
-  "earnings_text": "Mon May 11: CEG B CRCL FOX FOXA KSPI | SPG ASTS STE OVV ACM (PBR PBR.A VIV IX SBS)\nTue May 12: SE JD Q VG ONON MAIR TME TIGO ARMK ZBRA | FNV NXT JBS OKLO (NU HMC)\nWed May 13: BABA TAK NBIS TSEM DT | CSCO MFC STN AES (SMFG SONY TLK ICLR)\nThu May 14: BN VIK NVMI FPS LGN KLAR | AMAT BAP FIG (TM BNT QXO)\nFri May 15: RBC HTHT | \u2014",
+  "earnings_text": "Mon May 11: CEG B CRCL FOX FOXA KSPI | SPG ASTS STE OVV ACM (PBR PBR.A VIV IX)\nTue May 12: SE JD Q VG ONON MAIR TME TIGO ARMK ZBRA | FNV NXT JBS OKLO (NU HMC)\nWed May 13: BABA TAK NBIS TSEM DT | CSCO MFC STN AES (SMFG EC TLK AG ICLR)\nThu May 14: BN VIK NVMI FPS LGN KLAR | AMAT BAP FIG (BNT QXO)\nFri May 15: RBC HTHT | \u2014",
   "errors": []
 }
