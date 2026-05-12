@@ -1994,12 +1994,8 @@
             Number(row.pin || 0),
             classifyChainRow(row, center, zone)
           ]);
-        const chainBeRows = data.chain.map((row) => ({
-          strike: Number(row.strike),
-          be_score: Number(row.be_score || 0)
-        }));
         visibleRows = chain;
-        renderBe(chainBeRows.length ? chainBeRows : data.be_rows || beRows);
+        renderBe(data.be_rows || beRows);
         renderSentiment(data.sentiment_rows || sentimentRows);
         const bestLive = bestPinFromRows(visibleRows, true);
         if (bestLive) document.getElementById("confidenceValue").textContent = `${bestLive.pin}/100 @ ${bestLive.strike}`;
