@@ -1318,8 +1318,7 @@
     const TICKER_SYMBOLS = { SPX: "$SPX", RUT: "$RUT" };
     let selectedRegime = localStorage.getItem("odteRegime") || "bullish";
     let selectedTicker = localStorage.getItem("odteTicker") || "SPX";
-    let selectedDte = Number(localStorage.getItem("odteDte") || 0);
-    if (!Number.isFinite(selectedDte) || selectedDte < 0 || selectedDte > 3) selectedDte = 0;
+    let selectedDte = 0;
     let rowLimit = Number(localStorage.getItem("odteRowLimit") || 20);
     let lastChainRows = [];
     let stagedLegs = [];
@@ -1995,14 +1994,18 @@
             Number(row.pin || 0),
             classifyChainRow(row, center, zone)
           ]);
+        const chainBeRows = data.chain.map((row) => ({
+          strike: Number(row.strike),
+          be_score: Number(row.be_score || 0)
+        }));
         visibleRows = chain;
-        renderBe(data.be_rows || beRows);
+        renderBe(chainBeRows.length ? chainBeRows : data.be_rows || beRows);
         renderSentiment(data.sentiment_rows || sentimentRows);
         const bestLive = bestPinFromRows(visibleRows, true);
         if (bestLive) document.getElementById("confidenceValue").textContent = `${bestLive.pin}/100 @ ${bestLive.strike}`;
         lastChainRows = chain;
         renderChain(chain);
-        document.getElementById("dataStatus").textContent = "LIVE: Magix chain loaded.";
+        document.getElementById("dataStatus").textContent = `LIVE: Magix chain loaded. Exp ${data.expiration || "today"}.`;
         document.getElementById("pinMapStatus").textContent = "Live";
         document.getElementById("monitorStatus").textContent = "Live";
         document.getElementById("positionStatus").textContent = `Pin center ${center} · Live data`;
@@ -2128,10 +2131,34 @@
       return weighted.weight ? weighted.total / weighted.weight : null;
     }
 
+    function sentimentBalanceCenter(rows) {
+      const spx = Number(document.getElementById("spxValue")?.textContent || 0);
+      const normalized = (Array.isArray(rows) ? rows : [])
+        .map((row) => [Number(row[0]), Number(row[1] || 0)])
+        .filter(([strike, value]) => Number.isFinite(strike) && Number.isFinite(value))
+        .sort((a, b) => a[0] - b[0]);
+      if (!normalized.length) return null;
+      const crosses = [];
+      for (let i = 1; i < normalized.length; i += 1) {
+        const [prevStrike, prevValue] = normalized[i - 1];
+        const [strike, value] = normalized[i];
+        if (prevValue === 0) crosses.push(prevStrike);
+        if ((prevValue < 0 && value > 0) || (prevValue > 0 && value < 0)) {
+          const span = Math.abs(prevValue) + Math.abs(value);
+          crosses.push(span ? prevStrike + ((strike - prevStrike) * Math.abs(prevValue) / span) : strike);
+        }
+      }
+      if (crosses.length) {
+        const focus = spx > 0 ? spx : normalized[Math.floor(normalized.length / 2)][0];
+        return crosses.sort((a, b) => Math.abs(a - focus) - Math.abs(b - focus))[0];
+      }
+      return valleyCenter(rowsNearSpot(normalized, 15));
+    }
+
     function updateSkew(sentimentSource, beSource) {
       const chip = document.getElementById("skewChip");
       if (!chip) return;
-      const sentimentCenter = valleyCenter(rowsNearSpot(sentimentSource, 41));
+      const sentimentCenter = sentimentBalanceCenter(rowsNearSpot(sentimentSource, 41));
       const beCenter = valleyCenter(rowsNearSpot(beSource, 41), 10);
       if (!Number.isFinite(sentimentCenter) || !Number.isFinite(beCenter)) {
         chip.textContent = "Skew --";
