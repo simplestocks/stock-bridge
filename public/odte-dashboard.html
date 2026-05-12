@@ -2170,17 +2170,18 @@
       const sentimentSource = activeSentimentRows.length ? activeSentimentRows : normalizeSentimentRows(sentimentRows);
       const beSource = activeBeRows.length ? activeBeRows : normalizeBeRows(beRows);
       updateSkew(sentimentSource, beSource);
-      const beByStrike = new Map(beSource.map(([strike, score]) => [Number(strike), Number(score || 0)]));
-      const visibleRows = rowsNearSpot(sentimentSource, 41);
-      const max = Math.max(1, ...visibleRows.map(([, value]) => Math.abs(value)));
-      const maxBe = visualScaleMax(visibleRows.map(([strike]) => beByStrike.get(Number(strike)) || 0));
-      grid.innerHTML = visibleRows.map(([strike, value]) => {
-        const width = Math.max(2, Math.abs(value) / max * 100);
+      const sentimentByStrike = new Map(sentimentSource.map(([strike, value]) => [Number(strike), Number(value || 0)]));
+      const visibleRows = rowsNearSpot(beSource, 41);
+      const max = Math.max(1, ...visibleRows.map(([strike]) => Math.abs(sentimentByStrike.get(Number(strike)) || 0)));
+      const maxBe = visualScaleMax(visibleRows.map(([, score]) => score || 0));
+      grid.innerHTML = visibleRows.map(([strike, score]) => {
+        const value = sentimentByStrike.get(Number(strike)) || 0;
+        const width = value === 0 ? 0 : Math.max(2, Math.abs(value) / max * 100);
         const cls = value < 0 ? "sent-red" : "sent-green";
         return `
           <div class="strike">${strike}</div>
-          <div class="sent-line"><div class="${cls}" style="width:${width}%;">${formatPressure(value)}</div></div>
-          ${renderBeWallCell(beByStrike.get(Number(strike)) || 0, maxBe)}`;
+          <div class="sent-line">${value === 0 ? "" : `<div class="${cls}" style="width:${width}%;">${formatPressure(value)}</div>`}</div>
+          ${renderBeWallCell(score || 0, maxBe)}`;
       }).join("");
     }
 
