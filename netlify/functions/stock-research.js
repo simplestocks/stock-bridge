@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -9,6 +10,10 @@ exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
 
   if (event.httpMethod !== 'POST') {
     return {
@@ -205,3 +210,6 @@ Write a concise SimpleStocks market research brief. Include:
     };
   }
 };
+
+
+

@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -21,6 +22,10 @@ function normalizeTime(raw) {
 
 exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
   if (event.httpMethod !== 'GET') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
@@ -102,3 +107,6 @@ exports.handler = async function(event) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
   }
 };
+
+
+

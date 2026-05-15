@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 // netlify/functions/send-to-squarespace.js
 // Accepts a morning-note payload from alerts.html, creates a Squarespace
 // DRAFT via the internal API, then queues the result to GitHub.
@@ -226,6 +227,10 @@ exports.handler = async function(event) {
       body: ''
     };
   }
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -329,3 +334,6 @@ exports.handler = async function(event) {
     };
   }
 };
+
+
+

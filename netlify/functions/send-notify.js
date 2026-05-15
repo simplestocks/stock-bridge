@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 // netlify/functions/send-notify.js
 // Sends a real email via Gmail SMTP using nodemailer + App Password.
 // Called by the scheduled task (or any other Netlify function) to notify Nic
@@ -13,6 +14,10 @@
 const nodemailer = require('nodemailer');
 
 exports.handler = async function(event) {
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -81,3 +86,6 @@ exports.handler = async function(event) {
     };
   }
 };
+
+
+

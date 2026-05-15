@@ -1,4 +1,5 @@
 const https = require('https');
+const { requireAdmin } = require('./require-admin');
 
 function httpsRequest(url, method, body) {
   return new Promise((resolve, reject) => {
@@ -28,6 +29,10 @@ function httpsRequest(url, method, body) {
 }
 
 exports.handler = async function(event) {
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -71,3 +76,6 @@ exports.handler = async function(event) {
     };
   }
 };
+
+
+

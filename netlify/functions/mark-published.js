@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 // netlify/functions/mark-published.js
 // Moves a file from pending/ to published/ in the simplestocks/stock-bridge GitHub repo.
 // Called by the scheduled task after a Squarespace draft has been successfully saved.
@@ -47,6 +48,10 @@ function ghRequest(method, path, body) {
 }
 
 exports.handler = async function(event) {
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -121,3 +126,6 @@ exports.handler = async function(event) {
     };
   }
 };
+
+
+

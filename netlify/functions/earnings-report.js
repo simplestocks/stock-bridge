@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 /**
  * Earnings report generator — calls Claude API WITH WEB SEARCH
  * to get real-time earnings data and format it.
@@ -50,6 +51,10 @@ exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'POST only' }) };
@@ -112,3 +117,6 @@ exports.handler = async function(event) {
     };
   }
 };
+
+
+

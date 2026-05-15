@@ -1,3 +1,4 @@
+const { requireAdmin } = require('./require-admin');
 /**
  * On-demand earnings calendar fetch via Nasdaq public API.
  * Query params:
@@ -89,6 +90,10 @@ exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
 
   const offset = parseInt((event.queryStringParameters || {}).offset || '0', 10);
   if (![0, 7, 14].includes(offset)) {
@@ -131,3 +136,6 @@ exports.handler = async function(event) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: e.message }) };
   }
 };
+
+
+

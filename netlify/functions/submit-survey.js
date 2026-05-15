@@ -1,4 +1,5 @@
 const { Octokit } = require("@octokit/rest");
+const { requireAdmin } = require('./require-admin');
 
 exports.handler = async (event) => {
   // Handle preflight OPTIONS request
@@ -15,6 +16,10 @@ exports.handler = async (event) => {
   }
 
   // Only allow POST requests
+  const adminBlock = requireAdmin(event, typeof headers !== 'undefined' ? headers : {});
+  if (adminBlock) return adminBlock;
+
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -113,3 +118,6 @@ function escapeCSV(value) {
   if (!value) return '';
   return String(value).replace(/"/g, '""');
 }
+
+
+

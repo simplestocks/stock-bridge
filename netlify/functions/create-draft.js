@@ -1,4 +1,5 @@
 const https = require("https");
+const { requireAdmin } = require('./require-admin');
 const { URL } = require("url");
 
 const COLLECTIONS = {
@@ -136,6 +137,9 @@ async function squarespaceLogin(siteUrl, email, password) {
 }
 
 exports.handler = async (event) => {
+  const adminBlock = requireAdmin(event);
+  if (adminBlock) return adminBlock;
+
   try {
     const { title, html } = JSON.parse(event.body);
     const siteUrl = (process.env.SQUARESPACE_SITE_URL || "").trim().replace(/\/+$/, "");
@@ -218,3 +222,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+
+
