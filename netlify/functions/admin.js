@@ -146,6 +146,7 @@ function serveFile(name) {
       .replaceAll('./index.html', '/.netlify/functions/admin?path=index.html')
       .replaceAll('./writer.html', '/.netlify/functions/admin?path=writer.html');
   }
+  if (name.endsWith('.html')) body = injectAdminBackButton(body);
   return {
     statusCode: 200,
     headers: {
@@ -154,6 +155,32 @@ function serveFile(name) {
     },
     body
   };
+}
+
+function injectAdminBackButton(body) {
+  const bar = `
+<style>
+  .ss-admin-back {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 99999;
+    min-height: 28px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 6px;
+    background: rgba(6,10,18,.92);
+    color: #f4f8ff;
+    font: 800 12px/1 Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    box-shadow: 0 8px 28px rgba(0,0,0,.28);
+  }
+  .ss-admin-back:hover { background: #1d6fe8; color: #fff; }
+  body { padding-top: max(28px, env(safe-area-inset-top)); }
+</style>
+<a class="ss-admin-back" href="/.netlify/functions/admin">Admin</a>`;
+  if (body.includes('</body>')) return body.replace('</body>', `${bar}</body>`);
+  return `${bar}${body}`;
 }
 
 exports.handler = async function(event) {
