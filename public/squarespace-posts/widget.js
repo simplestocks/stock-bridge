@@ -3,6 +3,7 @@
   if (!root) return;
 
   const feedUrl = root.getAttribute('data-feed') || 'posts.json';
+  const refreshMs = Number(root.getAttribute('data-refresh-ms') || 30000);
   const state = { posts: [], query: '', tag: 'all' };
 
   root.innerHTML = [
@@ -31,19 +32,30 @@
     render();
   });
 
-  fetch(feedUrl, { cache: 'no-store' })
-    .then((res) => {
-      if (!res.ok) throw new Error('Feed failed: ' + res.status);
-      return res.json();
-    })
-    .then((posts) => {
-      state.posts = posts.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-      hydrateTags();
-      render();
-    })
-    .catch((err) => {
-      status.textContent = 'Could not load posts: ' + err.message;
-    });
+  loadFeed();
+  if (refreshMs >= 5000) {
+    window.setInterval(() => loadFeed(true), refreshMs);
+  }
+
+  function loadFeed(isRefresh) {
+    fetch(feedUrl + cacheBust(), { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error('Feed failed: ' + res.status);
+        return res.json();
+      })
+      .then((posts) => {
+        const nextPosts = posts.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+        const nextSignature = nextPosts.map((post) => post.id + ':' + post.date).join('|');
+        const currentSignature = state.posts.map((post) => post.id + ':' + post.date).join('|');
+        if (isRefresh && nextSignature === currentSignature) return;
+        state.posts = nextPosts;
+        hydrateTags();
+        render();
+      })
+      .catch((err) => {
+        if (!isRefresh) status.textContent = 'Could not load posts: ' + err.message;
+      });
+  }
 
   function hydrateTags() {
     const tags = Array.from(new Set(state.posts.flatMap((post) => post.tags || []))).sort();
@@ -53,11 +65,10 @@
   }
 
   function render() {
+    const terms = searchTerms(state.query);
     const filtered = state.posts.filter((post) => {
-      const haystack = [post.title, post.summary, post.body, post.type, post.author, ...(post.tags || [])]
-        .join(' ')
-        .toLowerCase();
-      const queryOk = !state.query || haystack.includes(state.query);
+      const haystack = normalizeSearch([post.title, post.summary, post.body, post.type, post.author, ...(post.tags || [])].join(' '));
+      const queryOk = !terms.length || terms.every((term) => haystack.includes(term));
       const tagOk = state.tag === 'all' || (post.tags || []).includes(state.tag);
       return queryOk && tagOk;
     });
@@ -98,5 +109,25 @@
 
   function escapeAttr(value) {
     return escapeHtml(value).replace(/\s+/g, '-');
+  }
+
+  function searchTerms(query) {
+    return normalizeSearch(query)
+      .split(' ')
+      .filter(Boolean)
+      .filter((term) => !['and', 'or', 'the', 'a', 'an'].includes(term));
+  }
+
+  function normalizeSearch(value) {
+    return String(value == null ? '' : value)
+      .toLowerCase()
+      .replace(/\bnvidia\b/g, 'nvda')
+      .replace(/[^a-z0-9$.\s-]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function cacheBust() {
+    return (feedUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
   }
 })();
