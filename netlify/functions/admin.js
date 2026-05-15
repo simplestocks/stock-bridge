@@ -68,7 +68,7 @@ function loginPage(message = '') {
   </style>
 </head>
 <body>
-  <form method="post" action="/admin/login">
+  <form method="post" action="/.netlify/functions/admin?path=login">
     <h1>SimpleStocks Admin</h1>
     <p>Private tools are locked. Enter the admin password.</p>
     <input name="password" type="password" autocomplete="current-password" autofocus>
