@@ -1,3 +1,6 @@
+/admin /.netlify/functions/admin?path= 200
+/admin/ /.netlify/functions/admin?path= 200
+/admin/* /.netlify/functions/admin?path=:splat 200
 /alerts.html /security-lockdown.html 302!
 /command-center /security-lockdown.html 302!
 /command-center.html /security-lockdown.html 302!

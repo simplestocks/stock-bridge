@@ -1,3 +1,6 @@
 [build]
   publish = "public"
   functions = "netlify/functions"
+
+[functions]
+  included_files = ["public/squarespace-posts/**", "public/alerts.html", "public/command-center.html", "public/odte-dashboard.html"]

@@ -1,4 +1,5 @@
 const https = require('https');
+const { isAuthed, json } = require('./admin-auth');
 
 const OWNER = 'simplestocks';
 const REPO = 'stock-bridge';
@@ -109,6 +110,7 @@ function jsonResponse(statusCode, body) {
 exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') return jsonResponse(200, { ok: true });
   if (event.httpMethod !== 'POST') return jsonResponse(405, { error: 'Method Not Allowed' });
+  if (!isAuthed(event)) return json(401, { error: 'Admin login required' });
   if (!process.env.GITHUB_TOKEN) return jsonResponse(500, { error: 'GITHUB_TOKEN not set' });
 
   let payload;
