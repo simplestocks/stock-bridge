@@ -94,6 +94,8 @@ function homePage() {
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
     a { display:block; border:1px solid #263244; border-radius:9px; background:#121927; color:#e8eef8; padding:16px; text-decoration:none; font-weight:800; }
     a span { display:block; margin-top:6px; color:#9daabe; font-weight:400; font-size:13px; }
+    a.railway { border-color:#79b8ff; background:#10243d; color:#d9ecff; }
+    a.railway span { color:#9fc9f5; }
     .top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:18px; }
     .logout { border-color:#49313a; color:#ffb0b0; }
   </style>
@@ -110,6 +112,8 @@ function homePage() {
       <a href="/.netlify/functions/admin?path=command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
       <a href="/.netlify/functions/admin?path=odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
       <a href="/.netlify/functions/admin?path=index.html">Feed Viewer<span>Protected feed test page.</span></a>
+      <a class="railway" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix Railway<span>Live Railway dashboard root.</span></a>
+      <a class="railway" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Magix Viewer<span>Live Railway viewer page.</span></a>
     </div>
   </main>
 </body>
