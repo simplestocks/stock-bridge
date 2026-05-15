@@ -5,33 +5,66 @@
     <link>https://simplestocks.com/</link>
     <description>Proof of concept feed for SimpleStocks member posts.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 May 2026 19:18:00 -0700</lastBuildDate>
+    <lastBuildDate>Fri, 15 May 2026 01:34:17 GMT</lastBuildDate>
     <item>
-      <title>Market Open Note</title>
-      <link>https://simplestocks.com/member-feed#market-open-2026-05-14</link>
-      <guid isPermaLink="false">market-open-2026-05-14</guid>
-      <pubDate>Thu, 14 May 2026 09:42:00 -0700</pubDate>
-      <category>SPX</category>
-      <category>0DTE</category>
-      <description><![CDATA[SPX is holding support. No chase until reclaim. Premium is still elevated, so wait for confirmation before pressing a new entry.]]></description>
+      <title>POC Writer Test</title>
+      <link>https://simplestocks.com/member-feed#poc-writer-test-2026-05-15</link>
+      <guid isPermaLink="false">poc-writer-test-2026-05-15</guid>
+      <pubDate>Fri, 15 May 2026 01:34:16 GMT</pubDate>
+      <category>POC</category>
+      <category>Writer</category>
+      <category>Test</category>
+      <description><![CDATA[This post was created from the hosted writer to prove the create-post loop works.]]></description>
     </item>
     <item>
       <title>NVDA Gap Fill Note</title>
       <link>https://simplestocks.com/member-feed#nvda-gap-fill-2026-05-14</link>
       <guid isPermaLink="false">nvda-gap-fill-2026-05-14</guid>
-      <pubDate>Thu, 14 May 2026 12:18:00 -0700</pubDate>
+      <pubDate>Thu, 14 May 2026 19:18:00 GMT</pubDate>
       <category>NVDA</category>
       <category>Gap Fill</category>
+      <category>Education</category>
       <description><![CDATA[NVDA defended the first zone. If buyers hold the retest, the next squeeze can start from here. If it loses the level, stand down.]]></description>
+    </item>
+    <item>
+      <title>Market Open Note</title>
+      <link>https://simplestocks.com/member-feed#market-open-2026-05-14</link>
+      <guid isPermaLink="false">market-open-2026-05-14</guid>
+      <pubDate>Thu, 14 May 2026 16:42:00 GMT</pubDate>
+      <category>SPX</category>
+      <category>0DTE</category>
+      <category>Market Open</category>
+      <description><![CDATA[SPX is holding support. No chase until reclaim. Premium is still elevated, so wait for confirmation before pressing a new entry.]]></description>
     </item>
     <item>
       <title>Earnings Risk Reminder</title>
       <link>https://simplestocks.com/member-feed#earnings-risk-2026-05-13</link>
       <guid isPermaLink="false">earnings-risk-2026-05-13</guid>
-      <pubDate>Wed, 13 May 2026 15:40:00 -0700</pubDate>
+      <pubDate>Wed, 13 May 2026 22:40:00 GMT</pubDate>
       <category>Earnings</category>
       <category>Risk</category>
+      <category>Options</category>
       <description><![CDATA[High premium is not free money. Earnings trades need defined risk, clear size, and no emotional averaging after the move starts.]]></description>
+    </item>
+    <item>
+      <title>Member Room Note</title>
+      <link>https://simplestocks.com/member-feed#membership-note-2026-05-12</link>
+      <guid isPermaLink="false">membership-note-2026-05-12</guid>
+      <pubDate>Tue, 12 May 2026 17:05:00 GMT</pubDate>
+      <category>Members</category>
+      <category>Process</category>
+      <category>Education</category>
+      <description><![CDATA[Clean entries beat busy screens. If the room is noisy, reduce the chart to the level, the invalidation, and the next decision.]]></description>
+    </item>
+    <item>
+      <title>SPX No Trade Zone</title>
+      <link>https://simplestocks.com/member-feed#spx-no-trade-2026-05-10</link>
+      <guid isPermaLink="false">spx-no-trade-2026-05-10</guid>
+      <pubDate>Sun, 10 May 2026 15:55:00 GMT</pubDate>
+      <category>SPX</category>
+      <category>Patience</category>
+      <category>0DTE</category>
+      <description><![CDATA[The best trade is waiting while price chops inside the box. Let the market leave the range before giving it your money.]]></description>
     </item>
   </channel>
 </rss>
