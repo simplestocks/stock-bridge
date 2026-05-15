@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T05:05:56.530926-07:00",
+  "generated_at": "2026-05-15T05:13:10.208240-07:00",
   "week_start": "2026-05-11",
   "week_end": "2026-05-15",
   "min_market_cap": 10000000000,
@@ -8,61 +8,61 @@
       {
         "symbol": "PBR",
         "name": "Petroleo Brasileiro S.A.- Petrobras",
-        "market_cap": 132109510811,
+        "market_cap": 126245137404,
         "when": "OTH"
       },
       {
         "symbol": "PBR.A",
         "name": "Petroleo Brasileiro S.A.- Petrobras",
-        "market_cap": 132109510811,
+        "market_cap": 126245137404,
         "when": "OTH"
       },
       {
         "symbol": "CEG",
         "name": "Constellation Energy Corporation",
-        "market_cap": 106045402497,
+        "market_cap": 99287536418,
         "when": "OTH"
       },
       {
         "symbol": "B",
         "name": "Barrick Mining Corporation",
-        "market_cap": 76946733272,
+        "market_cap": 75223761392,
         "when": "OTH"
       },
       {
         "symbol": "SPG",
         "name": "Simon Property Group, Inc.",
-        "market_cap": 66693463302,
+        "market_cap": 65039584751,
         "when": "OTH"
       },
       {
         "symbol": "VIV",
         "name": "Telefonica Brasil S.A.",
-        "market_cap": 47231061883,
+        "market_cap": 45505434452,
         "when": "OTH"
       },
       {
         "symbol": "IX",
         "name": "ORIX Corporation",
-        "market_cap": 43773898864,
+        "market_cap": 44146046782,
         "when": "OTH"
       },
       {
         "symbol": "SATS",
         "name": "EchoStar Corporation",
-        "market_cap": 37496069077,
+        "market_cap": 38611851006,
         "when": "OTH"
       },
       {
         "symbol": "CRCL",
         "name": "Circle Internet Group, Inc.",
-        "market_cap": 30736426110,
+        "market_cap": 31462268117,
         "when": "OTH"
       },
       {
         "symbol": "ASTS",
         "name": "AST SpaceMobile, Inc.",
-        "market_cap": 28317568773,
+        "market_cap": 29035599231,
         "when": "OTH"
       },
       {
@@ -80,29 +80,23 @@
       {
         "symbol": "STE",
         "name": "STERIS plc",
-        "market_cap": 20679119021,
-        "when": "OTH"
-      },
-      {
-        "symbol": "OVV",
-        "name": "Ovintiv Inc.",
-        "market_cap": 16485612816,
+        "market_cap": 20703637778,
         "when": "OTH"
       },
       {
         "symbol": "KSPI",
         "name": "Joint Stock Company Kaspi.kz",
-        "market_cap": 16354624707,
+        "market_cap": 16661344920,
         "when": "BMO"
+      },
+      {
+        "symbol": "OVV",
+        "name": "Ovintiv Inc.",
+        "market_cap": 16379649677,
+        "when": "OTH"
       }
     ],
     "2026-05-12": [
-      {
-        "symbol": "NU",
-        "name": "Nu Holdings Ltd.",
-        "market_cap": 62249735962,
-        "when": "OTH"
-      },
       {
         "symbol": "SE",
         "name": "Sea Limited",
@@ -119,12 +113,6 @@
         "symbol": "JD",
         "name": "JD.com, Inc.",
         "market_cap": 46123766120,
-        "when": "OTH"
-      },
-      {
-        "symbol": "HMC",
-        "name": "Honda Motor Company, Ltd.",
-        "market_cap": 35308146090,
         "when": "OTH"
       },
       {
@@ -266,56 +254,38 @@
       {
         "symbol": "AMAT",
         "name": "Applied Materials, Inc.",
-        "market_cap": 342204574650,
+        "market_cap": 346498004031,
         "when": "AMC"
       },
       {
         "symbol": "BN",
         "name": "Brookfield Corporation",
-        "market_cap": 102984140615,
+        "market_cap": 101156904707,
         "when": "BMO"
       },
       {
         "symbol": "VIK",
         "name": "Viking Holdings Ltd",
-        "market_cap": 35930354743,
+        "market_cap": 36630238825,
         "when": "BMO"
       },
       {
         "symbol": "BAP",
         "name": "Credicorp Ltd.",
-        "market_cap": 30562881891,
+        "market_cap": 29983374465,
         "when": "AMC"
       },
       {
         "symbol": "NVMI",
         "name": "Nova Ltd.",
-        "market_cap": 15675043961,
+        "market_cap": 16007493848,
         "when": "BMO"
-      },
-      {
-        "symbol": "BNT",
-        "name": "Brookfield Wealth Solutions Ltd.",
-        "market_cap": 15330623311,
-        "when": "OTH"
       },
       {
         "symbol": "FPS",
         "name": "Forgent Power Solutions, Inc.",
-        "market_cap": 13093486516,
+        "market_cap": 13857603027,
         "when": "BMO"
-      },
-      {
-        "symbol": "LGN",
-        "name": "Legence Corp.",
-        "market_cap": 10550984439,
-        "when": "BMO"
-      },
-      {
-        "symbol": "FIG",
-        "name": "Figma, Inc.",
-        "market_cap": 10171210522,
-        "when": "AMC"
       }
     ],
     "2026-05-15": [
@@ -333,6 +303,6 @@
       }
     ]
   },
-  "earnings_text": "Mon May 11: KSPI | (PBR PBR.A CEG B SPG VIV IX SATS CRCL ASTS FOX FOXA STE OVV)\nTue May 12: \u2014 | (NU SE FNV JD HMC Q VG ONON MAIR NXT JBS TME TIGO ARMK QXO OKLO AG ZBRA RDY)\nWed May 13: \u2014 | (CSCO BABA SMFG MFC NBIS TAK TSEM DT)\nThu May 14: BN VIK NVMI FPS LGN | AMAT BAP FIG (BNT)\nFri May 15: RBC HTHT | \u2014",
+  "earnings_text": "Mon May 11: KSPI | (PBR PBR.A CEG B SPG VIV IX SATS CRCL ASTS FOX FOXA STE OVV)\nTue May 12: \u2014 | (SE FNV JD Q VG ONON MAIR NXT JBS TME TIGO ARMK QXO OKLO AG ZBRA RDY)\nWed May 13: \u2014 | (CSCO BABA SMFG MFC NBIS TAK TSEM DT)\nThu May 14: BN VIK NVMI FPS | AMAT BAP\nFri May 15: RBC HTHT | \u2014",
   "errors": []
 }
