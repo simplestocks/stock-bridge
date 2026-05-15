@@ -8,7 +8,7 @@
   <style>
     .writer {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
       gap: 18px;
       align-items: start;
     }
@@ -23,7 +23,8 @@
       gap: 6px;
       margin-bottom: 12px;
     }
-    .field label {
+    .field label,
+    .tool-label {
       font-size: 12px;
       font-weight: 700;
       color: var(--ss-muted);
@@ -41,9 +42,31 @@
       color: var(--ss-ink);
     }
     .field textarea {
-      min-height: 220px;
+      min-height: 260px;
       resize: vertical;
       line-height: 1.45;
+    }
+    .formatbar,
+    .templatebar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 7px 0 12px;
+    }
+    .formatbar button,
+    .templatebar button {
+      border: 1px solid var(--ss-line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ss-ink);
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .formatbar button:hover,
+    .templatebar button:hover {
+      border-color: var(--ss-green);
     }
     .actions {
       display: flex;
@@ -68,7 +91,24 @@
       color: var(--ss-muted);
       font-size: 13px;
     }
-    @media (max-width: 860px) {
+    .preview-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .preview-title h2 {
+      font-size: 16px;
+      margin: 0;
+    }
+    .preview-title span {
+      color: var(--ss-muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    @media (max-width: 900px) {
       .writer { grid-template-columns: 1fr; }
     }
   </style>
@@ -78,7 +118,7 @@
     <header class="topbar">
       <div>
         <h1>SimpleStocks Post Writer</h1>
-        <p>Create a post, update posts.json, rebuild feed.xml, then the Squarespace widget reads it.</p>
+        <p>Create polished member-feed posts with formatting, tags, and live preview.</p>
       </div>
       <nav class="links">
         <a href="./index.html">View feed</a>
@@ -108,13 +148,30 @@
           <label for="summary">Summary</label>
           <input id="summary" name="summary" placeholder="One clean sentence for the card">
         </div>
+
+        <div class="tool-label">Formatting</div>
+        <div class="formatbar" aria-label="Formatting tools">
+          <button type="button" data-wrap="**">Bold</button>
+          <button type="button" data-prefix="## ">Section</button>
+          <button type="button" data-prefix="- ">Bullet</button>
+          <button type="button" data-prefix="! ">Action Box</button>
+          <button type="button" data-prefix="> ">Quote</button>
+        </div>
+
+        <div class="tool-label">Templates</div>
+        <div class="templatebar" aria-label="Post templates">
+          <button type="button" data-template="market">Market Note</button>
+          <button type="button" data-template="new-trade">New Trade</button>
+          <button type="button" data-template="trade-update">Trade Update</button>
+        </div>
+
         <div class="field">
           <label for="body">Body</label>
           <textarea id="body" name="body" required placeholder="Write the post..."></textarea>
         </div>
         <div class="field">
           <label for="tags">Tags</label>
-          <input id="tags" name="tags" placeholder="SPX, 0DTE, Education">
+          <input id="tags" name="tags" placeholder="SPX, 0DTE, Earnings">
         </div>
         <div class="field">
           <label for="author">Author</label>
@@ -127,16 +184,88 @@
       </form>
 
       <aside class="panel">
-        <div id="ss-post-feed" data-feed="./posts.json"></div>
+        <div class="preview-title">
+          <h2>Preview</h2>
+          <span>Member view</span>
+        </div>
+        <div class="ss-feed-list">
+          <article class="ss-feed-post ss-feed-alert" id="preview-card">
+            <div class="ss-feed-meta" id="preview-meta">Now / Alert</div>
+            <h3 id="preview-title">Market Open Note</h3>
+            <p class="ss-feed-summary" id="preview-summary">One clean sentence for the card</p>
+            <div class="ss-feed-body" id="preview-body"></div>
+            <div class="ss-feed-tagrow" id="preview-tags"></div>
+          </article>
+        </div>
       </aside>
     </section>
   </main>
 
-  <script src="./widget.js"></script>
   <script>
     const form = document.getElementById('writer-form');
     const statusEl = document.getElementById('status');
-    const button = form.querySelector('button');
+    const button = form.querySelector('.save');
+    const titleEl = document.getElementById('title');
+    const typeEl = document.getElementById('type');
+    const summaryEl = document.getElementById('summary');
+    const bodyEl = document.getElementById('body');
+    const tagsEl = document.getElementById('tags');
+    const authorEl = document.getElementById('author');
+
+    const previewCard = document.getElementById('preview-card');
+    const previewMeta = document.getElementById('preview-meta');
+    const previewTitle = document.getElementById('preview-title');
+    const previewSummary = document.getElementById('preview-summary');
+    const previewBody = document.getElementById('preview-body');
+    const previewTags = document.getElementById('preview-tags');
+
+    const labels = {
+      alert: 'Alert',
+      'new-trade': 'New Trade',
+      'trade-update': 'Trade Update',
+      update: 'Market Update',
+      education: 'Education',
+      event: 'Event'
+    };
+
+    const templates = {
+      market: {
+        type: 'update',
+        body: '## Market Read\n- SPX:\n- QQQ:\n- VIX:\n\n## Key Level\n! Action: wait for confirmation before pressing size.\n\n## Plan\n- If price holds:\n- If price fails:'
+      },
+      'new-trade': {
+        type: 'new-trade',
+        body: '## New Trade\n- Ticker:\n- Structure:\n- Entry:\n- Risk:\n- Target:\n\n! Action: defined risk only. No averaging if the setup fails.'
+      },
+      'trade-update': {
+        type: 'trade-update',
+        body: '## Trade Update\n- Ticker:\n- Current status:\n- What changed:\n\n! Action:'
+      }
+    };
+
+    document.querySelectorAll('.formatbar button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.wrap) wrapSelection(btn.dataset.wrap);
+        if (btn.dataset.prefix) prefixSelection(btn.dataset.prefix);
+        updatePreview();
+      });
+    });
+
+    document.querySelectorAll('.templatebar button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const template = templates[btn.dataset.template];
+        if (!template) return;
+        typeEl.value = template.type;
+        bodyEl.value = bodyEl.value.trim() ? bodyEl.value.trim() + '\n\n' + template.body : template.body;
+        bodyEl.focus();
+        updatePreview();
+      });
+    });
+
+    [titleEl, typeEl, summaryEl, bodyEl, tagsEl, authorEl].forEach((el) => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -154,15 +283,107 @@
         });
         const json = await res.json();
         if (!res.ok || !json.ok) throw new Error(json.error || 'Save failed');
-        statusEl.textContent = 'Saved. Netlify/GitHub feed updating.';
+        statusEl.textContent = 'Saved. Feed publishing.';
         form.reset();
-        document.getElementById('author').value = 'Nic';
+        authorEl.value = 'Nic';
+        updatePreview();
       } catch (err) {
         statusEl.textContent = 'Error: ' + err.message;
       } finally {
         button.disabled = false;
       }
     });
+
+    function wrapSelection(token) {
+      const start = bodyEl.selectionStart;
+      const end = bodyEl.selectionEnd;
+      const selected = bodyEl.value.slice(start, end) || 'bold text';
+      bodyEl.setRangeText(token + selected + token, start, end, 'select');
+      bodyEl.focus();
+    }
+
+    function prefixSelection(prefix) {
+      const start = bodyEl.selectionStart;
+      const end = bodyEl.selectionEnd;
+      const selected = bodyEl.value.slice(start, end) || 'Text';
+      const replacement = selected.split('\n').map((line) => prefix + line).join('\n');
+      bodyEl.setRangeText(replacement, start, end, 'end');
+      bodyEl.focus();
+    }
+
+    function updatePreview() {
+      const type = typeEl.value || 'alert';
+      const tags = splitTags(tagsEl.value);
+      previewCard.className = 'ss-feed-post ss-feed-' + escapeAttr(type);
+      previewMeta.textContent = 'Now / ' + (labels[type] || type);
+      previewTitle.textContent = titleEl.value.trim() || 'Market Open Note';
+      previewSummary.textContent = summaryEl.value.trim() || 'One clean sentence for the card';
+      previewBody.innerHTML = renderRichText(bodyEl.value.trim() || 'Write the post...');
+      previewTags.innerHTML = tags.map((tag) => '<span class="ss-feed-tag">' + escapeHtml(tag) + '</span>').join('');
+    }
+
+    function splitTags(value) {
+      return String(value || '').split(',').map((tag) => tag.trim()).filter(Boolean);
+    }
+
+    function renderRichText(value) {
+      const lines = String(value || '').replace(/\r\n/g, '\n').split('\n');
+      const out = [];
+      let bullets = [];
+
+      function flushBullets() {
+        if (!bullets.length) return;
+        out.push('<ul>' + bullets.map((line) => '<li>' + inlineFormat(line) + '</li>').join('') + '</ul>');
+        bullets = [];
+      }
+
+      lines.forEach((raw) => {
+        const line = raw.trim();
+        if (!line) {
+          flushBullets();
+          return;
+        }
+        if (line.startsWith('- ') || line.startsWith('* ')) {
+          bullets.push(line.slice(2).trim());
+          return;
+        }
+        flushBullets();
+        if (line.startsWith('### ')) {
+          out.push('<h4>' + inlineFormat(line.slice(4)) + '</h4>');
+        } else if (line.startsWith('## ')) {
+          out.push('<h4>' + inlineFormat(line.slice(3)) + '</h4>');
+        } else if (line.startsWith('! ')) {
+          out.push('<div class="ss-feed-callout">' + inlineFormat(line.slice(2)) + '</div>');
+        } else if (line.startsWith('> ')) {
+          out.push('<blockquote>' + inlineFormat(line.slice(2)) + '</blockquote>');
+        } else {
+          out.push('<p>' + inlineFormat(line) + '</p>');
+        }
+      });
+      flushBullets();
+      return out.join('');
+    }
+
+    function inlineFormat(value) {
+      return escapeHtml(value)
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\b([A-Z]{1,5})(?=\b)/g, '<span class="ss-feed-ticker">$1</span>');
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/\s+/g, '-');
+    }
+
+    updatePreview();
   </script>
 </body>
 </html>

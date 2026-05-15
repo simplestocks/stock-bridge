@@ -87,15 +87,73 @@
       minute: '2-digit'
     });
     const tags = (post.tags || []).map((tag) => '<span class="ss-feed-tag">' + escapeHtml(tag) + '</span>').join('');
+    const type = post.type || 'post';
     return [
-      '<article class="ss-feed-post ss-feed-' + escapeAttr(post.type || 'post') + '" id="' + escapeAttr(post.id) + '">',
-      '  <div class="ss-feed-meta">' + escapeHtml(dateText) + ' / ' + escapeHtml(post.type || 'post') + '</div>',
+      '<article class="ss-feed-post ss-feed-' + escapeAttr(type) + '" id="' + escapeAttr(post.id) + '">',
+      '  <div class="ss-feed-meta">' + escapeHtml(dateText) + ' / ' + escapeHtml(typeLabel(type)) + '</div>',
       '  <h3>' + escapeHtml(post.title) + '</h3>',
       '  <p class="ss-feed-summary">' + escapeHtml(post.summary || '') + '</p>',
-      '  <p>' + escapeHtml(post.body || '') + '</p>',
+      '  <div class="ss-feed-body">' + renderRichText(post.body || '') + '</div>',
       '  <div class="ss-feed-tagrow">' + tags + '</div>',
       '</article>'
     ].join('');
+  }
+
+  function renderRichText(value) {
+    const lines = String(value || '').replace(/\r\n/g, '\n').split('\n');
+    const out = [];
+    let bullets = [];
+
+    function flushBullets() {
+      if (!bullets.length) return;
+      out.push('<ul>' + bullets.map((line) => '<li>' + inlineFormat(line) + '</li>').join('') + '</ul>');
+      bullets = [];
+    }
+
+    lines.forEach((raw) => {
+      const line = raw.trim();
+      if (!line) {
+        flushBullets();
+        return;
+      }
+      if (line.startsWith('- ') || line.startsWith('* ')) {
+        bullets.push(line.slice(2).trim());
+        return;
+      }
+      flushBullets();
+      if (line.startsWith('### ')) {
+        out.push('<h4>' + inlineFormat(line.slice(4)) + '</h4>');
+      } else if (line.startsWith('## ')) {
+        out.push('<h4>' + inlineFormat(line.slice(3)) + '</h4>');
+      } else if (line.startsWith('! ')) {
+        out.push('<div class="ss-feed-callout">' + inlineFormat(line.slice(2)) + '</div>');
+      } else if (line.startsWith('> ')) {
+        out.push('<blockquote>' + inlineFormat(line.slice(2)) + '</blockquote>');
+      } else {
+        out.push('<p>' + inlineFormat(line) + '</p>');
+      }
+    });
+    flushBullets();
+    return out.join('');
+  }
+
+  function inlineFormat(value) {
+    return escapeHtml(value)
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/\b([A-Z]{1,5})(?=\b)/g, '<span class="ss-feed-ticker">$1</span>');
+  }
+
+  function typeLabel(type) {
+    const labels = {
+      alert: 'Alert',
+      'new-trade': 'New Trade',
+      'trade-update': 'Trade Update',
+      update: 'Market Update',
+      education: 'Education',
+      event: 'Event',
+      'member-note': 'Event'
+    };
+    return labels[type] || type;
   }
 
   function escapeHtml(value) {

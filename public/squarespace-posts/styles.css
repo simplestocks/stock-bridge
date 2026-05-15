@@ -109,11 +109,17 @@ h1 {
   border-left-color: var(--ss-gold);
 }
 
-.ss-feed-update {
+.ss-feed-update,
+.ss-feed-trade-update {
   border-left-color: var(--ss-blue);
 }
 
+.ss-feed-new-trade {
+  border-left-color: #9f2d20;
+}
+
 .ss-feed-education,
+.ss-feed-event,
 .ss-feed-member-note {
   border-left-color: var(--ss-green);
 }
@@ -140,6 +146,55 @@ h1 {
 
 .ss-feed-summary {
   font-weight: 700;
+}
+
+.ss-feed-body {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ss-feed-body p,
+.ss-feed-body ul,
+.ss-feed-body blockquote,
+.ss-feed-body h4 {
+  margin: 0;
+}
+
+.ss-feed-body h4 {
+  font-size: 15px;
+  line-height: 1.2;
+  padding-top: 4px;
+  text-transform: uppercase;
+}
+
+.ss-feed-body ul {
+  padding-left: 19px;
+}
+
+.ss-feed-body li {
+  margin: 4px 0;
+  line-height: 1.45;
+}
+
+.ss-feed-body blockquote,
+.ss-feed-callout {
+  border-left: 3px solid var(--ss-gold);
+  background: #fff4d8;
+  padding: 10px 12px;
+  border-radius: 6px;
+  line-height: 1.45;
+}
+
+.ss-feed-ticker {
+  display: inline-block;
+  border: 1px solid var(--ss-line);
+  border-radius: 999px;
+  padding: 1px 6px;
+  background: #fff;
+  color: var(--ss-blue);
+  font-size: 0.88em;
+  font-weight: 800;
 }
 
 .ss-feed-tagrow {
