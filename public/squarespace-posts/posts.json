@@ -1,5 +1,19 @@
 [
   {
+    "id": "poc-writer-test-2-2026-05-15",
+    "date": "2026-05-15T01:35:34.442Z",
+    "type": "alert",
+    "title": "POC Writer Test 2",
+    "summary": "Second test after rebuild trigger fix.",
+    "body": "This post proves the writer can create a post and trigger Netlify to rebuild the public feed.",
+    "tags": [
+      "POC",
+      "Writer",
+      "Rebuild"
+    ],
+    "author": "Nic"
+  },
+  {
     "id": "poc-writer-test-2026-05-15",
     "date": "2026-05-15T01:34:16.915Z",
     "type": "update",
