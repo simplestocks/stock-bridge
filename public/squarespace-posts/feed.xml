@@ -5,7 +5,17 @@
     <link>https://simplestocks.com/</link>
     <description>Proof of concept feed for SimpleStocks member posts.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 15 May 2026 01:34:17 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 15 May 2026 01:35:34 GMT</lastBuildDate>
+    <item>
+      <title>POC Writer Test 2</title>
+      <link>https://simplestocks.com/member-feed#poc-writer-test-2-2026-05-15</link>
+      <guid isPermaLink="false">poc-writer-test-2-2026-05-15</guid>
+      <pubDate>Fri, 15 May 2026 01:35:34 GMT</pubDate>
+      <category>POC</category>
+      <category>Writer</category>
+      <category>Rebuild</category>
+      <description><![CDATA[This post proves the writer can create a post and trigger Netlify to rebuild the public feed.]]></description>
+    </item>
     <item>
       <title>POC Writer Test</title>
       <link>https://simplestocks.com/member-feed#poc-writer-test-2026-05-15</link>
