@@ -143,7 +143,7 @@ exports.handler = async function(event) {
     const rssContent = Buffer.from(buildRss(nextPosts), 'utf8').toString('base64');
 
     await ghRequest('PUT', `/contents/${POSTS_PATH}`, {
-      message: `Add Squarespace feed post: ${post.title} [skip netlify]`,
+      message: `Add Squarespace feed post: ${post.title}`,
       content: postsContent,
       sha: current.sha,
       branch: BRANCH
@@ -156,7 +156,7 @@ exports.handler = async function(event) {
     } catch (e) {}
 
     await ghRequest('PUT', `/contents/${RSS_PATH}`, {
-      message: `Update Squarespace feed RSS for: ${post.title} [skip netlify]`,
+      message: `Update Squarespace feed RSS for: ${post.title}`,
       content: rssContent,
       ...(rssSha ? { sha: rssSha } : {}),
       branch: BRANCH
