@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SimpleStocks Post Writer</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .writer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      gap: 18px;
+      align-items: start;
+    }
+    .panel {
+      background: #fffaf0;
+      border: 1px solid var(--ss-line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ss-muted);
+      text-transform: uppercase;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--ss-line);
+      border-radius: 6px;
+      padding: 10px 11px;
+      font: inherit;
+      background: #fff;
+      color: var(--ss-ink);
+    }
+    .field textarea {
+      min-height: 220px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .save {
+      border: 0;
+      border-radius: 6px;
+      background: var(--ss-green);
+      color: #fff;
+      padding: 11px 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .save:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .status {
+      color: var(--ss-muted);
+      font-size: 13px;
+    }
+    @media (max-width: 860px) {
+      .writer { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div>
+        <h1>SimpleStocks Post Writer</h1>
+        <p>Create a post, update posts.json, rebuild feed.xml, then the Squarespace widget reads it.</p>
+      </div>
+      <nav class="links">
+        <a href="./index.html">View feed</a>
+        <a href="./posts.json">posts.json</a>
+        <a href="./feed.xml">feed.xml</a>
+      </nav>
+    </header>
+
+    <section class="writer">
+      <form class="panel" id="writer-form">
+        <div class="field">
+          <label for="title">Title</label>
+          <input id="title" name="title" required placeholder="Market Open Note">
+        </div>
+        <div class="field">
+          <label for="type">Type</label>
+          <select id="type" name="type">
+            <option value="alert">Alert</option>
+            <option value="update">Update</option>
+            <option value="education">Education</option>
+            <option value="member-note">Member Note</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="summary">Summary</label>
+          <input id="summary" name="summary" placeholder="One clean sentence for the card">
+        </div>
+        <div class="field">
+          <label for="body">Body</label>
+          <textarea id="body" name="body" required placeholder="Write the post..."></textarea>
+        </div>
+        <div class="field">
+          <label for="tags">Tags</label>
+          <input id="tags" name="tags" placeholder="SPX, 0DTE, Education">
+        </div>
+        <div class="field">
+          <label for="author">Author</label>
+          <input id="author" name="author" value="Nic">
+        </div>
+        <div class="actions">
+          <button class="save" type="submit">Save post</button>
+          <span class="status" id="status">Ready</span>
+        </div>
+      </form>
+
+      <aside class="panel">
+        <div id="ss-post-feed" data-feed="./posts.json"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="./widget.js"></script>
+  <script>
+    const form = document.getElementById('writer-form');
+    const statusEl = document.getElementById('status');
+    const button = form.querySelector('button');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      statusEl.textContent = 'Saving...';
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.date = new Date().toISOString();
+
+      try {
+        const res = await fetch('/.netlify/functions/squarespace-posts-save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Save failed');
+        statusEl.textContent = 'Saved. Netlify/GitHub feed updating.';
+        form.reset();
+        document.getElementById('author').value = 'Nic';
+      } catch (err) {
+        statusEl.textContent = 'Error: ' + err.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
