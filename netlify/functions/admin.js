@@ -102,14 +102,14 @@ function homePage() {
   <main>
     <div class="top">
       <h1>SimpleStocks Admin</h1>
-      <a class="logout" href="/admin/logout">Log out</a>
+      <a class="logout" href="/.netlify/functions/admin?path=logout">Log out</a>
     </div>
     <div class="grid">
-      <a href="/admin/writer.html">Post Writer<span>Create member feed posts.</span></a>
-      <a href="/admin/alerts.html">Alert Generator<span>Morning notes, alerts, trades.</span></a>
-      <a href="/admin/command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
-      <a href="/admin/odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
-      <a href="/admin/index.html">Feed Viewer<span>Protected feed test page.</span></a>
+      <a href="/.netlify/functions/admin?path=writer.html">Post Writer<span>Create member feed posts.</span></a>
+      <a href="/.netlify/functions/admin?path=alerts.html">Alert Generator<span>Morning notes, alerts, trades.</span></a>
+      <a href="/.netlify/functions/admin?path=command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
+      <a href="/.netlify/functions/admin?path=odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
+      <a href="/.netlify/functions/admin?path=index.html">Feed Viewer<span>Protected feed test page.</span></a>
     </div>
   </main>
 </body>
@@ -139,12 +139,12 @@ function serveFile(name) {
   if (!abs.startsWith(ROOT) || !fs.existsSync(abs)) return html(404, 'Not found');
   let body = fs.readFileSync(abs, 'utf8');
   if (name === 'writer.html' || name === 'index.html') {
-    body = body.replaceAll('./styles.css', '/admin/styles.css')
-      .replaceAll('./widget.js', '/admin/widget.js')
-      .replaceAll('./posts.json', '/admin/posts.json')
-      .replaceAll('./feed.xml', '/admin/feed.xml')
-      .replaceAll('./index.html', '/admin/index.html')
-      .replaceAll('./writer.html', '/admin/writer.html');
+    body = body.replaceAll('./styles.css', '/.netlify/functions/admin?path=styles.css')
+      .replaceAll('./widget.js', '/.netlify/functions/admin?path=widget.js')
+      .replaceAll('./posts.json', '/.netlify/functions/admin?path=posts.json')
+      .replaceAll('./feed.xml', '/.netlify/functions/admin?path=feed.xml')
+      .replaceAll('./index.html', '/.netlify/functions/admin?path=index.html')
+      .replaceAll('./writer.html', '/.netlify/functions/admin?path=writer.html');
   }
   return {
     statusCode: 200,
@@ -163,13 +163,13 @@ exports.handler = async function(event) {
   if (cleanPath === 'login' && event.httpMethod === 'POST') {
     const form = parseForm(event);
     if (checkPassword(form.get('password'))) {
-      return redirect('/admin', { 'Set-Cookie': makeCookie() });
+      return redirect('/.netlify/functions/admin', { 'Set-Cookie': makeCookie() });
     }
     return loginPage('Wrong password.');
   }
 
   if (cleanPath === 'logout') {
-    return redirect('/admin', { 'Set-Cookie': clearCookie() });
+    return redirect('/.netlify/functions/admin', { 'Set-Cookie': clearCookie() });
   }
 
   if (!process.env.ADMIN_PASSWORD || !process.env.ADMIN_SESSION_SECRET) {
