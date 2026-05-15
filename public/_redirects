@@ -1,0 +1,6 @@
+/alerts.html /security-lockdown.html 302!
+/command-center /security-lockdown.html 302!
+/command-center.html /security-lockdown.html 302!
+/odte-dashboard.html /security-lockdown.html 302!
+/squarespace-posts /security-lockdown.html 302!
+/squarespace-posts/* /security-lockdown.html 302!

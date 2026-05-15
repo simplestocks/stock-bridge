@@ -902,9 +902,9 @@
   const LIVE_ROOM    = 'https://join.freeconferencecall.com/simplestocks';
   const TICKERS_FORM = 'http://forms.gle/tEHEEMDJ3W3btSDy7';
   const AV_KEY       = 'YOUR_ALPHA_VANTAGE_KEY';
-  const DISCORD_MAIN_URL = 'https://discord.com/api/webhooks/1487502867832111115/UzZlRxhLDDgZGyS_AAxslyjcvdqslCd_N6wsx-_KYI9xRHI1w3432OpLynfxBxU9oTXm';
+  const DISCORD_MAIN_URL = '';
   const DISCORD_MAIN_THREAD = '1483104531247140955';
-  const DISCORD_VID_URL = 'https://discord.com/api/webhooks/1487891731474288780/zJQR_hv1Vd_G8RMhPy6LMTkRJia60oVNkkmZBetZtA7YihtxzmuI1D2xtO5Mb_yV6i8q';
+  const DISCORD_VID_URL = '';
   const SLACK_URL = '/.netlify/functions/slack-proxy';
   const DISCORD_PROXY_URL = '/.netlify/functions/discord-proxy';
 
@@ -1124,9 +1124,9 @@
     const statusEl=document.getElementById(statusId);
     if(statusEl){statusEl.textContent='Sending to Discord...';statusEl.className='send-status';}
     try{
-      const url=useVidChannel?DISCORD_VID_URL:`${DISCORD_MAIN_URL}?thread_id=${DISCORD_MAIN_THREAD}`;
-      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
-      const ok=res.ok||res.status===204;
+      const res=await fetch(DISCORD_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
+      const json=await res.json();
+      const ok=Boolean(json.ok);
       if(statusEl){statusEl.textContent=ok?'✓ Sent to Discord successfully.':'✗ Discord send failed.';statusEl.className=ok?'send-status ok':'send-status err';}
     }catch(e){if(statusEl){statusEl.textContent=`✗ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
     setTimeout(()=>{if(statusEl)statusEl.textContent='';},5000);
