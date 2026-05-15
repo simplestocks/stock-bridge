@@ -5,7 +5,16 @@
     <link>https://simplestocks.com/</link>
     <description>Proof of concept feed for SimpleStocks member posts.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 15 May 2026 01:35:34 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 15 May 2026 01:45:24 GMT</lastBuildDate>
+    <item>
+      <title>5/14 test note</title>
+      <link>https://simplestocks.com/member-feed#5-14-test-note-2026-05-15</link>
+      <guid isPermaLink="false">5-14-test-note-2026-05-15</guid>
+      <pubDate>Fri, 15 May 2026 01:45:23 GMT</pubDate>
+      <description><![CDATA[The 10 year yields just surged. Reasons notwithstanding, this surely squashes the idea of rate cuts this year. Hopefully markets are not counting on those in their pursuit of SPX 8000
+
+nic]]></description>
+    </item>
     <item>
       <title>POC Writer Test 2</title>
       <link>https://simplestocks.com/member-feed#poc-writer-test-2-2026-05-15</link>
