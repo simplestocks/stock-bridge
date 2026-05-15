@@ -1,0 +1,52 @@
+[
+  {
+    "id": "market-open-2026-05-14",
+    "date": "2026-05-14T09:42:00-07:00",
+    "type": "alert",
+    "title": "Market Open Note",
+    "summary": "SPX is holding support. No chase until reclaim.",
+    "body": "SPX is holding support. No chase until reclaim. Premium is still elevated, so wait for confirmation before pressing a new entry.",
+    "tags": ["SPX", "0DTE", "Market Open"],
+    "author": "Nic"
+  },
+  {
+    "id": "nvda-gap-fill-2026-05-14",
+    "date": "2026-05-14T12:18:00-07:00",
+    "type": "update",
+    "title": "NVDA Gap Fill Note",
+    "summary": "NVDA defended the first zone. Watch the next retest.",
+    "body": "NVDA defended the first zone. If buyers hold the retest, the next squeeze can start from here. If it loses the level, stand down.",
+    "tags": ["NVDA", "Gap Fill", "Education"],
+    "author": "Nic"
+  },
+  {
+    "id": "earnings-risk-2026-05-13",
+    "date": "2026-05-13T15:40:00-07:00",
+    "type": "education",
+    "title": "Earnings Risk Reminder",
+    "summary": "Do not confuse high premium with free money.",
+    "body": "High premium is not free money. Earnings trades need defined risk, clear size, and no emotional averaging after the move starts.",
+    "tags": ["Earnings", "Risk", "Options"],
+    "author": "Nic"
+  },
+  {
+    "id": "membership-note-2026-05-12",
+    "date": "2026-05-12T10:05:00-07:00",
+    "type": "member-note",
+    "title": "Member Room Note",
+    "summary": "Clean entries beat busy screens.",
+    "body": "Clean entries beat busy screens. If the room is noisy, reduce the chart to the level, the invalidation, and the next decision.",
+    "tags": ["Members", "Process", "Education"],
+    "author": "Nic"
+  },
+  {
+    "id": "spx-no-trade-2026-05-10",
+    "date": "2026-05-10T08:55:00-07:00",
+    "type": "alert",
+    "title": "SPX No Trade Zone",
+    "summary": "The best trade is waiting while price chops inside the box.",
+    "body": "The best trade is waiting while price chops inside the box. Let the market leave the range before giving it your money.",
+    "tags": ["SPX", "Patience", "0DTE"],
+    "author": "Nic"
+  }
+]
