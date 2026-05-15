@@ -163,13 +163,13 @@ exports.handler = async function(event) {
   if (cleanPath === 'login' && event.httpMethod === 'POST') {
     const form = parseForm(event);
     if (checkPassword(form.get('password'))) {
-      return redirect('/admin/', { 'Set-Cookie': makeCookie() });
+      return redirect('/admin', { 'Set-Cookie': makeCookie() });
     }
     return loginPage('Wrong password.');
   }
 
   if (cleanPath === 'logout') {
-    return redirect('/admin/', { 'Set-Cookie': clearCookie() });
+    return redirect('/admin', { 'Set-Cookie': clearCookie() });
   }
 
   if (!process.env.ADMIN_PASSWORD || !process.env.ADMIN_SESSION_SECRET) {
