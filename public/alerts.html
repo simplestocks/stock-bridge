@@ -162,6 +162,8 @@
   .ticker-btn.active-iwm { background: #1a1a2a; border-color: var(--morn); color: var(--morn); }
   .ticker-btn.active-rut { background: #1a2a1a; border-color: var(--bull); color: var(--bull); }
   .ticker-btn.active-xsp { background: #1a2a1a; border-color: var(--bull); color: var(--bull); }
+  .trade-ticker-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin-bottom: 10px; }
+  .trade-clear-inline { height: 41px; min-width: 92px; padding: 0 16px; }
   .type-btn { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 3px; cursor: pointer; transition: all 0.15s; }
   .type-btn:hover { color: var(--text); }
   .type-btn.active { background: #2a2a1a; border-color: #ffcc00; color: #ffcc00; }
@@ -731,19 +733,17 @@
     <div class="id-display">TRADE ID: <span style="color:var(--trade)" id="trdId">—</span></div>
 
     <div class="section-label sl-trd">Ticker</div>
-    <div class="form-grid" style="margin-bottom:10px;">
+    <div class="trade-ticker-row">
       <div class="field">
         <label>Free-text Ticker (for any ticker — BA, AAPL, etc.)</label>
         <input type="text" id="trd_free_ticker" placeholder="e.g. BA, AAPL, TSLA" oninput="if(this.value){document.querySelectorAll('.ticker-btn').forEach(b=>{b.className='ticker-btn';});currentTicker=this.value.toUpperCase().trim();}">
       </div>
+      <button class="btn-clear trade-clear-inline" onclick="clearTrade()">Clear</button>
     </div>
-    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">OR QUICK SELECT — SPX / SPY GROUP</div>
+    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">Quick Select</div>
     <div class="ticker-btn-group" id="trd_ticker_btns">
       <button class="ticker-btn" onclick="selectTicker('SPX',this)">SPX</button>
       <button class="ticker-btn" onclick="selectTicker('SPY',this)">SPY</button>
-    </div>
-    <div style="margin-bottom:6px;font-family:var(--mono);font-size:10px;color:var(--muted);">OTHER</div>
-    <div class="ticker-btn-group">
       <button class="ticker-btn" onclick="selectTicker('QQQ',this)">QQQ</button>
       <button class="ticker-btn" onclick="selectTicker('IWM',this)">IWM</button>
       <button class="ticker-btn" onclick="selectTicker('RUT',this)">RUT</button>
@@ -1972,10 +1972,11 @@
     document.getElementById('trd_pnl_pct').textContent='—';
     document.getElementById('trd_s1_label').textContent='Strike 1';
     const ftEl=document.getElementById('trd_free_ticker');if(ftEl)ftEl.value='';
-    // Reset expiration to today
-    const now=new Date();
-    const todayReset=`${MONTHS[now.getMonth()]} ${now.getDate()}${ordinal(now.getDate())}`;
-    const expEl=document.getElementById('trd_exp');if(expEl)expEl.value=todayReset;
+    ['trd_query_ticker','exit_close','exit_notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['trdLogStatus','trdQueryStatus'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
+    const exitPanel=document.getElementById('exitFormPanel');if(exitPanel)exitPanel.style.display='none';
+    const logSection=document.getElementById('trd_log_section');if(logSection)logSection.style.display='none';
+    sessionTrades=[];
     updateIds();
   }
 
