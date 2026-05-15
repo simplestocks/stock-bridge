@@ -146,6 +146,7 @@ function serveFile(name) {
       .replaceAll('./index.html', '/.netlify/functions/admin?path=index.html')
       .replaceAll('./writer.html', '/.netlify/functions/admin?path=writer.html');
   }
+  if (name.endsWith('.html')) body = rewriteAdminLinks(body);
   if (name.endsWith('.html')) body = injectAdminBackButton(body);
   return {
     statusCode: 200,
@@ -155,6 +156,16 @@ function serveFile(name) {
     },
     body
   };
+}
+
+function rewriteAdminLinks(body) {
+  return body
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/command-center.html', '/.netlify/functions/admin?path=command-center.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/command-center', '/.netlify/functions/admin?path=command-center.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/odte-dashboard.html', '/.netlify/functions/admin?path=odte-dashboard.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/alerts.html', '/.netlify/functions/admin?path=alerts.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/writer.html', '/.netlify/functions/admin?path=writer.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/index.html', '/.netlify/functions/admin?path=index.html');
 }
 
 function injectAdminBackButton(body) {
