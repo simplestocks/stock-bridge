@@ -96,6 +96,8 @@ function homePage() {
     a span { display:block; margin-top:6px; color:#9daabe; font-weight:400; font-size:13px; }
     a.railway { border-color:#79b8ff; background:#10243d; color:#d9ecff; }
     a.railway span { color:#9fc9f5; }
+    a.event-app { border-color:#ffb454; background:#3a2209; color:#ffe1b5; }
+    a.event-app span { color:#ffc977; }
     .top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:18px; }
     .logout { border-color:#49313a; color:#ffb0b0; }
   </style>
@@ -112,6 +114,7 @@ function homePage() {
       <a href="/.netlify/functions/admin?path=command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
       <a href="/.netlify/functions/admin?path=odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
       <a href="/.netlify/functions/admin?path=index.html">Feed Viewer<span>Protected feed test page.</span></a>
+      <a class="event-app" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager<span>Apps Script event dashboard.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix Railway<span>Live Railway dashboard root.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Magix Viewer<span>Live Railway viewer page.</span></a>
     </div>
