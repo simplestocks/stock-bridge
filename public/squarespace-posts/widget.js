@@ -6,7 +6,7 @@
   const feedUrl = new URL(root.getAttribute('data-feed') || '/.netlify/functions/member-feed', scriptUrl).toString();
   const ticketUrl = new URL(root.getAttribute('data-ticket') || '/.netlify/functions/member-feed-ticket', scriptUrl).toString();
   const refreshMs = Number(root.getAttribute('data-refresh-ms') || 30000);
-  const state = { posts: [], query: '', tag: 'all' };
+  const state = { posts: [], query: '', tag: 'all', lane: 'all' };
 
   root.innerHTML = [
     '<div class="ss-feed-shell">',
@@ -34,6 +34,7 @@
     render();
   });
 
+  setupExternalNavControls();
   loadFeed();
   if (refreshMs >= 5000) {
     window.setInterval(() => loadFeed(true), refreshMs);
@@ -78,7 +79,8 @@
       const haystack = normalizeSearch([post.title, post.summary, post.body, post.type, post.author, ...(post.tags || [])].join(' '));
       const queryOk = !terms.length || terms.every((term) => haystack.includes(term));
       const tagOk = state.tag === 'all' || (post.tags || []).includes(state.tag);
-      return queryOk && tagOk;
+      const laneOk = state.lane === 'all' || postLane(post) === state.lane;
+      return queryOk && tagOk && laneOk;
     });
 
     status.textContent = filtered.length + ' post' + (filtered.length === 1 ? '' : 's');
@@ -96,8 +98,9 @@
     });
     const tags = (post.tags || []).map((tag) => '<span class="ss-feed-tag">' + escapeHtml(tag) + '</span>').join('');
     const type = post.type || 'post';
+    const lane = postLane(post);
     return [
-      '<article class="ss-feed-post ss-feed-' + escapeAttr(type) + '" id="' + escapeAttr(post.id) + '">',
+      '<article class="ss-feed-post ss-feed-' + escapeAttr(type) + '" data-type="' + escapeAttr(type) + '" data-feed-lane="' + escapeAttr(lane) + '" id="' + escapeAttr(post.id) + '">',
       '  <div class="ss-feed-meta">' + escapeHtml(dateText) + ' / ' + escapeHtml(typeLabel(type)) + '</div>',
       '  <h3>' + escapeHtml(post.title) + '</h3>',
       '  <p class="ss-feed-summary">' + escapeHtml(post.summary || '') + '</p>',
@@ -162,6 +165,40 @@
       'member-note': 'Event'
     };
     return labels[type] || type;
+  }
+
+  function postLane(post) {
+    const type = String(post.type || '').toLowerCase();
+    if (['new-trade', 'trade-update', 'trade', 'trades'].includes(type)) return 'trades';
+    return 'updates';
+  }
+
+  function setupExternalNavControls() {
+    [
+      ['btn-all', 'all'],
+      ['btn-trades', 'trades'],
+      ['btn-updates', 'updates']
+    ].forEach(([id, lane]) => {
+      const button = document.getElementById(id);
+      if (!button || button.dataset.ssFeedBound === '1') return;
+      button.dataset.ssFeedBound = '1';
+      button.addEventListener('click', () => {
+        state.lane = lane;
+        updateExternalNavControls();
+        render();
+      });
+    });
+  }
+
+  function updateExternalNavControls() {
+    [
+      ['btn-all', 'all'],
+      ['btn-trades', 'trades'],
+      ['btn-updates', 'updates']
+    ].forEach(([id, lane]) => {
+      const button = document.getElementById(id);
+      if (button) button.classList.toggle('nav-active', state.lane === lane);
+    });
   }
 
   function escapeHtml(value) {
