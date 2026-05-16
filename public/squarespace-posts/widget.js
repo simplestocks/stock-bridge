@@ -3,7 +3,8 @@
   if (!root) return;
 
   const scriptUrl = document.currentScript && document.currentScript.src ? document.currentScript.src : 'https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/widget.js';
-  const feedUrl = root.getAttribute('data-feed') || new URL('/.netlify/functions/member-feed', scriptUrl).toString();
+  const feedUrl = new URL(root.getAttribute('data-feed') || '/.netlify/functions/member-feed', scriptUrl).toString();
+  const ticketUrl = new URL(root.getAttribute('data-ticket') || '/.netlify/functions/member-feed-ticket', scriptUrl).toString();
   const refreshMs = Number(root.getAttribute('data-refresh-ms') || 30000);
   const state = { posts: [], query: '', tag: 'all' };
 
@@ -38,24 +39,30 @@
     window.setInterval(() => loadFeed(true), refreshMs);
   }
 
-  function loadFeed(isRefresh) {
-    fetch(feedUrl + cacheBust(), { cache: 'no-store' })
-      .then((res) => {
-        if (!res.ok) throw new Error('Feed failed: ' + res.status);
-        return res.json();
-      })
-      .then((posts) => {
-        const nextPosts = posts.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-        const nextSignature = nextPosts.map((post) => post.id + ':' + post.date).join('|');
-        const currentSignature = state.posts.map((post) => post.id + ':' + post.date).join('|');
-        if (isRefresh && nextSignature === currentSignature) return;
-        state.posts = nextPosts;
-        hydrateTags();
-        render();
-      })
-      .catch((err) => {
-        if (!isRefresh) status.textContent = 'Could not load posts: ' + err.message;
-      });
+  async function loadFeed(isRefresh) {
+    try {
+      const ticket = await getTicket();
+      const res = await fetch(withParams(feedUrl, { token: ticket, t: Date.now() }), { cache: 'no-store' });
+      if (!res.ok) throw new Error('Feed failed: ' + res.status);
+      const posts = await res.json();
+      const nextPosts = posts.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+      const nextSignature = nextPosts.map((post) => post.id + ':' + post.date).join('|');
+      const currentSignature = state.posts.map((post) => post.id + ':' + post.date).join('|');
+      if (isRefresh && nextSignature === currentSignature) return;
+      state.posts = nextPosts;
+      hydrateTags();
+      render();
+    } catch (err) {
+      if (!isRefresh) status.textContent = 'Could not load posts: ' + err.message;
+    }
+  }
+
+  async function getTicket() {
+    const res = await fetch(withParams(ticketUrl, { t: Date.now() }), { cache: 'no-store' });
+    if (!res.ok) throw new Error('Ticket failed: ' + res.status);
+    const json = await res.json();
+    if (!json.token) throw new Error('Ticket missing');
+    return json.token;
   }
 
   function hydrateTags() {
@@ -186,7 +193,9 @@
       .trim();
   }
 
-  function cacheBust() {
-    return (feedUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+  function withParams(url, params) {
+    const next = new URL(url, window.location.href);
+    Object.keys(params).forEach((key) => next.searchParams.set(key, params[key]));
+    return next.toString();
   }
 })();

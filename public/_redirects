@@ -1,3 +1,6 @@
+/squarespace-posts/writer.html /.netlify/functions/admin?path=writer.html 200!
+/squarespace-posts/index.html /.netlify/functions/admin?path=index.html 200!
+/squarespace-posts/feed-doctor.html /.netlify/functions/admin?path=feed-doctor.html 200!
 /admin /.netlify/functions/admin?path= 200
 /admin/ /.netlify/functions/admin?path= 200
 /admin/login /.netlify/functions/admin?path=login 200
@@ -7,6 +10,7 @@
 /admin/command-center.html /.netlify/functions/admin?path=command-center.html 200
 /admin/odte-dashboard.html /.netlify/functions/admin?path=odte-dashboard.html 200
 /admin/index.html /.netlify/functions/admin?path=index.html 200
+/admin/feed-doctor.html /.netlify/functions/admin?path=feed-doctor.html 200
 /admin/styles.css /.netlify/functions/admin?path=styles.css 200
 /admin/widget.js /.netlify/functions/admin?path=widget.js 200
 /admin/* /.netlify/functions/admin?path=:splat 200
@@ -14,6 +18,8 @@
 /squarespace-posts/styles.css /squarespace-posts/styles.css 200
 /squarespace-posts/widget.js /squarespace-posts/widget.js 200
 /squarespace-posts/embed-snippet.html /squarespace-posts/embed-snippet.html 200
+/squarespace-posts/posts.json /security-lockdown.html 302!
+/squarespace-posts/feed.xml /security-lockdown.html 302!
 /alerts.html /security-lockdown.html 302!
 /command-center /security-lockdown.html 302!
 /command-center.html /security-lockdown.html 302!

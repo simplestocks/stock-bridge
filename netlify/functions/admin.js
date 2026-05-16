@@ -17,6 +17,7 @@ const FILES = {
   'styles.css': 'public/squarespace-posts/styles.css',
   'widget.js': 'public/squarespace-posts/widget.js',
   'index.html': 'public/squarespace-posts/index.html',
+  'feed-doctor.html': 'public/squarespace-posts/feed-doctor.html',
   'alerts.html': 'public/alerts.html',
   'command-center.html': 'public/command-center.html',
   'odte-dashboard.html': 'public/odte-dashboard.html'
@@ -112,6 +113,7 @@ function homePage() {
       <a href="/admin/command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
       <a href="/admin/odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
       <a href="/admin/index.html">Feed Viewer<span>Protected feed test page.</span></a>
+      <a href="/admin/feed-doctor.html">Feed Doctor<span>Panic check and recovery snippet.</span></a>
       <a class="event-app" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager<span>Apps Script event dashboard.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix Railway<span>Live Railway dashboard root.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Magix Viewer<span>Live Railway viewer page.</span></a>

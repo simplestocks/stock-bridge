@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SimpleStocks Feed Doctor</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d14;
+      --panel: #111a27;
+      --line: #26364d;
+      --ink: #eef5ff;
+      --muted: #9fb0c5;
+      --good: #35d07f;
+      --bad: #ff6969;
+      --warn: #f8c45c;
+      --blue: #4ea1ff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+    main { max-width: 1060px; margin: 0 auto; padding: 30px 18px 52px; }
+    header { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; margin-bottom: 18px; }
+    h1 { margin: 0 0 6px; font-size: 30px; line-height: 1.05; }
+    p { margin: 0; color: var(--muted); line-height: 1.45; }
+    .btn, button {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #162235;
+      color: var(--ink);
+      padding: 10px 12px;
+      text-decoration: none;
+      font: 800 13px/1 Arial, Helvetica, sans-serif;
+      cursor: pointer;
+    }
+    button.primary { background: var(--blue); border-color: var(--blue); color: #05111f; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); gap: 14px; align-items: start; }
+    .card { border: 1px solid var(--line); border-radius: 9px; background: var(--panel); padding: 16px; }
+    .verdict { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: 18px; font-weight: 900; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 18px currentColor; }
+    .ok .dot { background: var(--good); }
+    .bad .dot { background: var(--bad); }
+    .row { display: grid; grid-template-columns: 160px 80px minmax(0, 1fr); gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); align-items: center; }
+    .name { font-weight: 800; }
+    .status { font-weight: 900; text-transform: uppercase; font-size: 12px; }
+    .pass { color: var(--good); }
+    .fail { color: var(--bad); }
+    .pending { color: var(--warn); }
+    .detail { color: var(--muted); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+    h2 { margin: 0 0 10px; font-size: 18px; }
+    textarea {
+      width: 100%;
+      min-height: 260px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #08111f;
+      color: var(--ink);
+      padding: 12px;
+      font: 12px/1.45 Consolas, "Courier New", monospace;
+      resize: vertical;
+    }
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .links { display: grid; gap: 8px; margin-top: 10px; }
+    .links a { color: #9ecbff; overflow-wrap: anywhere; }
+    @media (max-width: 860px) {
+      header, .grid { display: block; }
+      .card { margin-bottom: 14px; }
+      .row { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Feed Doctor</h1>
+        <p>One-page panic check for the Squarespace member feed.</p>
+      </div>
+      <a class="btn" href="/admin/">Admin</a>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <div id="verdict" class="verdict">
+          <span class="dot"></span>
+          <span>Checking feed...</span>
+        </div>
+        <div id="checks"></div>
+        <div class="tools">
+          <button class="primary" type="button" id="rerun">Run check again</button>
+          <a class="btn" href="https://netlify.statuspage.io/" target="_blank" rel="noreferrer">Netlify status</a>
+          <a class="btn" href="https://www.githubstatus.com/" target="_blank" rel="noreferrer">GitHub status</a>
+        </div>
+      </div>
+
+      <aside class="card">
+        <h2>Panic Result</h2>
+        <p id="plain">Checking.</p>
+        <div class="links">
+          <a href="/admin/writer.html">Open Post Writer</a>
+          <a href="/admin/index.html">Open protected feed viewer</a>
+          <a href="/admin/feed-doctor.html">Open Feed Doctor</a>
+          <a href="https://github.com/simplestocks/stock-bridge" target="_blank" rel="noreferrer">Open GitHub repo</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card">
+      <h2>Emergency Squarespace Fallback</h2>
+      <p>If the live widget dies but Squarespace still works, paste this static block into the locked Squarespace page. It uses the latest posts Feed Doctor could read.</p>
+      <textarea id="fallback" readonly>Waiting for feed check...</textarea>
+      <div class="tools">
+        <button type="button" id="copy-fallback">Copy fallback HTML</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>AI Repair Prompt</h2>
+      <p>Paste this into Codex/Grok/Claude if the feed is broken later.</p>
+      <textarea id="repair" readonly></textarea>
+      <div class="tools">
+        <button type="button" id="copy-repair">Copy repair prompt</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const checksEl = document.getElementById('checks');
+    const verdictEl = document.getElementById('verdict');
+    const plainEl = document.getElementById('plain');
+    const fallbackEl = document.getElementById('fallback');
+    const repairEl = document.getElementById('repair');
+    const repairPrompt = `Project: Squarespace member feed / Stock Bridge. Use C:\\FUCKYOUCHATGPT\\stock-bridge-push-work and repo https://github.com/simplestocks/stock-bridge. Live site is https://jazzy-starlight-0a9a95.netlify.app. The Squarespace locked member page loads https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/styles.css and widget.js. Posts are stored in Netlify Blobs by netlify/functions/member-post-store.js. The browser must NOT read public posts.json or feed.xml. The widget must call /.netlify/functions/member-feed-ticket, then call /.netlify/functions/member-feed with the short-lived signed token. Members must not enter any extra password beyond Squarespace. Start by opening /admin/feed-doctor.html and checking member-feed-auth.js, member-feed-ticket.js, member-feed.js, member-post-store.js, squarespace-posts-save.js, and public/squarespace-posts/widget.js. Fix the smallest broken piece, then verify: no-token feed returns 403, ticket endpoint works from allowed origin, tokenized feed returns 200, old public posts.json/feed.xml return 404.`;
+    repairEl.value = repairPrompt;
+
+    document.getElementById('rerun').addEventListener('click', run);
+    document.getElementById('copy-fallback').addEventListener('click', () => copyText(fallbackEl.value, 'Fallback copied.'));
+    document.getElementById('copy-repair').addEventListener('click', () => copyText(repairEl.value, 'Repair prompt copied.'));
+
+    run();
+
+    async function run() {
+      setVerdict('pending', 'Checking feed...');
+      checksEl.innerHTML = '';
+      plainEl.textContent = 'Checking.';
+      fallbackEl.value = 'Waiting for feed check...';
+
+      const results = [];
+      const health = await checkJson('Admin health', '/.netlify/functions/member-feed-health');
+      results.push(health);
+
+      const widget = await checkFetch('Widget file', '/squarespace-posts/widget.js', 200);
+      results.push(widget);
+
+      const direct = await checkFetch('Feed without ticket', '/.netlify/functions/member-feed?doctor=' + Date.now(), 403);
+      results.push(direct);
+
+      const legacyJson = await checkFetch('Old public posts.json', '/squarespace-posts/posts.json?doctor=' + Date.now(), [302, 404], { redirect: 'manual' });
+      results.push(legacyJson);
+
+      const legacyXml = await checkFetch('Old public feed.xml', '/squarespace-posts/feed.xml?doctor=' + Date.now(), [302, 404], { redirect: 'manual' });
+      results.push(legacyXml);
+
+      let posts = [];
+      const ticketResult = await getTicket();
+      results.push(ticketResult.result);
+      if (ticketResult.token) {
+        const feedResult = await getFeed(ticketResult.token);
+        results.push(feedResult.result);
+        posts = feedResult.posts;
+      }
+
+      if (health.body && Array.isArray(health.body.checks)) {
+        health.body.checks.forEach((item) => results.push({
+          name: item.name,
+          ok: item.ok,
+          expected: 'pass',
+          actual: item.ok ? 'pass' : 'fail',
+          detail: item.detail
+        }));
+      }
+
+      renderChecks(results);
+      const failed = results.filter((item) => !item.ok);
+      if (!failed.length) {
+        setVerdict('ok', 'Feed system is healthy.');
+        plainEl.textContent = 'Use the normal writer. The live widget, ticket, feed, storage, and old public-file removal all check out.';
+      } else {
+        setVerdict('bad', failed[0].name + ' is broken.');
+        plainEl.textContent = explainFailure(failed[0]);
+      }
+      fallbackEl.value = buildFallback(posts);
+    }
+
+    async function checkFetch(name, url, expectedStatus, options = {}) {
+      try {
+        const expected = Array.isArray(expectedStatus) ? expectedStatus : [expectedStatus];
+        const res = await fetch(url, { cache: 'no-store', ...options });
+        return {
+          name,
+          ok: expected.includes(res.status),
+          expected: expected.join(' or '),
+          actual: String(res.status),
+          detail: expected.includes(res.status) ? 'Correct response' : 'Expected ' + expected.join(' or ') + ', got ' + res.status
+        };
+      } catch (error) {
+        return { name, ok: false, expected: String(expectedStatus), actual: 'error', detail: error.message };
+      }
+    }
+
+    async function checkJson(name, url) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        const body = await res.json().catch(() => null);
+        return {
+          name,
+          ok: res.ok && body && body.ok !== false,
+          expected: '200',
+          actual: String(res.status),
+          detail: body && body.checkedAt ? 'Checked ' + body.checkedAt : (body && body.error) || 'No JSON body',
+          body
+        };
+      } catch (error) {
+        return { name, ok: false, expected: '200', actual: 'error', detail: error.message };
+      }
+    }
+
+    async function getTicket() {
+      try {
+        const res = await fetch('/.netlify/functions/member-feed-ticket?doctor=' + Date.now(), { cache: 'no-store' });
+        const body = await res.json().catch(() => null);
+        return {
+          token: body && body.token,
+          result: {
+            name: 'Feed ticket',
+            ok: res.ok && Boolean(body && body.token),
+            expected: '200 + token',
+            actual: String(res.status),
+            detail: body && body.token ? 'Ticket issued for ' + body.expiresIn + ' seconds' : (body && body.error) || 'No token'
+          }
+        };
+      } catch (error) {
+        return { token: '', result: { name: 'Feed ticket', ok: false, expected: '200 + token', actual: 'error', detail: error.message } };
+      }
+    }
+
+    async function getFeed(token) {
+      try {
+        const url = '/.netlify/functions/member-feed?token=' + encodeURIComponent(token) + '&doctor=' + Date.now();
+        const res = await fetch(url, { cache: 'no-store' });
+        const body = await res.json().catch(() => null);
+        const posts = Array.isArray(body) ? body : [];
+        return {
+          posts,
+          result: {
+            name: 'Tokenized feed',
+            ok: res.ok && Array.isArray(body),
+            expected: '200 + posts',
+            actual: String(res.status),
+            detail: res.ok ? posts.length + ' post' + (posts.length === 1 ? '' : 's') + ' returned' : (body && body.error) || 'Feed failed'
+          }
+        };
+      } catch (error) {
+        return { posts: [], result: { name: 'Tokenized feed', ok: false, expected: '200 + posts', actual: 'error', detail: error.message } };
+      }
+    }
+
+    function renderChecks(items) {
+      checksEl.innerHTML = items.map((item) => `
+        <div class="row">
+          <div class="name">${escapeHtml(item.name)}</div>
+          <div class="status ${item.ok ? 'pass' : 'fail'}">${item.ok ? 'pass' : 'fail'}</div>
+          <div class="detail">Expected ${escapeHtml(item.expected)}. Got ${escapeHtml(item.actual)}. ${escapeHtml(item.detail || '')}</div>
+        </div>
+      `).join('');
+    }
+
+    function setVerdict(kind, text) {
+      verdictEl.className = 'verdict ' + kind;
+      verdictEl.querySelector('span:last-child').textContent = text;
+    }
+
+    function explainFailure(item) {
+      if (item.name.includes('Widget')) return 'The static widget file is not loading. Check Netlify deploy or public/squarespace-posts/widget.js.';
+      if (item.name.includes('Ticket')) return 'The ticket function is failing. Check MEMBER_FEED_SECRET or ADMIN_SESSION_SECRET and member-feed-ticket.js.';
+      if (item.name.includes('Tokenized')) return 'The feed function or Blob storage is failing. Check member-feed.js and member-post-store.js.';
+      if (item.name.includes('Old public')) return 'A legacy public feed file is visible. Remove public/squarespace-posts/posts.json and feed.xml.';
+      if (item.name.includes('Admin health')) return 'The admin health function failed. Check admin login cookie, Netlify functions, and Blob storage.';
+      return item.detail || 'Use the repair prompt below.';
+    }
+
+    function buildFallback(posts) {
+      const safePosts = posts.slice(0, 20);
+      if (!safePosts.length) return '<!-- Feed Doctor could not read posts. Add emergency text here inside the locked Squarespace page. -->';
+      return `<section class="ss-emergency-feed">\n<style>\n.ss-emergency-feed{background:#050505;color:#fff;font-family:Arial,Helvetica,sans-serif;display:grid;gap:14px}.ss-emergency-post{background:#141414;border-left:4px solid #00e676;border-radius:4px;padding:16px}.ss-emergency-meta{color:#8a8a8a;font-size:12px;margin-bottom:6px}.ss-emergency-post h3{margin:0 0 8px;font-size:21px}.ss-emergency-post p{margin:8px 0;line-height:1.45}.ss-emergency-body{white-space:pre-wrap;line-height:1.45}\n</style>\n${safePosts.map((post) => `<article class="ss-emergency-post">\n<div class="ss-emergency-meta">${escapeHtml(formatDate(post.date))} / ${escapeHtml(post.type || 'post')}</div>\n<h3>${escapeHtml(post.title || '')}</h3>\n<p><strong>${escapeHtml(post.summary || '')}</strong></p>\n<div class="ss-emergency-body">${escapeHtml(post.body || '')}</div>\n</article>`).join('\n')}\n</section>`;
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      return isNaN(date.getTime()) ? '' : date.toLocaleString();
+    }
+
+    function copyText(value, message) {
+      navigator.clipboard.writeText(value).then(() => {
+        plainEl.textContent = message;
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
