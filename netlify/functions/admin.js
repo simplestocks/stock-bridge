@@ -222,7 +222,7 @@ exports.handler = async function(event) {
   }
 
   if (cleanPath === 'login') {
-    return isAuthed(event) ? redirect('/.netlify/functions/admin') : loginPage();
+    return isAuthed(event) ? homePage() : loginPage();
   }
 
   if (!isAuthed(event)) return loginPage();
