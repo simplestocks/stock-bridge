@@ -99,9 +99,22 @@ function homePage() {
     a.event-app span { color:#ffc977; }
     .top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:18px; }
     .logout { border-color:#49313a; color:#ffb0b0; }
+    .panic-corner {
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:10;
+      width:min(260px, calc(100vw - 36px));
+      border-color:#ff5b5b;
+      background:#d60000;
+      color:#fff;
+      box-shadow:0 16px 40px rgba(0,0,0,.42);
+    }
+    .panic-corner span { color:#ffe5e5; }
   </style>
 </head>
 <body>
+  <a class="panic-corner" href="/admin/feed-doctor.html">FEED DOCTOR<span>Checks the member feed and gives the emergency fallback.</span></a>
   <main>
     <div class="top">
       <h1>SimpleStocks Admin</h1>
