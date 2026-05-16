@@ -4,6 +4,9 @@
 /admin/logout /.netlify/functions/admin?path=logout 200
 /admin/* /.netlify/functions/admin?path=:splat 200
 /admin.html /.netlify/functions/admin 200
+/squarespace-posts/styles.css /squarespace-posts/styles.css 200
+/squarespace-posts/widget.js /squarespace-posts/widget.js 200
+/squarespace-posts/embed-snippet.html /squarespace-posts/embed-snippet.html 200
 /alerts.html /security-lockdown.html 302!
 /command-center /security-lockdown.html 302!
 /command-center.html /security-lockdown.html 302!

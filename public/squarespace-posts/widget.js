@@ -2,7 +2,8 @@
   const root = document.getElementById('ss-post-feed');
   if (!root) return;
 
-  const feedUrl = root.getAttribute('data-feed') || 'posts.json';
+  const scriptUrl = document.currentScript && document.currentScript.src ? document.currentScript.src : 'https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/widget.js';
+  const feedUrl = root.getAttribute('data-feed') || new URL('/.netlify/functions/member-feed', scriptUrl).toString();
   const refreshMs = Number(root.getAttribute('data-refresh-ms') || 30000);
   const state = { posts: [], query: '', tag: 'all' };
 
