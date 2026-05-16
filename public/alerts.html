@@ -186,6 +186,7 @@
 
   .nav-launchers {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin: 10px 0 4px 0;
   }
@@ -221,6 +222,26 @@
     box-shadow: 0 0 6px rgba(0,0,0,0.5);
   }
   .xsearch-btn:hover { color: #fff; }
+
+  .viewer-btn,
+  .tos-btn {
+    padding: 7px 14px;
+    font-size: 0.72rem;
+  }
+
+  .viewer-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    border: 1px solid #6366f1;
+    box-shadow: 0 0 8px rgba(99,102,241,0.42);
+  }
+
+  .tos-btn {
+    background: linear-gradient(135deg, #d29922 0%, #b7791f 100%);
+    color: #000;
+    border: 1px solid #d29922;
+    box-shadow: 0 0 8px rgba(210,153,34,0.35);
+  }
 
   .earnings-btn {
     background: linear-gradient(135deg, #ff8c00 0%, #cc6600 100%);
@@ -294,10 +315,12 @@
   </header>
   <div class="nav-launchers">
     <a href="https://magix-production.up.railway.app/" target="_blank" class="nav-btn magix-btn">⚡ MAGIX</a>
-    <a href="/admin/command-center.html" target="_blank" class="nav-btn helo-btn">🧭 HELO</a>
-    <a href="xsearch://" class="nav-btn xsearch-btn">X Search</a>
-    <button class="nav-btn earnings-btn" onclick="openEarnings()">📊 Earnings</button>
     <a href="/admin/odte-dashboard.html" target="_blank" class="nav-btn odte-btn">SPX 0DTE</a>
+    <a href="/admin/command-center.html" target="_blank" class="nav-btn helo-btn">🧭 HELO</a>
+    <a href="https://magix-production.up.railway.app/" target="_blank" class="nav-btn xsearch-btn">Old 0DTE</a>
+    <button class="nav-btn earnings-btn" onclick="openEarnings()">📊 Earnings</button>
+    <a href="https://magix-production.up.railway.app/viewer.html" target="_blank" class="nav-btn viewer-btn">Viewer</a>
+    <a href="https://magix-production.up.railway.app/auth/tos" target="_blank" class="nav-btn tos-btn">Magix Auth TOS</a>
   </div>
 
 

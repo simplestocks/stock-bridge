@@ -14,5 +14,21 @@
     "status": "Done",
     "waitingOn": "Live verification",
     "nextStep": "Refresh Admin and confirm Worker Status is visible"
+  },
+  {
+    "worker": "Copernicus",
+    "project": "Alerts Generator",
+    "task": "Consolidate Magix, Old 0DTE, Viewer, and Auth TOS buttons",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh Alerts Generator and confirm nav buttons"
+  },
+  {
+    "worker": "Kant",
+    "project": "HELO",
+    "task": "Move AI dashboard into command-center dark skin",
+    "status": "Active",
+    "waitingOn": "Worker completion",
+    "nextStep": "Review HELO diff before push"
   }
 ]
