@@ -221,6 +221,10 @@ exports.handler = async function(event) {
     return loginPage('Admin is not configured yet. Set ADMIN_PASSWORD and ADMIN_SESSION_SECRET in Netlify.');
   }
 
+  if (cleanPath === 'login') {
+    return isAuthed(event) ? redirect('/.netlify/functions/admin') : loginPage();
+  }
+
   if (!isAuthed(event)) return loginPage();
   if (!cleanPath) return homePage();
   return serveFile(cleanPath);
