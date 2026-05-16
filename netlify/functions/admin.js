@@ -68,7 +68,7 @@ function loginPage(message = '') {
   </style>
 </head>
 <body>
-  <form method="post" action="/.netlify/functions/admin?path=login">
+  <form method="post" action="/admin/login">
     <h1>SimpleStocks Admin</h1>
     <p>Private tools are locked. Enter the admin password.</p>
     <input name="password" type="password" autocomplete="current-password" autofocus>
@@ -106,14 +106,14 @@ function homePage() {
   <main>
     <div class="top">
       <h1>SimpleStocks Admin</h1>
-      <a class="logout" href="/.netlify/functions/admin?path=logout">Log out</a>
+      <a class="logout" href="/admin/logout">Log out</a>
     </div>
     <div class="grid">
-      <a href="/.netlify/functions/admin?path=writer.html">Post Writer<span>Create member feed posts.</span></a>
-      <a href="/.netlify/functions/admin?path=alerts.html">Alert Generator<span>Morning notes, alerts, trades.</span></a>
-      <a href="/.netlify/functions/admin?path=command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
-      <a href="/.netlify/functions/admin?path=odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
-      <a href="/.netlify/functions/admin?path=index.html">Feed Viewer<span>Protected feed test page.</span></a>
+      <a href="/admin/writer.html">Post Writer<span>Create member feed posts.</span></a>
+      <a href="/admin/alerts.html">Alert Generator<span>Morning notes, alerts, trades.</span></a>
+      <a href="/admin/command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
+      <a href="/admin/odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
+      <a href="/admin/index.html">Feed Viewer<span>Protected feed test page.</span></a>
       <a class="event-app" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager<span>Apps Script event dashboard.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix Railway<span>Live Railway dashboard root.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Magix Viewer<span>Live Railway viewer page.</span></a>
@@ -146,12 +146,12 @@ function serveFile(name) {
   if (!abs.startsWith(ROOT) || !fs.existsSync(abs)) return html(404, 'Not found');
   let body = fs.readFileSync(abs, 'utf8');
   if (name === 'writer.html' || name === 'index.html') {
-    body = body.replaceAll('./styles.css', '/.netlify/functions/admin?path=styles.css')
-      .replaceAll('./widget.js', '/.netlify/functions/admin?path=widget.js')
-      .replaceAll('./posts.json', '/.netlify/functions/admin?path=posts.json')
-      .replaceAll('./feed.xml', '/.netlify/functions/admin?path=feed.xml')
-      .replaceAll('./index.html', '/.netlify/functions/admin?path=index.html')
-      .replaceAll('./writer.html', '/.netlify/functions/admin?path=writer.html');
+    body = body.replaceAll('./styles.css', '/admin/styles.css')
+      .replaceAll('./widget.js', '/admin/widget.js')
+      .replaceAll('./posts.json', '/admin/posts.json')
+      .replaceAll('./feed.xml', '/admin/feed.xml')
+      .replaceAll('./index.html', '/admin/index.html')
+      .replaceAll('./writer.html', '/admin/writer.html');
   }
   if (name.endsWith('.html')) body = rewriteAdminLinks(body);
   if (name.endsWith('.html')) body = injectAdminBackButton(body);
@@ -167,12 +167,12 @@ function serveFile(name) {
 
 function rewriteAdminLinks(body) {
   return body
-    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/command-center.html', '/.netlify/functions/admin?path=command-center.html')
-    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/command-center', '/.netlify/functions/admin?path=command-center.html')
-    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/odte-dashboard.html', '/.netlify/functions/admin?path=odte-dashboard.html')
-    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/alerts.html', '/.netlify/functions/admin?path=alerts.html')
-    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/writer.html', '/.netlify/functions/admin?path=writer.html')
-    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/index.html', '/.netlify/functions/admin?path=index.html');
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/command-center.html', '/admin/command-center.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/command-center', '/admin/command-center.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/odte-dashboard.html', '/admin/odte-dashboard.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/alerts.html', '/admin/alerts.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/writer.html', '/admin/writer.html')
+    .replaceAll('https://jazzy-starlight-0a9a95.netlify.app/squarespace-posts/index.html', '/admin/index.html');
 }
 
 function injectAdminBackButton(body) {
@@ -196,7 +196,7 @@ function injectAdminBackButton(body) {
   .ss-admin-back:hover { background: #1d6fe8; color: #fff; }
   body { padding-top: max(28px, env(safe-area-inset-top)); }
 </style>
-<a class="ss-admin-back" href="/.netlify/functions/admin">Admin</a>`;
+<a class="ss-admin-back" href="/admin/">Admin</a>`;
   if (body.includes('</body>')) return body.replace('</body>', `${bar}</body>`);
   return `${bar}${body}`;
 }
@@ -208,13 +208,13 @@ exports.handler = async function(event) {
   if (cleanPath === 'login' && event.httpMethod === 'POST') {
     const form = parseForm(event);
     if (checkPassword(form.get('password'))) {
-      return redirect('/.netlify/functions/admin', { 'Set-Cookie': makeCookie() });
+      return redirect('/admin/', { 'Set-Cookie': makeCookie() });
     }
     return loginPage('Wrong password.');
   }
 
   if (cleanPath === 'logout') {
-    return redirect('/.netlify/functions/admin', { 'Set-Cookie': clearCookie() });
+    return redirect('/admin/', { 'Set-Cookie': clearCookie() });
   }
 
   if (!process.env.ADMIN_PASSWORD || !process.env.ADMIN_SESSION_SECRET) {
