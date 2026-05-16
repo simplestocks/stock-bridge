@@ -42,7 +42,7 @@ exports.handler = async function(event) {
     : String(payload.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean);
 
   try {
-    const posts = await readPosts();
+    const posts = await readPosts(event);
     const post = {
       id: `${slugify(title)}-${date.toISOString().slice(0, 10)}`,
       date: date.toISOString(),
@@ -54,7 +54,7 @@ exports.handler = async function(event) {
       author: String(payload.author || 'Nic').trim() || 'Nic'
     };
     const nextPosts = [post, ...posts.filter((p) => p.id !== post.id)];
-    await writePosts(nextPosts);
+    await writePosts(nextPosts, event);
 
     return jsonResponse(200, { ok: true, post, count: nextPosts.length });
   } catch (err) {

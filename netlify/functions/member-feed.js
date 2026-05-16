@@ -72,7 +72,7 @@ exports.handler = async function(event) {
   if (!isAllowed(event)) return response(403, { error: 'Forbidden' });
 
   try {
-    const posts = await readPosts();
+    const posts = await readPosts(event);
     return response(200, posts, origin);
   } catch (error) {
     return response(500, { error: 'Feed unavailable' }, origin);
