@@ -1,516 +1,873 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Command Center — Nic</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HELO Command Center - Nic</title>
 <style>
   :root {
     --bg: #0b0f1a;
-    --card: #141a2b;
-    --card-border: #232b42;
+    --panel: #141a2b;
+    --panel-2: #101729;
+    --line: #263149;
+    --line-soft: rgba(255,255,255,.08);
     --text: #e6edf7;
-    --muted: #8792a8;
+    --muted: #8d98af;
     --accent: #4ea1ff;
-    --red: #ff4d4d;
-    --red-bg: rgba(255, 77, 77, 0.12);
-    --yellow: #ffc857;
-    --yellow-bg: rgba(255, 200, 87, 0.12);
-    --gray: #6b7489;
-    --gray-bg: rgba(107, 116, 137, 0.12);
     --green: #5eead4;
-    --green-bg: rgba(94, 234, 212, 0.10);
-    --code-bg: #0d1322;
+    --yellow: #ffc857;
+    --red: #ff5c75;
+    --blue: #7cb7ff;
+    --shadow: 0 18px 45px rgba(0,0,0,.22);
   }
+
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
-    padding: 32px 24px;
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.45;
   }
-  header {
-    max-width: 1700px;
-    margin: 0 auto 28px auto;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  h1 {
-    margin: 0;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  h1 span { color: var(--accent); }
-  .meta { color: var(--muted); font-size: 12px; }
-  .grid {
+
+  a { color: inherit; }
+
+  .shell {
     max-width: 1700px;
     margin: 0 auto;
+    padding: 28px 22px 34px;
+  }
+
+  header {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 20px;
+    grid-template-columns: minmax(260px, 1fr) auto;
+    gap: 16px;
+    align-items: end;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
   }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-  }
-  .card h2 {
-    margin: 0 0 14px 0;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-    line-height: 1.25;
-  }
-  .section-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--muted);
-    margin: 16px 0 6px 0;
-  }
-  .status, .notes-text {
-    font-size: 13px;
-    color: #c8d2e5;
+
+  h1 {
     margin: 0;
+    font-size: 30px;
+    line-height: 1.05;
+    letter-spacing: 0;
   }
-  code, .mono {
-    font-family: "SF Mono", Menlo, Consolas, monospace;
-    font-size: 12px;
-    background: var(--code-bg);
-    padding: 1px 6px;
-    border-radius: 4px;
-    color: #9cc2ff;
-  }
-  ol.actions, ul.flat {
-    margin: 6px 0 0 0;
-    padding-left: 0;
-    list-style: none;
-  }
-  ol.actions { counter-reset: step; }
-  ol.actions li {
-    counter-increment: step;
-    position: relative;
-    padding: 10px 12px 10px 36px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid transparent;
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    margin-top: 8px;
+    color: var(--muted);
     font-size: 13px;
   }
-  ol.actions li::before {
-    content: counter(step);
-    position: absolute;
-    left: 12px;
-    top: 10px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 700;
+
+  .top-actions,
+  .links {
     display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  button,
+  .button {
+    min-height: 36px;
+    border: 1px solid rgba(78,161,255,.45);
+    background: rgba(78,161,255,.16);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 8px 11px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-  }
-  ol.actions li .trigger {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 3px;
-    color: var(--muted);
-  }
-  ol.actions li.red { background: var(--red-bg); border-color: rgba(255,77,77,0.35); }
-  ol.actions li.red::before { background: var(--red); color: #fff; }
-  ol.actions li.red .trigger { color: var(--red); }
-  ol.actions li.yellow { background: var(--yellow-bg); border-color: rgba(255,200,87,0.35); }
-  ol.actions li.yellow::before { background: var(--yellow); color: #0b0f1a; }
-  ol.actions li.yellow .trigger { color: var(--yellow); }
-  ol.actions li.gray { background: var(--gray-bg); border-color: rgba(107,116,137,0.25); }
-  ol.actions li.gray::before { background: var(--gray); color: #fff; }
-  ol.actions li.gray .trigger { color: var(--gray); }
-  ol.actions li.green { background: var(--green-bg); border-color: rgba(94,234,212,0.35); }
-  ol.actions li.green::before { content: "✓"; background: var(--green); color: #0b0f1a; }
-  ol.actions li.green .trigger { color: var(--green); }
-
-  .card.completed {
-    border-color: rgba(94, 234, 212, 0.45);
-    background: linear-gradient(180deg, rgba(94,234,212,0.04) 0%, var(--card) 100%);
-  }
-  .card.completed h2::after {
-    content: "SHIPPED";
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--green);
-    background: var(--green-bg);
-    border: 1px solid rgba(94,234,212,0.4);
-    padding: 2px 8px;
-    border-radius: 10px;
-    vertical-align: middle;
+    white-space: nowrap;
   }
 
-  ul.flat li {
-    padding: 5px 0 5px 14px;
-    font-size: 13px;
-    position: relative;
-    color: #c8d2e5;
+  button.secondary,
+  .button.secondary {
+    border-color: var(--line);
+    background: rgba(255,255,255,.04);
+    color: #c9d4e8;
   }
-  ul.flat li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: var(--muted);
+
+  .toolbar {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 160px 180px;
+    gap: 10px;
+    padding: 18px 0;
   }
-  .cost {
-    color: var(--accent);
-    font-weight: 600;
+
+  input,
+  select,
+  textarea {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #0d1322;
+    color: var(--text);
+    min-height: 40px;
+    padding: 9px 11px;
+    font: inherit;
   }
-  .total-line {
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px dashed var(--card-border);
-    font-size: 12px;
-    color: var(--muted);
+
+  input::placeholder { color: #68748d; }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
   }
-  .total-line strong { color: var(--accent); }
-  .notes-box {
-    background: rgba(78, 161, 255, 0.05);
-    border: 1px dashed rgba(78, 161, 255, 0.25);
+
+  .metric,
+  .card,
+  .empty {
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 12px;
-    color: #b8c4dc;
-    font-style: italic;
-    white-space: pre-wrap;
+    box-shadow: var(--shadow);
   }
-  footer {
-    max-width: 1700px;
-    margin: 32px auto 0 auto;
+
+  .metric {
+    padding: 13px 14px;
+    min-height: 78px;
+  }
+
+  .metric strong {
+    display: block;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .metric span {
+    display: block;
+    margin-top: 8px;
     color: var(--muted);
     font-size: 11px;
-    text-align: center;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
   }
-  footer a { color: var(--accent); text-decoration: none; }
-  @media (max-width: 640px) {
-    body { padding: 20px 14px; }
-    .grid { grid-template-columns: 1fr; }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(230px, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+
+  .lane { min-width: 0; }
+
+  .lane-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    min-height: 30px;
+  }
+
+  .lane-title {
+    color: #dce6f7;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .lane-count {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 8px;
+    color: var(--muted);
+    background: rgba(255,255,255,.04);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .stack {
+    display: grid;
+    gap: 10px;
+  }
+
+  .card {
+    border-left: 5px solid var(--blue);
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+    min-height: 258px;
+    align-content: start;
+  }
+
+  .card[data-lane="idea"] { border-left-color: var(--yellow); }
+  .card[data-lane="build"] { border-left-color: var(--blue); }
+  .card[data-lane="qc"] { border-left-color: var(--red); }
+  .card[data-lane="deploy"] { border-left-color: var(--green); }
+  .card[data-lane="done"] { border-left-color: #6f7b91; }
+
+  .card h2 {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.18;
+    letter-spacing: 0;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255,255,255,.04);
+    color: #c3cee3;
+    min-height: 24px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .pill.good { color: var(--green); border-color: rgba(94,234,212,.35); background: rgba(94,234,212,.08); }
+  .pill.warn { color: var(--yellow); border-color: rgba(255,200,87,.35); background: rgba(255,200,87,.08); }
+
+  .summary,
+  .small {
+    margin: 0;
+    color: #bdc8dc;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .status-strip {
+    margin: 0;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: var(--panel-2);
+    color: #c7d3e7;
+    padding: 8px 9px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .status-strip strong {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .status-strip.last {
+    background: rgba(78,161,255,.07);
+    border-color: rgba(78,161,255,.22);
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  .links a,
+  .links button {
+    width: 100%;
+    min-height: 34px;
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  .links .primary {
+    background: rgba(94,234,212,.14);
+    border-color: rgba(94,234,212,.5);
+    color: var(--green);
+  }
+
+  details {
+    border-top: 1px solid var(--line-soft);
+    padding-top: 8px;
+  }
+
+  summary {
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  ul {
+    margin: 8px 0 0;
+    padding-left: 17px;
+    color: #aeb9ce;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .empty {
+    min-height: 110px;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    border-style: dashed;
+    background: rgba(255,255,255,.025);
+  }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,.68);
+    z-index: 5;
+  }
+
+  .modal.open { display: flex; }
+
+  .modal-box {
+    width: min(880px, 100%);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    box-shadow: 0 24px 80px rgba(0,0,0,.45);
+    padding: 18px;
+  }
+
+  .modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .modal h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 210px;
+    resize: vertical;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  footer {
+    margin-top: 28px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  @media (max-width: 1180px) {
+    .board { grid-template-columns: repeat(2, minmax(240px, 1fr)); }
+    .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 720px) {
+    .shell { padding: 18px 14px 28px; }
+    header,
+    .toolbar,
+    .board,
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+    .top-actions { justify-content: flex-start; }
+    h1 { font-size: 27px; }
   }
 </style>
 </head>
 <body>
-  <header>
-    <h1>Command <span>Center</span></h1>
-    <div class="meta">Nic · 7 active Claude projects · Last updated Apr 12, 2026 (PT)</div>
-  </header>
+  <div class="shell">
+    <header>
+      <div>
+        <h1>HELO <span>Command Center</span></h1>
+        <div class="subtitle" id="subtitle">ChatGPT HQ for Nic's active SimpleStocks work</div>
+      </div>
+      <div class="top-actions">
+        <a class="button secondary" href="/admin/alerts.html">Alerts</a>
+        <a class="button secondary" href="/admin/odte-dashboard.html">0DTE</a>
+        <button type="button" id="showAllPrompt">Foreman Prompt</button>
+      </div>
+    </header>
 
-  <div class="grid">
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="Search project, alias, repo, service...">
+      <select id="laneFilter" aria-label="Lane filter">
+        <option value="all">All lanes</option>
+        <option value="idea">Idea</option>
+        <option value="build">Build</option>
+        <option value="qc">QC</option>
+        <option value="deploy">Deploy</option>
+        <option value="done">Done</option>
+      </select>
+      <select id="confidenceFilter" aria-label="Confidence filter">
+        <option value="all">All confidence</option>
+        <option value="verified">Verified</option>
+        <option value="partial">Needs review</option>
+      </select>
+    </section>
 
-    <!-- ============ PROJECT 1: MAGIX ============ -->
-    <div class="card">
-      <h2>MAGIX — 0DTE SPX Dashboard</h2>
-
-      <div class="section-label">Status / What's Done</div>
-      <p class="status">
-        Replaced ThinkorSwim + Excel RTD workflow with cloud-hosted options pressure dashboard.
-        FastAPI backend + ThetaData v3 feed via Theta Terminal sidecar, both on Railway (private networking).
-        Frontend served same-origin at <code>magix-production.up.railway.app</code>. Public URL verified,
-        health endpoint responding, 0DTE expiration auto-detection working. Desktop <code>.url</code> shortcut created.
-        Structural plumbing confirmed — live market data not yet witnessed end-to-end (weekend).
-      </p>
-
-      <div class="section-label">Next Actions</div>
-      <ol class="actions">
-        <li class="red">
-          <span class="trigger">Mon 4/6 · 6:30 AM PT</span>
-          Load MAGIX at market open. Confirm live SPX options ticks flowing through Railway. First real-world test. If blank/stale, dig Railway logs.
-        </li>
-        <li class="yellow">
-          <span class="trigger">Tue 4/7 · 1:00 PM PT</span>
-          Kickoff: Expiration + Ticker Selector. Real dropdown from Theta Terminal that swaps chain, BE Score, X-Factor. Wire multi-symbol ticker input (e.g., AAPL Friday exp). Scope ~2-3 hrs. Reminder already scheduled.
-        </li>
-        <li class="gray">
-          <span class="trigger">Future · no date</span>
-          Tab-per-ticker expansion for actively traded names (AAPL etc. — 3 weekly expirations).
-        </li>
-      </ol>
-
-      <div class="section-label">Delivered Files</div>
-      <ul class="flat">
-        <li><code>index.html</code> — frontend dashboard (single file, ~77 KB)</li>
-        <li><code>main.py</code> — FastAPI backend (serves frontend + <code>/api/scores</code>, <code>/api/health</code>)</li>
-        <li><code>data_thetadata.py</code> — ThetaData v3 adapter (expiration detection, strikes/quotes/greeks)</li>
-        <li><code>Dockerfile</code> — Theta Terminal sidecar container</li>
-        <li><code>railway.toml</code> — Railway deployment config</li>
-        <li><code>MAGIX Dashboard.url</code> — Windows desktop shortcut (one-click launch)</li>
-        <li>GitHub repo: <code>simplestocks/magix</code> (main branch)</li>
-      </ul>
-
-      <div class="section-label">Services &amp; Costs</div>
-      <ul class="flat">
-        <li><strong>Railway</strong> — <span class="cost">~$5/mo</span> hobby plan. Hosts FastAPI (<code>magix-production</code>) + Theta Terminal sidecar (<code>theta-terminal-v3</code>) on private network.</li>
-        <li><strong>ThetaData</strong> — <span class="cost">~$60/mo</span> subscription. Credentials live inside Theta Terminal container.</li>
-        <li><strong>GitHub</strong> — <span class="cost">free</span> (simplestocks org, public repo)</li>
-        <li><strong>Domain</strong> — none yet, using free Railway subdomain <code>magix-production.up.railway.app</code></li>
-      </ul>
-      <div class="total-line">Total recurring: <strong>~$65/mo</strong></div>
-
-      <div class="section-label">Notes</div>
-      <div class="notes-box">Credentials kept in password manager — not stored here. Encrypted vault upgrade scheduled for Fri 4/10.</div>
-    </div>
-
-    <!-- ============ PROJECT 2: SIMPLESTOCKS ALERT DASHBOARD ============ -->
-    <div class="card">
-      <h2>SimpleStocks Alert Generator Dashboard</h2>
-
-      <div class="section-label">Status / What's Done</div>
-      <p class="status">
-        Live on Netlify, in testing phase. 6-tab HTML dashboard: Morning Note, Bullish Alert, Bearish Alert,
-        Sunday Session, Sunday Videos, Trade Log. Netlify serverless functions
-        (<code>slack-proxy.js</code>, <code>log-trade.js</code>, <code>assess-note.js</code>) handle
-        Slack/Discord/Sheets logging and Claude API morning note assessment + title suggestion + week-ahead macro.
-        Trade Log supports Buy Call, Buy Put, CPS, CCS, IB, IC across SPX/SPY/QQQ/IWM/RUT/XSP + free text.
-        Single HTML file, accessible from any device.
-      </p>
-
-      <div class="section-label">Next Actions</div>
-      <ol class="actions">
-        <li class="gray">
-          <span class="trigger">No date · testing phase</span>
-          Monitor for bugs and edge cases as trades get logged. No immediate open items.
-        </li>
-        <li class="gray">
-          <span class="trigger">Future · no date</span>
-          Merge MAGIX + SimpleStocks Alert Dashboard into a unified web-based pla4form.
-        </li>
-      </ol>
-
-      <div class="section-label">Delivered Files</div>
-      <ul class="flat">
-        <li><code>alerts.html</code> — 6-tab dashboard (live at <code>jazzy-starlight-0a9a95.netlify.app/alerts.html</code>)</li>
-        <li><code>slack-proxy.js</code> — Netlify serverless function (Slack webhook relay)</li>
-        <li><code>log-trade.js</code> — Netlify serverless function (Google Sheets logger)</li>
-        <li><code>assess-note.js</code> — Netlify serverless function (Claude API morning note)</li>
-        <li>GitHub repo: <code>simplestocks/stock-bridge</code> (public folder)</li>
-      </ul>
-
-      <div class="section-label">Services &amp; Costs</div>
-      <ul class="flat">
-        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (hosting + serverless functions)</li>
-        <li><strong>GitHub</strong> — <span class="cost">free tier</span> (simplestocks org)</li>
-        <li><strong>Google Sheets</strong> — <span class="cost">free</span> (trade log storage)</li>
-        <li><strong>Discord</strong> — <span class="cost">free</span> (2 hardcoded channel webhooks)</li>
-        <li><strong>Slack</strong> — webhook via Netlify proxy</li>
-        <li><strong>Claude API</strong> — usage-based (morning note assessment)</li>
-      </ul>
-      <div class="total-line">Total recurring: <strong>~$0/mo + Claude API usage</strong></div>
-
-      <div class="section-label">Notes</div>
-      <div class="notes-box">Full project details live in the other Cowork session. Pull service costs and delivered file list next time that session is awake.</div>
-    </div>
-
-    <!-- ============ PROJECT 3: SQUARESPACE AUTO-PUBLISH ============ -->
-    <div class="card">
-      <h2>Squarespace Auto-Publish — Morning Note Pipeline</h2>
-
-      <div class="section-label">Status / What's Done</div>
-      <p class="status">
-        Phase 1 shipped — both commits landed on <code>main</code>.
-        New <code>netlify/functions/send-to-squarespace.js</code> function and a "Send to Squarespace" button
-        on the Morning Note row in <code>public/alerts.html</code>. Button writes a JSON payload to
-        <code>pending/post-{timestamp}.json</code> in the repo via GitHub API
-        (using the <code>GITHUB_TOKEN</code> env var in Netlify). Queue-file commit messages include
-        <code>[skip netlify]</code> so they don't trigger rebuilds. Netlify redeploys in ~1-2 min after each push.
-        Phase 2 (auto-publish into Squarespace editor) still pending.
-      </p>
-
-      <div class="section-label">Next Actions</div>
-      <ol class="actions">
-        <li class="red">
-          <span class="trigger">ASAP · within 24 hrs</span>
-          Rotate the <code>GITHUB_TOKEN</code>. Current token is exposed in another Cowork chat history. Create a new fine-grained token scoped only to <code>stock-bridge</code> (contents read/write), replace the value in Netlify env vars, trigger a redeploy.
-        </li>
-        <li class="red">
-          <span class="trigger">Today · after Netlify deploy</span>
-          End-to-end test of Phase 1. Open <code>alerts.html</code>, generate a morning note, click Send to Squarespace. Confirm success message "✓ Queued for Squarespace (pending/post-...)". Verify JSON file lands at <code>github.com/simplestocks/stock-bridge/tree/main/pending</code>.
-        </li>
-        <li class="yellow">
-          <span class="trigger">Phase 2 · this week</span>
-          Map Squarespace editor click path. Nic opens the editor, Chrome tooling watches and records every step (login → dashboard → new blog post → title → body → save draft).
-        </li>
-        <li class="gray">
-          <span class="trigger">Phase 2 · no date</span>
-          Build Cowork scheduled task (15-min cadence) that reads <code>pending/</code>, drives Chrome into Squarespace, saves draft, moves file to <code>published/</code>, fires desktop notification + email to <code>racernic@gmail.com</code>.
-        </li>
-        <li class="gray">
-          <span class="trigger">Phase 2 · no date</span>
-          Retry / alert logic for when Chrome isn't reachable (machine off, network down).
-        </li>
-      </ol>
-
-      <div class="section-label">Delivered Files</div>
-      <ul class="flat">
-        <li><code>netlify/functions/send-to-squarespace.js</code> — queue writer (GitHub API)</li>
-        <li><code>public/alerts.html</code> — added "Send to Squarespace" button on Morning Note row</li>
-        <li><code>pending/post-{timestamp}.json</code> — queue file format (created on each button click)</li>
-      </ul>
-
-      <div class="section-label">Services &amp; Costs</div>
-      <ul class="flat">
-        <li><strong>Squarespace Pro</strong> — simplestocks.com hosting (existing)</li>
-        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (hosts function, auto-deploys)</li>
-        <li><strong>GitHub</strong> — <span class="cost">free tier</span> (repo + API token auth)</li>
-        <li><strong>Gmail</strong> — <span class="cost">free</span> (notification target: racernic@gmail.com)</li>
-      </ul>
-      <div class="total-line">Total recurring: <strong>$0/mo incremental (reuses existing stack)</strong></div>
-
-      <div class="section-label">Notes</div>
-      <div class="notes-box">Phase 1 built in another Cowork session. Full reference files + source links: GitHub REST API (create/update file contents), Netlify Functions getting started, Netlify [skip ci] / [skip netlify] build tag docs. Details still coming from Nic.</div>
-    </div>
-
-    <!-- ============ PROJECT 4: HELO ============ -->
-    <div class="card">
-      <h2>Helo — Command Center &amp; Meta-Ops</h2>
-
-      <div class="section-label">Status / What's Done</div>
-      <p class="status">
-        The meta-project. This Cowork session acts as Nic's helicopter view across every other active Claude
-        project. Built the Options Trade Tracker (<code>Options_Trade_Tracker.xlsx</code>) — 2-sheet dark-themed
-        workbook with Trade Log (credit/debit spreads, singles, shares) and Summary dashboard (win rate, profit
-        factor, stats by strategy + direction, last 10 trades). 1,110 formulas verified, zero errors.
-        Now building <code>command-center.html</code> — single-file, portable, responsive dashboard with
-        per-project status, urgency-ranked next actions, delivered files, services &amp; costs, and freeform notes.
-      </p>
-
-      <div class="section-label">Next Actions</div>
-      <ol class="actions">
-        <li class="yellow">
-          <span class="trigger">Fri 4/10 · 4:00 PM PT</span>
-          Kickoff: encrypted credentials vault inside command-center.html (Option C — AES-GCM + PBKDF2 master password). Lets Nic store real creds inside Notes, GitHub-safe. Scheduled reminder already set.
-        </li>
-        <li class="gray">
-          <span class="trigger">Ongoing</span>
-          Update this file whenever a project status changes. Nic drops updates in chat ("update MAGIX: live data confirmed") and Helo regenerates.
-        </li>
-        <li class="gray">
-          <span class="trigger">Future · no date</span>
-          Host on GitHub Pages as the portable command center accessible from any device during travel.
-        </li>
-      </ol>
-
-      <div class="section-label">Delivered Files</div>
-      <ul class="flat">
-        <li><code>Options_Trade_Tracker.xlsx</code> — options trade tracker w/ summary dashboard</li>
-        <li><code>command-center.html</code> — this file</li>
-        <li><code>command-center.url</code> — desktop shortcut (pending)</li>
-      </ul>
-
-      <div class="section-label">Services &amp; Costs</div>
-      <ul class="flat">
-        <li><strong>Cowork (Claude)</strong> — part of Claude subscription, no additional cost</li>
-        <li><strong>GitHub</strong> — <span class="cost">free</span> (future hosting)</li>
-      </ul>
-      <div class="total-line">Total recurring: <strong>$0/mo incremental</strong></div>
-
-      <div class="section-label">Notes</div>
-      <div class="notes-box">Chat renamed to "Helo" (user does this client-side in Cowork sidebar). Scheduled reminder set for Fri 4/10/2026 4:00 PM PT to action plan the encrypted vault build — Option 1 now (plain notes), Option C later (master-password-encrypted creds).</div>
-    </div>
-
-    <!-- ============ PROJECT 6: TRADING VIEW / CODE ============ -->
-    <div class="card">
-      <h2>Trading View / Code and Description Projects</h2>
-
-      <div class="section-label">Overview</div>
-      <p class="status">Projects involving Claude Code and chart analysis.</p>
-
-      <div class="section-label">Skills</div>
-      <ul class="flat">
-        <li><strong>Skill 1 — Ongoing:</strong> Reading charts and providing feedback on three time frames.</li>
-        <li><strong>Skill 2 — Established (not complete):</strong> Delivering three images for carousel and social media posting.</li>
-      </ul>
-
-      <div class="section-label">Resources</div>
-      <ul class="flat">
-        <li>TBD</li>
-        <li>TBD</li>
-        <li><a href="https://docs.google.com/spreadsheets/d/1JFIf-sq42MtuG7LbSv4U9J3lk_ss8IexdNmU2j3d7a8/edit?gid=0#gid=0" target="_blank" style="color:var(--accent);text-decoration:none;">ClaudeCode Google Sheets link</a> — sheet built. Claude Code can deliver analysis and hyperlinks to charts on demand in bulk.</li>
-      </ul>
-    </div>
-
-    <!-- ============ PROJECT 7: EXTRACT SIGNUPS / ATTENDEES ============ -->
-    <div class="card">
-      <h2>Extract Sign Ups and Attendees from SquareSpace</h2>
-
-      <div class="section-label">Status</div>
-      <p class="status">
-        <strong style="color:var(--yellow)">On Hold</strong> — waiting to see how to move forward. No next actions at this time.
-      </p>
-
-      <div class="section-label">What Was Built</div>
-      <ul class="flat">
-        <li>
-          <strong>Seminar Attendee Master Workbook (Excel)</strong> — 446 attendance records extracted from 19-event Google Sheets file.
-          240 unique people, 107 repeat attendees. 4 tabs: Master List, Person Summary (✓ matrix), Event Summary, Lookup.
-          Lookup tab has single search box + 50-row bulk paste for live screening (green = existing member, red = new).
-          Static file — bring updated Google Sheets to regenerate.
-        </li>
-        <li>
-          <strong>Squaresubs — Order Tracker (15-min auto-poll)</strong> — Google Apps Script (<code>pullOrders</code>) runs every 15 min via time trigger.
-          Polls Squarespace Orders API, logs every new order to sheet.
-          Emails <code>racernic@gmail.com</code> only when new signups come in.
-          Rate-limit handling added (sleep between pages, retry on 429, errors log to sheet).
-          Sheet: <a href="https://docs.google.com/spreadsheets/d/14Ror5sWUP9QFXIb72zf5beeIn923caOtoI0VE9zlWp4" target="_blank" style="color:var(--accent);text-decoration:none;">Squaresubs Sheet</a>
-        </li>
-        <li>
-          <strong>Squarequery — 7start Plan Lookup (on-demand)</strong> — Google Apps Script (<code>pullPlanMembers</code>), run manually when needed.
-          Pulls all orders matching the 7start pricing plan from Squarespace. No changes needed — working fine.
-          Sheet: <a href="https://docs.google.com/spreadsheets/d/1sQyy_x52x4MvxAJQhn6fPGxsqa8PWr4PkCJNAJ0sy3Q" target="_blank" style="color:var(--accent);text-decoration:none;">Squarequery Sheet</a>
-        </li>
-      </ul>
-
-      <div class="section-label">Notes</div>
-      <div class="notes-box">Next discussed move: convert seminar attendee data into a real web app via Firebase Studio + Firestore — so Nic and team can search, update, and import new events from a browser. On hold pending decision on direction.</div>
-    </div>
-
-    <!-- ============ PROJECT 5: BRIEFING: EARNINGS ============ -->
-    <div class="card completed">
-      <h2>Briefing: Earnings</h2>
-
-      <div class="section-label">Status / What's Done</div>
-      <p class="status">
-        Operational. Code lives on GitHub (<code>simplestocks/stock-bridge</code>), runs via Netlify functions.
-        Pulls current-week earnings data into the Morning Note tab on <code>alerts.html</code>.
-        Added functionality: Refresh, +7 days, +14 days, project status indicator, and Status Done with today's date.
-      </p>
-
-      <div class="section-label">Services</div>
-      <ul class="flat">
-        <li><strong>GitHub</strong> — <span class="cost">free</span> (<code>stock-bridge</code> repo)</li>
-        <li><strong>Netlify</strong> — <span class="cost">free tier</span> (functions + hosting)</li>
-        <li><strong>Nasdaq public API</strong> — <span class="cost">free</span> (no key)</li>
-      </ul>
-      <div class="total-line">Total recurring: <strong>$0/mo</strong></div>
-    </div>
-
+    <section class="metrics" id="metrics"></section>
+    <main class="board" id="board"></main>
+    <footer>simplestocks.com - HELO admin command center - protected behind /admin/command-center.html</footer>
   </div>
 
-  <footer>
-    simplestocks.com · built in Cowork · 7 active projects · single-file, portable, GitHub-ready
-  </footer>
+  <div class="modal" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2 id="modalTitle">Codex Prompt</h2>
+        <button type="button" class="secondary" id="closeModal">Close</button>
+      </div>
+      <textarea id="promptText"></textarea>
+      <div class="top-actions" style="margin-top:10px;">
+        <button type="button" id="copyPrompt">Copy Prompt</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const data = {
+    updatedAt: "2026-05-16",
+    title: "HELO Command Center",
+    subtitle: "ChatGPT HQ for Nic's active SimpleStocks work",
+    projects: [
+      {
+        id: "odte-dashboard",
+        name: "0DTE Dashboard",
+        aliases: ["0DTE", "ODTE", "zero dte", "SPX dashboard"],
+        lane: "build",
+        status: "active",
+        confidence: "verified",
+        summary: "Netlify-hosted 0DTE dashboard inside the Stock Bridge repo.",
+        localPath: "C:\\FUCKYOUCHATGPT\\stock-bridge-push-work",
+        repo: "https://github.com/simplestocks/stock-bridge",
+        live: "/admin/odte-dashboard.html",
+        liveLabel: "Admin Page",
+        editUrl: "https://github.com/simplestocks/stock-bridge/edit/main/public/odte-dashboard.html",
+        sourceFiles: ["public\\odte-dashboard.html", "ODTE_DASHBOARD_TODO.md", "netlify\\functions\\"],
+        services: ["Netlify", "GitHub", "Schwab/TOS data through Magix where needed"],
+        envVars: ["ALPHA_VANTAGE_API_KEY", "Netlify function secrets where used"],
+        nextAction: "Tablet polish, Open Trades layout cleanup, future liquidity sweep panel.",
+        lastAction: "2026-05-16: Live button updated to open the protected Netlify admin-served 0DTE page.",
+        foremanPrompt: "Project: 0DTE Dashboard. Use C:\\FUCKYOUCHATGPT\\stock-bridge-push-work. Repo https://github.com/simplestocks/stock-bridge. Live admin page /admin/odte-dashboard.html. Start by reading ODTE_DASHBOARD_TODO.md and public/odte-dashboard.html. Make the requested change, verify locally if possible, then report exact files changed and test result."
+      },
+      {
+        id: "stock-bridge",
+        name: "Stock Bridge / Alerts",
+        aliases: ["stock bridge", "alerts", "morning note", "squarespace bridge"],
+        lane: "deploy",
+        status: "active",
+        confidence: "verified",
+        summary: "Netlify tools for alerts, command center, Squarespace queue helpers, trade logging, and research functions.",
+        localPath: "C:\\FUCKYOUCHATGPT\\stock-bridge-push-work",
+        repo: "https://github.com/simplestocks/stock-bridge",
+        live: "/admin/alerts.html",
+        liveLabel: "Admin Page",
+        editUrl: "https://github.com/simplestocks/stock-bridge/edit/main/public/alerts.html",
+        sourceFiles: ["public\\alerts.html", "public\\command-center.html", "netlify\\functions\\send-to-squarespace.js", "netlify\\functions\\log-trade.js", ".github\\workflows\\publish-to-squarespace.yml"],
+        services: ["Netlify", "GitHub API", "Squarespace", "Google Apps Script", "Alpha Vantage"],
+        envVars: ["SQUARESPACE_EMAIL", "SQUARESPACE_PASSWORD", "GITHUB_TOKEN", "ALPHA_VANTAGE_API_KEY"],
+        nextAction: "Use this repo for SimpleStocks dashboard/tool changes unless a task belongs in Magix.",
+        lastAction: "2026-05-16: Cleaned Alert Generator nav buttons so HELO and SPX 0DTE open protected admin routes.",
+        foremanPrompt: "Project: Stock Bridge / Alerts. Use C:\\FUCKYOUCHATGPT\\stock-bridge-push-work. Repo https://github.com/simplestocks/stock-bridge. Live admin page /admin/alerts.html. Read the relevant file under public/ or netlify/functions, make the requested change, verify, and report the live path."
+      },
+      {
+        id: "magix",
+        name: "Magix Railway Backend",
+        aliases: ["magix", "railway", "theta", "tos", "schwab", "be score", "xfactor"],
+        lane: "build",
+        status: "active",
+        confidence: "verified",
+        summary: "Railway FastAPI backend for SPX/ES option pressure, BE score, XFactor, earnings scan, snapshots, and viewer pages.",
+        localPath: "C:\\FUCKYOUCHATGPT\\magix-live",
+        repo: "https://github.com/simplestocks/magix",
+        live: "https://magix-production.up.railway.app/",
+        liveLabel: "Railway App",
+        editUrl: "https://github.com/simplestocks/magix/edit/main/main.py",
+        extraLinks: [{ label: "Viewer", url: "https://magix-production.up.railway.app/viewer.html" }],
+        sourceFiles: ["main.py", "data_tos.py", "calcs.py", "xfactor_pressure.py", "earnings_scan.py", "snapshot.py", "index.html", "viewer.html"],
+        services: ["Railway", "Theta Terminal v3", "Schwab/TOS", "GitHub"],
+        envVars: ["THETA_URL", "Schwab/TOS auth variables", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET", "CLAUDE_API_KEY", "TRADE_LOG_URL"],
+        nextAction: "After Railway deploy, verify WRITE-UPS opens protected Alerts, trade logging uses /api/log-trade, and AI Check uses /api/assess-note.",
+        lastAction: "2026-05-16: Repointed Magix WRITE-UPS to protected Netlify admin Alerts and moved browser calls to same-origin Railway endpoints.",
+        foremanPrompt: "Project: Magix. Use C:\\FUCKYOUCHATGPT\\magix-live. Repo https://github.com/simplestocks/magix. Live app https://magix-production.up.railway.app/. Start by reading README.md and the relevant Python or HTML file. Keep changes scoped, run the smallest check available, and report exact endpoint/page verified."
+      },
+      {
+        id: "simplestocks-ai",
+        name: "SimpleStocks AI Workbook",
+        aliases: ["AI workbook", "Market Lens AI", "SimpleStocks AI", "AI class app"],
+        lane: "idea",
+        status: "prototype",
+        confidence: "verified",
+        summary: "Standalone GitHub Pages pitch mockup and research workbook prototype.",
+        localPath: "C:\\FUCKYOUCHATGPT\\simplestock_AI",
+        repo: "https://github.com/simplestocks/AI",
+        live: "https://simplestocks.github.io/AI/",
+        liveLabel: "Demo",
+        editUrl: "https://github.com/simplestocks/AI/edit/main/index.html",
+        sourceFiles: ["index.html", "AI Market Research Workbook.html", "app.jsx", "data.jsx", "styles.css"],
+        services: ["GitHub Pages"],
+        envVars: [],
+        nextAction: "Use for AI workbook demos, pitch changes, class app framing, and static UI proof of concepts.",
+        lastAction: "2026-05-14: Existing demo/repo map preserved.",
+        foremanPrompt: "Project: SimpleStocks AI Workbook. Use C:\\FUCKYOUCHATGPT\\simplestock_AI. Repo https://github.com/simplestocks/AI. Demo https://simplestocks.github.io/AI/. Make the requested page or copy change in index.html unless inspection shows another file is source of truth. Verify by opening the local file or GitHub Pages path."
+      },
+      {
+        id: "nic-todo",
+        name: "Nic Todo",
+        aliases: ["todo", "tasks", "nic todo"],
+        lane: "done",
+        status: "stable",
+        confidence: "verified",
+        summary: "Single-file PWA with GitHub-backed storage in nic-todo.md.",
+        localPath: "C:\\FUCKYOUCHATGPT\\nic-todo-live",
+        repo: "https://github.com/simplestocks/nic-todo-app",
+        live: "",
+        editUrl: "https://github.com/simplestocks/nic-todo-app/edit/main/index.html",
+        sourceFiles: ["index.html", "nic-todo.md", "manifest.json", "netlify.toml"],
+        services: ["GitHub Contents API", "PWA"],
+        envVars: [],
+        nextAction: "Leave alone unless Nic asks. Last known fix was save reliability.",
+        lastAction: "2026-05-14: No changes today.",
+        foremanPrompt: "Project: Nic Todo. Use C:\\FUCKYOUCHATGPT\\nic-todo-live. Repo https://github.com/simplestocks/nic-todo-app. Do not touch unless explicitly requested. If requested, inspect index.html and nic-todo.md first, then verify GitHub-backed persistence."
+      },
+      {
+        id: "event-manager",
+        name: "Event Manager Apps Script",
+        aliases: ["event manager", "seminar app", "Apps Script event tool"],
+        lane: "qc",
+        status: "needs review",
+        confidence: "partial",
+        summary: "Apps Script seminar/event manager files and fixed export snapshot. Source of truth needs one review pass.",
+        localPath: "C:\\FUCKYOUCHATGPT\\events-manager-appscript",
+        repo: "",
+        live: "https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec",
+        liveLabel: "Web App",
+        editUrl: "https://script.google.com/home/projects/1Z7_AqiPhontK15xBjJK6H7vQGpOMexsmOsY1vqzhQCaCGFA7p9XrhxSq/edit",
+        editLabel: "Script Editor",
+        extraLinks: [
+          { label: "Control Sheet", url: "https://docs.google.com/spreadsheets/d/15dgaS3IcCaq9PPXiT9D86ek44J7Dj-5Fg1VbJ3UNo9Q/edit?gid=726631919#gid=726631919" },
+          { label: "Signup Data", url: "https://docs.google.com/spreadsheets/d/14Ror5sWUP9QFXIb72zf5beeIn923caOtoI0VE9zlWp4/edit" }
+        ],
+        sourceFiles: ["PROJECT_INFO.md", "C:\\FUCKYOUCHATGPT\\event-manager-appscript-fixed", "C:\\FUCKYOUCHATGPT\\EventManager_Code_FIXED.gs"],
+        services: ["Google Apps Script", "Google Sheets", "Squarespace Orders"],
+        envVars: ["SQUARESUBS_SHEET_ID"],
+        nextAction: "Later: audit the Squarespace puller start date and add a backfill mode so old full-pay signups are not missed again.",
+        lastAction: "2026-05-15: Event Manager deployed version 36 after webhook rotation.",
+        foremanPrompt: "Project: Event Manager Apps Script. Start in C:\\FUCKYOUCHATGPT\\events-manager-appscript, but verify source of truth against C:\\FUCKYOUCHATGPT\\event-manager-appscript-fixed and EventManager_Code_FIXED.gs before editing. Do not deploy until the active Apps Script project is identified."
+      },
+      {
+        id: "link-qr-library",
+        name: "Link & QR Library",
+        aliases: ["link qr", "QR library", "short links", "ticker shortcuts"],
+        lane: "idea",
+        status: "local prototype",
+        confidence: "partial",
+        summary: "Local Link & QR Library prototype. Needs source-of-truth and hosting confirmation before production edits.",
+        localPath: "C:\\FUCKYOUCHATGPT\\link-qr-library",
+        repo: "",
+        live: "",
+        editUrl: "",
+        sourceFiles: ["index.html", "netlify\\functions\\", "README.md"],
+        services: ["Netlify", "Google Apps Script", "Google Sheets", "Google Drive QR uploads"],
+        envVars: ["Password/env vars in Netlify if deployed"],
+        nextAction: "Confirm whether this is active or only a prototype.",
+        lastAction: "2026-05-14: Added to Foreman as local prototype.",
+        foremanPrompt: "Project: Link & QR Library. Use C:\\FUCKYOUCHATGPT\\link-qr-library. First identify whether this is a git repo or local prototype. Keep the browser thin and verify any Apps Script/Netlify source of truth before changes."
+      },
+      {
+        id: "squarespace-posts",
+        name: "Squarespace Posts",
+        aliases: ["squarespace posts", "rss posts", "rss feed", "member feed"],
+        lane: "idea",
+        status: "shell",
+        confidence: "partial",
+        summary: "Investigation shell for replacing manual Squarespace blog posting with a hosted feed/widget approach.",
+        localPath: "C:\\FUCKYOUCHATGPT\\squarespace-posts",
+        repo: "",
+        live: "/admin/index.html",
+        liveLabel: "Admin Page",
+        editUrl: "",
+        sourceFiles: ["README.md", "NOTES.md", "index.html", "writer.html", "posts.json", "feed.xml", "widget.js", "styles.css"],
+        services: ["Squarespace Code/Embed block", "RSS/XML", "JSON feed", "Netlify or GitHub-backed app"],
+        envVars: [],
+        nextAction: "Test a fresh writer save and confirm the Squarespace Code Block pulls from Netlify Blobs through member-feed.",
+        lastAction: "2026-05-16: Moved Squarespace Posts storage out of public GitHub files into Netlify Blobs.",
+        foremanPrompt: "Project: Squarespace Posts. Use C:\\FUCKYOUCHATGPT\\squarespace-posts. Verify current Squarespace docs first. Favor a small proof of concept with styled searchable cards."
+      },
+      {
+        id: "security-audit",
+        name: "Security Audit",
+        aliases: ["security", "security audit", "public risk", "netlify exposure", "secrets audit"],
+        lane: "qc",
+        status: "urgent",
+        confidence: "verified",
+        summary: "Audit and cleanup project for public exposure across Jazzy Netlify, dashboards, webhooks, member feeds, and internal project maps.",
+        localPath: "C:\\FUCKYOUCHATGPT\\security-audit",
+        repo: "https://github.com/simplestocks/stock-bridge",
+        live: "",
+        editUrl: "",
+        sourceFiles: ["README.md", "JAZZY_NETLIFY_PUBLIC_RISK.md", "public\\alerts.html", "public\\command-center.html", "public\\odte-dashboard.html"],
+        services: ["Netlify", "GitHub", "Discord webhooks", "Squarespace member feed", "Railway/Magix endpoint references"],
+        envVars: ["DISCORD_WEBHOOK_URL", "GITHUB_TOKEN", "SQUARESPACE_EMAIL", "SQUARESPACE_PASSWORD", "ALPHA_VANTAGE_API_KEY"],
+        nextAction: "Verify deployed member-feed function reads Netlify Blobs and raw GitHub posts.json/feed.xml URLs return 404.",
+        lastAction: "2026-05-16: Replaced public GitHub post storage with Netlify Blobs for Squarespace Posts.",
+        foremanPrompt: "Project: Security Audit. Use C:\\FUCKYOUCHATGPT\\security-audit and inspect C:\\FUCKYOUCHATGPT\\stock-bridge-push-work. Focus on public exposure in Netlify public files and unauthenticated functions. First read JAZZY_NETLIFY_PUBLIC_RISK.md."
+      },
+      {
+        id: "llc-partner-draws",
+        name: "LLC Partner Draws",
+        aliases: ["llc", "partner draws", "arlenys draws", "tax summary", "cash split"],
+        lane: "idea",
+        status: "intake",
+        confidence: "verified",
+        summary: "Document intake and analysis workspace for LLC cash, P&L, tax-return context, and unequal partner draws.",
+        localPath: "C:\\FUCKYOUCHATGPT\\llc-partner-draws",
+        repo: "",
+        live: "",
+        editUrl: "",
+        sourceFiles: ["README.md", "DOCUMENTS_TO_ADD.md", "partner-draws-notes.md", "FILED_TAX_SUMMARY_FROM_SCREENSHOT.md", "PARTNER_DRAW_TALLY.md", "BANK_LEDGER_INDEX.md"],
+        services: ["Local document analysis", "CPA review after calculations"],
+        envVars: [],
+        nextAction: "Add current bank screenshot, prior returns, P&L files, and draw notes.",
+        lastAction: "2026-05-14: Imported Chase statements, built searchable ledgers, added filed-tax screenshot summary, and created draw tally.",
+        foremanPrompt: "Project: LLC Partner Draws. Use C:\\FUCKYOUCHATGPT\\llc-partner-draws. Review README.md, DOCUMENTS_TO_ADD.md, and uploaded bank/tax/P&L files. Build a concise cash and partner-draw summary for Nic and Arlenys. Do not present tax/legal advice as final."
+      },
+      {
+        id: "whop",
+        name: "WHOP",
+        aliases: ["whop", "whop puller", "whop api", "whop payments", "whop revenue"],
+        lane: "idea",
+        status: "shell",
+        confidence: "verified",
+        summary: "Future automation project for pulling Whop payment and revenue data by date range.",
+        localPath: "C:\\FUCKYOUCHATGPT\\WHOP",
+        repo: "",
+        live: "",
+        editUrl: "",
+        sourceFiles: ["README.md", "NOTES.md"],
+        services: ["Whop API", "Local reporting", "Future CSV/JSON exports"],
+        envVars: ["WHOP_API_KEY", "WHOP_COMPANY_ID"],
+        nextAction: "Paused. Build later when Nic wants the Whop API puller.",
+        lastAction: "2026-05-14: Created shell project and added Whop screenshot stats to LLC notes.",
+        foremanPrompt: "Project: WHOP. Use C:\\FUCKYOUCHATGPT\\WHOP. Do not build until Nic asks. When building, verify current Whop API docs first, use read-only API access, keep secrets in environment variables only, and produce date-range revenue summaries."
+      }
+    ]
+  };
+
+  const lanes = [
+    ["idea", "Idea"],
+    ["build", "Build"],
+    ["qc", "QC"],
+    ["deploy", "Deploy"],
+    ["done", "Done"]
+  ];
+
+  const state = { search: "", lane: "all", confidence: "all" };
+  const byId = (id) => document.getElementById(id);
+
+  function init() {
+    byId("subtitle").textContent = `${data.subtitle} | Updated ${data.updatedAt}`;
+    byId("search").addEventListener("input", (event) => {
+      state.search = event.target.value.trim().toLowerCase();
+      render();
+    });
+    byId("laneFilter").addEventListener("change", (event) => {
+      state.lane = event.target.value;
+      render();
+    });
+    byId("confidenceFilter").addEventListener("change", (event) => {
+      state.confidence = event.target.value;
+      render();
+    });
+    byId("closeModal").addEventListener("click", closeModal);
+    byId("copyPrompt").addEventListener("click", copyPrompt);
+    byId("promptModal").addEventListener("click", (event) => {
+      if (event.target.id === "promptModal") closeModal();
+    });
+    byId("showAllPrompt").addEventListener("click", () => {
+      showPrompt("Foreman Intake Prompt", [
+        "Act as Codex Foreman for Nic.",
+        "Use HELO Command Center as the project registry.",
+        "When Nic refers to a project by nickname, match it against aliases first.",
+        "Before changing files, verify the local path, repo, live URL, and source-of-truth file.",
+        "End with exact files changed, verification result, and live URL if deployed."
+      ].join("\\n"));
+    });
+    render();
+  }
+
+  function filteredProjects() {
+    return data.projects.filter((project) => {
+      if (state.lane !== "all" && project.lane !== state.lane) return false;
+      if (state.confidence !== "all" && project.confidence !== state.confidence) return false;
+      if (!state.search) return true;
+      const haystack = [
+        project.name,
+        project.summary,
+        project.localPath,
+        project.repo,
+        project.live,
+        project.liveLabel,
+        project.status,
+        project.confidence,
+        project.lastAction,
+        ...(project.aliases || []),
+        ...(project.services || []),
+        ...(project.sourceFiles || []),
+        ...((project.extraLinks || []).map((link) => `${link.label} ${link.url}`))
+      ].join(" ").toLowerCase();
+      return haystack.includes(state.search);
+    });
+  }
+
+  function renderMetrics(projects) {
+    const verified = projects.filter((project) => project.confidence === "verified").length;
+    const active = projects.filter((project) => ["active", "prototype", "local prototype"].includes(project.status)).length;
+    const needsReview = projects.filter((project) => project.confidence !== "verified").length;
+    const repos = projects.filter((project) => project.repo).length;
+    byId("metrics").innerHTML = [
+      metric(projects.length, "Visible Projects"),
+      metric(active, "Active / Prototype"),
+      metric(verified, "Verified"),
+      metric(needsReview, "Needs Review"),
+      metric(repos, "GitHub Linked")
+    ].join("");
+  }
+
+  function metric(value, label) {
+    return `<div class="metric"><strong>${value}</strong><span>${label}</span></div>`;
+  }
+
+  function render() {
+    const projects = filteredProjects();
+    renderMetrics(projects);
+    byId("board").innerHTML = lanes.map(([laneId, laneTitle]) => {
+      const laneProjects = projects.filter((project) => project.lane === laneId);
+      return `
+        <section class="lane">
+          <div class="lane-head">
+            <div class="lane-title">${laneTitle}</div>
+            <div class="lane-count">${laneProjects.length}</div>
+          </div>
+          <div class="stack">${laneProjects.map(card).join("") || `<div class="empty">No projects</div>`}</div>
+        </section>
+      `;
+    }).join("");
+
+    document.querySelectorAll("[data-prompt-id]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const project = data.projects.find((item) => item.id === button.dataset.promptId);
+        showPrompt(project.name, project.foremanPrompt);
+      });
+    });
+    document.querySelectorAll("[data-open-path]").forEach((button) => {
+      button.addEventListener("click", () => showPrompt("Local Path", button.dataset.openPath));
+    });
+  }
+
+  function card(project) {
+    const confidenceClass = project.confidence === "verified" ? "good" : "warn";
+    const aliases = (project.aliases || []).slice(0, 4).map((alias) => `<span class="pill">${escapeHtml(alias)}</span>`).join("");
+    const services = (project.services || []).map((service) => `<li>${escapeHtml(service)}</li>`).join("");
+    const files = (project.sourceFiles || []).map((file) => `<li>${escapeHtml(file)}</li>`).join("");
+    const env = (project.envVars || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const extraLinks = (project.extraLinks || []).map((link) => `<a class="button secondary" href="${escapeAttr(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("");
+    return `
+      <article class="card" data-lane="${escapeAttr(project.lane)}">
+        <div>
+          <h2>${escapeHtml(project.name)}</h2>
+          <div class="meta" style="margin-top:8px;">
+            <span class="pill ${confidenceClass}">${escapeHtml(project.confidence)}</span>
+            <span class="pill">${escapeHtml(project.status)}</span>
+          </div>
+        </div>
+        <p class="summary">${escapeHtml(project.summary)}</p>
+        <div class="meta">${aliases}</div>
+        ${project.lastAction ? `<p class="status-strip last"><strong>Last</strong>${escapeHtml(project.lastAction)}</p>` : ""}
+        <p class="status-strip"><strong>Next</strong>${escapeHtml(project.nextAction)}</p>
+        <div class="links">
+          ${project.localPath ? `<button class="secondary" type="button" data-open-path="${escapeAttr(project.localPath)}">Folder</button>` : `<span></span>`}
+          ${project.repo ? `<a class="button secondary" href="${escapeAttr(project.repo)}" target="_blank" rel="noreferrer">GitHub</a>` : `<span></span>`}
+          ${project.live ? `<a class="button primary" href="${escapeAttr(project.live)}" target="_blank" rel="noreferrer">${escapeHtml(project.liveLabel || "Live")}</a>` : `<span></span>`}
+          ${project.editUrl ? `<a class="button secondary" href="${escapeAttr(project.editUrl)}" target="_blank" rel="noreferrer">${escapeHtml(project.editLabel || "Edit")}</a>` : `<span></span>`}
+          ${extraLinks}
+          <button type="button" data-prompt-id="${escapeAttr(project.id)}">Codex Prompt</button>
+        </div>
+        <details>
+          <summary>Map</summary>
+          <p class="small" style="margin-top:8px;">${escapeHtml(project.localPath || "No local path confirmed")}</p>
+          ${files ? `<ul>${files}</ul>` : ""}
+        </details>
+        <details>
+          <summary>Services</summary>
+          ${services ? `<ul>${services}</ul>` : `<p class="small" style="margin-top:8px;">No services mapped.</p>`}
+        </details>
+        <details>
+          <summary>Env Names</summary>
+          ${env ? `<ul>${env}</ul>` : `<p class="small" style="margin-top:8px;">No env vars mapped.</p>`}
+        </details>
+      </article>
+    `;
+  }
+
+  function showPrompt(title, prompt) {
+    byId("modalTitle").textContent = title;
+    byId("promptText").value = prompt || "";
+    byId("promptModal").classList.add("open");
+    byId("promptText").focus();
+    byId("promptText").select();
+  }
+
+  function closeModal() {
+    byId("promptModal").classList.remove("open");
+  }
+
+  async function copyPrompt() {
+    const text = byId("promptText").value;
+    try {
+      await navigator.clipboard.writeText(text);
+      byId("copyPrompt").textContent = "Copied";
+    } catch (error) {
+      byId("promptText").focus();
+      byId("promptText").select();
+      byId("copyPrompt").textContent = "Select + Copy";
+    }
+    setTimeout(() => byId("copyPrompt").textContent = "Copy Prompt", 1400);
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replaceAll("`", "&#096;");
+  }
+
+  init();
+</script>
 </body>
 </html>

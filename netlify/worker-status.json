@@ -27,8 +27,8 @@
     "worker": "Kant",
     "project": "HELO",
     "task": "Move AI dashboard into command-center dark skin",
-    "status": "Active",
-    "waitingOn": "Worker completion",
-    "nextStep": "Review HELO diff before push"
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh Command Center and confirm the dark project dashboard loads"
   }
 ]
