@@ -5,7 +5,20 @@
     <link>https://simplestocks.com/</link>
     <description>Proof of concept feed for SimpleStocks member posts.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 16 May 2026 19:08:41 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 16 May 2026 19:09:25 GMT</lastBuildDate>
+    <item>
+      <title>test 2</title>
+      <link>https://simplestocks.com/member-feed#test-2-2026-05-16</link>
+      <guid isPermaLink="false">test-2-2026-05-16</guid>
+      <pubDate>Sat, 16 May 2026 19:09:25 GMT</pubDate>
+      <category>SLV</category>
+      <description><![CDATA[## Trade Update
+- Ticker: SLV 
+- Current status: Closing
+- What changed: max gains
+
+! Action: enjoy]]></description>
+    </item>
     <item>
       <title>test</title>
       <link>https://simplestocks.com/member-feed#test-2026-05-16</link>
