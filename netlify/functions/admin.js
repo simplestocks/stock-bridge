@@ -201,9 +201,18 @@ function injectAdminBackButton(body) {
   return `${bar}${body}`;
 }
 
+function cleanPathFromEvent(event) {
+  const queryPath = String(event.queryStringParameters?.path || '').replace(/^\/+/, '');
+  if (queryPath) return queryPath;
+
+  const eventPath = String(event.path || '').replace(/^\/+/, '');
+  if (eventPath === 'admin') return '';
+  if (eventPath.startsWith('admin/')) return eventPath.slice('admin/'.length).replace(/^\/+/, '');
+  return '';
+}
+
 exports.handler = async function(event) {
-  const rawPath = String(event.queryStringParameters?.path || '').replace(/^\/+/, '') || '';
-  const cleanPath = rawPath || '';
+  const cleanPath = cleanPathFromEvent(event);
 
   if (cleanPath === 'login' && event.httpMethod === 'POST') {
     const form = parseForm(event);
