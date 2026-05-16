@@ -1,5 +1,17 @@
 [
   {
+    "id": "test-2-2026-05-16",
+    "date": "2026-05-16T19:09:25.672Z",
+    "type": "trade-update",
+    "title": "test 2",
+    "summary": "SLV update",
+    "body": "## Trade Update\n- Ticker: SLV \n- Current status: Closing\n- What changed: max gains\n\n! Action: enjoy",
+    "tags": [
+      "SLV"
+    ],
+    "author": "Nic"
+  },
+  {
     "id": "test-2026-05-16",
     "date": "2026-05-16T19:08:41.564Z",
     "type": "update",
