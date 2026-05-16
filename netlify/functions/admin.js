@@ -3,6 +3,7 @@ const path = require('path');
 const { checkPassword, clearCookie, isAuthed, makeCookie } = require('./admin-auth');
 
 const ROOT = process.cwd();
+const WORKER_STATUS_FILE = path.join(ROOT, 'netlify', 'worker-status.json');
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -78,7 +79,31 @@ function loginPage(message = '') {
 </html>`);
 }
 
+function readWorkerStatuses() {
+  try {
+    return JSON.parse(fs.readFileSync(WORKER_STATUS_FILE, 'utf8'));
+  } catch (error) {
+    return [];
+  }
+}
+
+function renderWorkerStatusRows(statuses) {
+  if (!Array.isArray(statuses) || !statuses.length) {
+    return '<tr><td colspan="6">No worker status rows yet.</td></tr>';
+  }
+
+  return statuses.map((row) => `<tr>
+        <td>${escapeHtml(row.worker)}</td>
+        <td>${escapeHtml(row.project)}</td>
+        <td>${escapeHtml(row.task)}</td>
+        <td>${escapeHtml(row.status)}</td>
+        <td>${escapeHtml(row.waitingOn)}</td>
+        <td>${escapeHtml(row.nextStep)}</td>
+      </tr>`).join('');
+}
+
 function homePage() {
+  const workerStatusRows = renderWorkerStatusRows(readWorkerStatuses());
   return html(200, `<!doctype html>
 <html lang="en">
 <head>
@@ -97,6 +122,13 @@ function homePage() {
     a.railway span { color:#9fc9f5; }
     a.event-app { border-color:#ffb454; background:#3a2209; color:#ffe1b5; }
     a.event-app span { color:#ffc977; }
+    section { margin-top:22px; }
+    h2 { margin:0 0 10px; font-size:18px; }
+    .status-wrap { overflow-x:auto; border:1px solid #263244; border-radius:9px; background:#121927; }
+    table { width:100%; border-collapse:collapse; min-width:760px; }
+    th, td { padding:10px 12px; border-bottom:1px solid #263244; text-align:left; vertical-align:top; font-size:13px; }
+    th { color:#9daabe; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+    tr:last-child td { border-bottom:0; }
     .top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:18px; }
     .logout { border-color:#49313a; color:#ffb0b0; }
     .panic-corner {
@@ -131,6 +163,26 @@ function homePage() {
       <a class="railway" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix Railway<span>Live Railway dashboard root.</span></a>
       <a class="railway" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Magix Viewer<span>Live Railway viewer page.</span></a>
     </div>
+    <section>
+      <h2>Worker Status</h2>
+      <div class="status-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Worker</th>
+              <th>Project</th>
+              <th>Task</th>
+              <th>Status</th>
+              <th>Waiting on</th>
+              <th>Next step</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${workerStatusRows}
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
 </body>
 </html>`);
