@@ -122,8 +122,7 @@
       </div>
       <nav class="links">
         <a href="./index.html">View feed</a>
-        <a href="./posts.json">posts.json</a>
-        <a href="./feed.xml">feed.xml</a>
+        <a href="/.netlify/functions/member-feed">member feed</a>
       </nav>
     </header>
 
@@ -283,7 +282,7 @@
         });
         const json = await res.json();
         if (!res.ok || !json.ok) throw new Error(json.error || 'Save failed');
-        statusEl.textContent = 'Saved. Feed publishing.';
+        statusEl.textContent = 'Saved. Member feed updated.';
         form.reset();
         authorEl.value = 'Nic';
         updatePreview();

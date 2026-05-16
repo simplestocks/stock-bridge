@@ -17,8 +17,6 @@ const FILES = {
   'styles.css': 'public/squarespace-posts/styles.css',
   'widget.js': 'public/squarespace-posts/widget.js',
   'index.html': 'public/squarespace-posts/index.html',
-  'posts.json': 'public/squarespace-posts/posts.json',
-  'feed.xml': 'public/squarespace-posts/feed.xml',
   'alerts.html': 'public/alerts.html',
   'command-center.html': 'public/command-center.html',
   'odte-dashboard.html': 'public/odte-dashboard.html'
@@ -148,8 +146,8 @@ function serveFile(name) {
   if (name === 'writer.html' || name === 'index.html') {
     body = body.replaceAll('./styles.css', '/admin/styles.css')
       .replaceAll('./widget.js', '/admin/widget.js')
-      .replaceAll('./posts.json', '/admin/posts.json')
-      .replaceAll('./feed.xml', '/admin/feed.xml')
+      .replaceAll('./posts.json', '/.netlify/functions/member-feed')
+      .replaceAll('./feed.xml', '/.netlify/functions/member-feed')
       .replaceAll('./index.html', '/admin/index.html')
       .replaceAll('./writer.html', '/admin/writer.html');
   }

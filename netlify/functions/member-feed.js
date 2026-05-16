@@ -1,8 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const { readPosts } = require('./member-post-store');
 
-const POSTS_PATH = path.join(process.cwd(), 'public', 'squarespace-posts', 'posts.json');
 const DEFAULT_ALLOWED = [
+  'https://jazzy-starlight-0a9a95.netlify.app',
   'https://simplestocks.com',
   'https://www.simplestocks.com',
   'https://simplestocks.squarespace.com'
@@ -73,8 +72,8 @@ exports.handler = async function(event) {
   if (!isAllowed(event)) return response(403, { error: 'Forbidden' });
 
   try {
-    const raw = fs.readFileSync(POSTS_PATH, 'utf8');
-    return response(200, JSON.parse(raw), origin);
+    const posts = await readPosts();
+    return response(200, posts, origin);
   } catch (error) {
     return response(500, { error: 'Feed unavailable' }, origin);
   }

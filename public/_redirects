@@ -9,8 +9,6 @@
 /admin/index.html /.netlify/functions/admin?path=index.html 200
 /admin/styles.css /.netlify/functions/admin?path=styles.css 200
 /admin/widget.js /.netlify/functions/admin?path=widget.js 200
-/admin/posts.json /.netlify/functions/admin?path=posts.json 200
-/admin/feed.xml /.netlify/functions/admin?path=feed.xml 200
 /admin/* /.netlify/functions/admin?path=:splat 200
 /admin.html /.netlify/functions/admin 200
 /squarespace-posts/styles.css /squarespace-posts/styles.css 200
