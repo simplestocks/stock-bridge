@@ -10,7 +10,6 @@ function store(event) {
 
 async function readPosts(event) {
   const posts = await store(event).get(POSTS_KEY, {
-    consistency: 'strong',
     type: 'json'
   });
   return Array.isArray(posts) ? posts : [];
