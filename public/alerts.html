@@ -753,6 +753,7 @@
       <div class="send-row">
         <button class="btn-discord" onclick="sendToDiscord('vidDoc',true)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('vidDoc')">Send to Slack</button>
+        <button class="btn-squarespace" onclick="sendToSquarespace('vidDoc')" id="vidSqsBtn">Send to Squarespace</button>
         <button class="btn-copy-html cb-vid" onclick="copyHTML('vidDoc','vidHtmlBtn')" id="vidHtmlBtn">Copy HTML</button>
       </div>
       <div class="send-status" id="vidSendStatus"></div>
@@ -1216,6 +1217,10 @@
       await saveTradeAlertToMemberFeed(docId);
       return;
     }
+    if(docId==='vidDoc'){
+      await saveVideoWriteupToMemberFeed();
+      return;
+    }
 
     const doc=document.getElementById(docId);
     if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
@@ -1365,6 +1370,37 @@
     };
   }
 
+  function buildVideoFeedPayload(doc){
+    const headEl=doc.querySelector('.doc-head');
+    const bodyEl=doc.querySelector('.doc-body');
+    const title=headEl?headEl.textContent.trim():`Sunday Videos ${new Date().toLocaleDateString()}`;
+    const children=bodyEl?Array.from(bodyEl.children):[];
+    const bodyLines=[];
+    let summary='';
+
+    children.forEach((child)=>{
+      if(child.classList.contains('doc-sig')||child.classList.contains('doc-meta'))return;
+      const text=textWithLinks(child);
+      if(!text)return;
+      if(!summary&&!text.startsWith('+ '))summary=text;
+      if(text.startsWith('+ ')){
+        bodyLines.push('- '+text.slice(2));
+      }else{
+        bodyLines.push(text);
+      }
+    });
+
+    return {
+      title,
+      summary:summary||bodyLines[0]||title,
+      body:bodyLines.join('\n\n'),
+      tags:['Videos','Sunday Videos'],
+      type:'video',
+      author:'Nic',
+      date:new Date().toISOString()
+    };
+  }
+
   async function saveMorningNoteToMemberFeed(){
     const doc=document.getElementById('mornDoc');
     if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
@@ -1405,6 +1441,33 @@
 
     try{
       const payload=buildTradeAlertFeedPayload(doc,docId);
+      const res=await fetch('/.netlify/functions/squarespace-posts-save',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok||!data.ok)throw new Error(data.error||`HTTP ${res.status}`);
+      if(statusEl){statusEl.textContent='Saved to member feed.';statusEl.className='send-status ok';}
+      if(btn){btn.textContent='Saved';setTimeout(()=>{btn.textContent='Send to Squarespace';btn.disabled=false;},3000);}
+    }catch(e){
+      if(statusEl){statusEl.textContent=`Save failed: ${e.message}`;statusEl.className='send-status err';}
+      if(btn){btn.textContent='Send to Squarespace';btn.disabled=false;}
+    }
+    setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
+  }
+
+  async function saveVideoWriteupToMemberFeed(){
+    const doc=document.getElementById('vidDoc');
+    if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
+
+    const btn=document.getElementById('vidSqsBtn');
+    const statusEl=document.getElementById('vidSendStatus');
+    if(btn){btn.disabled=true;btn.textContent='Saving...';}
+    if(statusEl){statusEl.textContent='Saving to member feed...';statusEl.className='send-status';}
+
+    try{
+      const payload=buildVideoFeedPayload(doc);
       const res=await fetch('/.netlify/functions/squarespace-posts-save',{
         method:'POST',
         headers:{'Content-Type':'application/json'},

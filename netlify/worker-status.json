@@ -1,5 +1,13 @@
 [
   {
+    "worker": "Codex",
+    "project": "Alerts Generator",
+    "task": "Add Sunday Videos Send to Squarespace feed button",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Generate Sunday Videos, click Send to Squarespace, and confirm it appears in the member feed as a video post"
+  },
+  {
     "worker": "Halley",
     "project": "Alerts Generator",
     "task": "Send Bullish and Bearish alerts to protected member feed",
