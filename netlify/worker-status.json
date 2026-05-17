@@ -2,6 +2,14 @@
   {
     "worker": "Codex",
     "project": "Alerts Generator",
+    "task": "Add Sunday Session Send to Squarespace feed button",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Generate Sunday Session, click Send to Squarespace, and confirm it appears in the member feed as an event post"
+  },
+  {
+    "worker": "Codex",
+    "project": "Alerts Generator",
     "task": "Add Sunday Videos Send to Squarespace feed button",
     "status": "Done",
     "waitingOn": "Live verification",
