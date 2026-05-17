@@ -54,5 +54,13 @@
     "status": "Done",
     "waitingOn": "Live verification",
     "nextStep": "Refresh Admin and confirm cockpit polish batch"
+  },
+  {
+    "worker": "Ptolemy",
+    "project": "Admin Cockpit",
+    "task": "Move Site Feed Doctor to header, compact nav, add Todo panel, and add metallic inset styling",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh Admin and confirm cockpit correction plus metallic inset panels"
   }
 ]
