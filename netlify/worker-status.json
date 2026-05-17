@@ -38,5 +38,13 @@
     "status": "Done",
     "waitingOn": "Live verification",
     "nextStep": "Refresh Admin and confirm compact cockpit layout"
+  },
+  {
+    "worker": "Dewey",
+    "project": "Admin Cockpit",
+    "task": "Move Worker Status into main floor and intake under nav",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh Admin and confirm worker floor layout"
   }
 ]

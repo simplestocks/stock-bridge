@@ -117,7 +117,7 @@ function homePage() {
     main { max-width:1160px; margin:0 auto; }
     a, button { font:inherit; }
     a { color:inherit; text-decoration:none; }
-    .top { display:grid; grid-template-columns:1fr minmax(260px, 360px); gap:18px; align-items:start; margin-bottom:18px; }
+    .top { margin-bottom:18px; }
     header { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:38px; }
     .brand { display:flex; align-items:baseline; gap:8px; text-transform:uppercase; }
     .logo { font-size:15px; font-weight:900; letter-spacing:.08em; }
@@ -136,39 +136,33 @@ function homePage() {
     .writer-btn { background:linear-gradient(135deg,#38d39f 0%,#119c74 100%); border-color:#21b889; color:#04120e; }
     .doctor-btn { background:linear-gradient(135deg,#ff4b4b 0%,#c40000 100%); border-color:#ff5b5b; color:#fff; }
     .event-btn { background:linear-gradient(135deg,#ffd166 0%,#f59e0b 100%); border-color:#f59e0b; color:#211000; }
-    .status-panel, .helo-panel, .intake-panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); }
-    .status-panel { padding:12px; }
+    .status-panel, .intake-panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+    .status-panel { padding:14px; min-height:320px; }
     .panel-title { margin:0 0 10px; color:#aab8ca; font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
-    .worker-list { display:grid; gap:8px; max-height:236px; overflow:auto; }
+    .worker-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:10px; max-height:520px; overflow:auto; }
     .worker-card { border:1px solid #26364f; border-radius:7px; background:#0b1220; padding:9px; }
     .worker-top { display:flex; justify-content:space-between; gap:8px; align-items:center; }
     .worker-top strong { font-size:13px; }
     .worker-top span { border:1px solid #2f8f6c; border-radius:99px; color:#77ffc9; padding:2px 7px; font-size:10px; font-weight:900; text-transform:uppercase; }
     .worker-card p { margin:5px 0 4px; color:#d6e2f1; font-size:12px; font-weight:800; }
     .worker-card small, .status-empty { color:var(--muted); font-size:11px; line-height:1.35; }
-    .below { display:grid; grid-template-columns:1fr 340px; gap:18px; align-items:start; }
-    .helo-panel { padding:16px; min-height:190px; }
-    .helo-head { display:flex; justify-content:space-between; gap:16px; align-items:start; margin-bottom:14px; }
-    h1 { margin:0; font-size:19px; line-height:1.15; }
-    .helo-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
-    .launch-command { background:#1f2937; border:1px solid #5b6b83; color:#f4f8ff; border-radius:6px; padding:10px 13px; font-size:12px; font-weight:900; text-transform:uppercase; white-space:nowrap; }
-    .project-board { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; }
-    .project-tile { min-height:74px; border:1px solid #26364f; border-radius:7px; background:#0b1220; padding:10px; }
-    .project-tile strong { display:block; font-size:13px; }
-    .project-tile span { display:block; margin-top:7px; color:var(--muted); font-size:11px; line-height:1.3; }
-    .intake-panel { padding:12px; }
-    textarea { width:100%; min-height:128px; resize:vertical; border:1px solid #31405a; border-radius:7px; background:#090f19; color:#e8eef8; padding:10px; font:12px/1.45 Arial,Helvetica,sans-serif; }
-    .copy-btn { width:100%; min-height:36px; margin-top:8px; border:0; border-radius:6px; background:#4ea1ff; color:#06101f; cursor:pointer; font-size:12px; font-weight:900; text-transform:uppercase; }
+    .below { display:block; }
+    .intake-panel { display:grid; grid-template-columns:120px 1fr 132px; gap:10px; align-items:start; padding:12px; margin-top:14px; }
+    .intake-panel .panel-title { margin:3px 0 0; }
+    textarea { width:100%; min-height:54px; resize:vertical; border:1px solid #31405a; border-radius:7px; background:#090f19; color:#e8eef8; padding:9px 10px; font:12px/1.35 Arial,Helvetica,sans-serif; }
+    .copy-btn { width:100%; min-height:36px; border:0; border-radius:6px; background:#4ea1ff; color:#06101f; cursor:pointer; font-size:12px; font-weight:900; text-transform:uppercase; }
     @media (max-width: 860px) {
       body { padding:14px; }
-      .top, .below { grid-template-columns:1fr; }
       header { align-items:flex-start; }
-      .project-board { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .intake-panel { grid-template-columns:1fr; }
+      .intake-panel .panel-title { margin:0; }
+      .copy-btn { max-width:180px; }
     }
     @media (max-width: 520px) {
       .launcher-grid { display:grid; grid-template-columns:1fr 1fr; }
       .nav-btn { width:100%; min-width:0; padding-left:8px; padding-right:8px; letter-spacing:.04em; }
-      .project-board { grid-template-columns:1fr; }
+      .worker-list { grid-template-columns:1fr; }
+      .copy-btn { max-width:none; }
     }
   </style>
 </head>
@@ -195,39 +189,24 @@ function homePage() {
           <a class="nav-btn doctor-btn" href="/admin/feed-doctor.html">Feed Doctor</a>
           <a class="nav-btn event-btn" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager</a>
         </nav>
-      </div>
-      <aside class="status-panel">
-        <h2 class="panel-title">Worker Status</h2>
-        <div class="worker-list">
-          ${workerStatusCards}
-        </div>
-      </aside>
-    </div>
-    <div class="below">
-      <section class="helo-panel">
-        <div class="helo-head">
-          <div>
-            <h1>HELO project board</h1>
-            <p>Front door for the command center and active worker tracks.</p>
-          </div>
-          <a class="launch-command" href="/admin/command-center.html">Open Command Center</a>
-        </div>
-        <div class="project-board">
-          <div class="project-tile"><strong>Alerts</strong><span>Generator, earnings, trade post flow.</span></div>
-          <div class="project-tile"><strong>0DTE</strong><span>SPX dashboard and Magix bridge.</span></div>
-          <div class="project-tile"><strong>Feed</strong><span>Writer, doctor, member output.</span></div>
-          <div class="project-tile"><strong>Events</strong><span>Apps Script event dashboard.</span></div>
-        </div>
-      </section>
-      <aside class="intake-panel">
-        <h2 class="panel-title">Codex Intake</h2>
-        <textarea id="codexPrompt">Work in C:\\FUCKYOUCHATGPT\\stock-bridge-push-work.
+        <section class="intake-panel">
+          <h2 class="panel-title">Codex Intake</h2>
+          <textarea id="codexPrompt">Work in C:\\FUCKYOUCHATGPT\\stock-bridge-push-work.
 Task:
 Ownership:
 Checks:
 No commit, no push.</textarea>
-        <button class="copy-btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('codexPrompt').value); this.textContent='Copied'; setTimeout(()=>this.textContent='Copy Prompt',1200);">Copy Prompt</button>
-      </aside>
+          <button class="copy-btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('codexPrompt').value); this.textContent='Copied'; setTimeout(()=>this.textContent='Copy Prompt',1200);">Copy Prompt</button>
+        </section>
+      </div>
+    </div>
+    <div class="below">
+      <section class="status-panel">
+        <h2 class="panel-title">Worker Status</h2>
+        <div class="worker-list">
+          ${workerStatusCards}
+        </div>
+      </section>
     </div>
   </main>
 </body>
