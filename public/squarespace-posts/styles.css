@@ -7,6 +7,8 @@
   --ss-green: #0f6f4f;
   --ss-gold: #9a6a00;
   --ss-blue: #175f8f;
+  --ss-hot-pink: #d9148d;
+  --ss-lime: #8ccf00;
 }
 
 * {
@@ -110,12 +112,22 @@ h1 {
 }
 
 .ss-feed-update,
-.ss-feed-trade-update {
-  border-left-color: var(--ss-blue);
+.ss-feed-morning-note,
+.ss-feed-midday-note,
+.ss-feed-urgent,
+.ss-feed-urgent-correction,
+.ss-feed-special-announcement {
+  border-left-color: var(--ss-hot-pink);
 }
 
-.ss-feed-new-trade {
-  border-left-color: #9f2d20;
+.ss-feed-new-trade,
+.ss-feed-trade-update {
+  border-left-color: var(--ss-lime);
+}
+
+.ss-feed-video,
+.ss-feed-videos {
+  border-left-color: var(--ss-blue);
 }
 
 .ss-feed-education,

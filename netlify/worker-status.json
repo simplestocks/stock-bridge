@@ -1,5 +1,13 @@
 [
   {
+    "worker": "Lovelace",
+    "project": "Member Feed",
+    "task": "Send Morning Note to protected feed",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Generate a Morning Note, pick feed type, click Send to Squarespace, and confirm it appears in the member feed"
+  },
+  {
     "worker": "Turing",
     "project": "Alerts Generator",
     "task": "Make Clear button red",

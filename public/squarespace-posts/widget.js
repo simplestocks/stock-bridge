@@ -157,11 +157,17 @@
   function typeLabel(type) {
     const labels = {
       alert: 'Alert',
+      'morning-note': 'Morning Note',
+      'midday-note': 'Midday Note',
       'new-trade': 'New Trade',
       'trade-update': 'Trade Update',
+      video: 'Video',
       update: 'Market Update',
       education: 'Education',
       event: 'Event',
+      'special-announcement': 'Special Announcement',
+      urgent: 'URGENT',
+      'urgent-correction': 'URGENT CORRECTION',
       'member-note': 'Event'
     };
     return labels[type] || type;
@@ -170,6 +176,7 @@
   function postLane(post) {
     const type = String(post.type || '').toLowerCase();
     if (['new-trade', 'trade-update', 'trade', 'trades'].includes(type)) return 'trades';
+    if (['video', 'videos'].includes(type)) return 'videos';
     return 'updates';
   }
 
