@@ -111,9 +111,9 @@ function homePage() {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SimpleStocks Admin</title>
   <style>
-    :root { color-scheme: dark; --line:#253247; --panel:#111a28; --text:#e8eef8; --muted:#91a1b8; }
+    :root { color-scheme: dark; --line:#253247; --panel:rgba(17,26,40,.9); --text:#e8eef8; --muted:#91a1b8; --nav-w:148px; }
     * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; background:#080d15; color:var(--text); font-family:Arial,Helvetica,sans-serif; padding:20px; }
+    body { margin:0; min-height:100vh; background:linear-gradient(rgba(5,8,13,.76), rgba(5,8,13,.86)), url('/assets/ratrod.jpg') center/cover fixed; color:var(--text); font-family:Arial,Helvetica,sans-serif; padding:20px; }
     main { max-width:1160px; margin:0 auto; }
     a, button { font:inherit; }
     a { color:inherit; text-decoration:none; }
@@ -124,7 +124,7 @@ function homePage() {
     .tagline { color:#6fffd2; font-size:13px; font-weight:800; letter-spacing:.1em; }
     .logout { border:1px solid #49313a; border-radius:6px; color:#ffb0b0; padding:8px 11px; font-size:12px; font-weight:800; text-transform:uppercase; }
     .launcher-grid { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
-    .nav-btn { display:inline-flex; align-items:center; justify-content:center; min-height:38px; padding:9px 16px; border-radius:6px; font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; border:1px solid transparent; box-shadow:0 0 10px rgba(0,0,0,.28); transition:opacity .15s, transform .1s; }
+    .nav-btn { display:inline-flex; align-items:center; justify-content:center; width:var(--nav-w); min-width:var(--nav-w); min-height:38px; padding:9px 10px; border-radius:6px; font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; border:1px solid transparent; box-shadow:0 0 10px rgba(0,0,0,.28); transition:opacity .15s, transform .1s; text-align:center; white-space:nowrap; }
     .nav-btn:hover { opacity:.84; transform:translateY(-1px); }
     .magix-btn { background:linear-gradient(135deg,#00c8ff 0%,#0070f3 100%); border-color:#0070f3; color:#fff; box-shadow:0 0 10px rgba(0,112,243,.45); }
     .odte-btn { background:linear-gradient(135deg,#b7ff00 0%,#63d600 100%); border-color:#9cff00; color:#041000; box-shadow:0 0 10px rgba(156,255,0,.42); }
@@ -136,6 +136,7 @@ function homePage() {
     .writer-btn { background:linear-gradient(135deg,#38d39f 0%,#119c74 100%); border-color:#21b889; color:#04120e; }
     .doctor-btn { background:linear-gradient(135deg,#ff4b4b 0%,#c40000 100%); border-color:#ff5b5b; color:#fff; }
     .event-btn { background:linear-gradient(135deg,#ffd166 0%,#f59e0b 100%); border-color:#f59e0b; color:#211000; }
+    .todo-btn { background:linear-gradient(135deg,#f8fafc 0%,#cbd5e1 100%); border-color:#e2e8f0; color:#101827; }
     .status-panel, .intake-panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); }
     .status-panel { padding:14px; min-height:320px; }
     .panel-title { margin:0 0 10px; color:#aab8ca; font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
@@ -149,7 +150,7 @@ function homePage() {
     .below { display:block; }
     .intake-panel { display:grid; grid-template-columns:120px 1fr 132px; gap:10px; align-items:start; padding:12px; margin-top:14px; }
     .intake-panel .panel-title { margin:3px 0 0; }
-    textarea { width:100%; min-height:54px; resize:vertical; border:1px solid #31405a; border-radius:7px; background:#090f19; color:#e8eef8; padding:9px 10px; font:12px/1.35 Arial,Helvetica,sans-serif; }
+    textarea { width:100%; min-height:86px; resize:vertical; border:1px solid #31405a; border-radius:7px; background:#090f19; color:#e8eef8; padding:9px 10px; font:12px/1.35 Arial,Helvetica,sans-serif; }
     .copy-btn { width:100%; min-height:36px; border:0; border-radius:6px; background:#4ea1ff; color:#06101f; cursor:pointer; font-size:12px; font-weight:900; text-transform:uppercase; }
     @media (max-width: 860px) {
       body { padding:14px; }
@@ -181,13 +182,14 @@ function homePage() {
           <a class="nav-btn magix-btn" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix</a>
           <a class="nav-btn odte-btn" href="/admin/odte-dashboard.html">SPX 0DTE</a>
           <a class="nav-btn helo-btn" href="/admin/command-center.html">HELO</a>
+          <a class="nav-btn doctor-btn" href="/admin/feed-doctor.html">Site Feed Doctor</a>
           <a class="nav-btn old-btn" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Old 0DTE</a>
-          <a class="nav-btn earnings-btn" href="/admin/alerts.html">Earnings</a>
+          <a class="nav-btn earnings-btn" href="/admin/alerts.html">Earns</a>
           <a class="nav-btn viewer-btn" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Viewer</a>
-          <a class="nav-btn tos-btn" href="https://magix-production.up.railway.app/auth/tos" target="_blank" rel="noreferrer">Magix Auth TOS</a>
-          <a class="nav-btn writer-btn" href="/admin/writer.html">Post Writer</a>
-          <a class="nav-btn doctor-btn" href="/admin/feed-doctor.html">Feed Doctor</a>
-          <a class="nav-btn event-btn" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager</a>
+          <a class="nav-btn tos-btn" href="https://magix-production.up.railway.app/auth/tos" target="_blank" rel="noreferrer">Auth TOS</a>
+          <a class="nav-btn writer-btn" href="/admin/writer.html">Writer</a>
+          <a class="nav-btn event-btn" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Events</a>
+          <a class="nav-btn todo-btn" href="https://nic-todo.netlify.app" target="_blank" rel="noreferrer">Todo</a>
         </nav>
         <section class="intake-panel">
           <h2 class="panel-title">Codex Intake</h2>
