@@ -187,7 +187,7 @@ function homePage() {
           <a class="logout" href="/admin/logout">Log out</a>
         </header>
         <nav class="launcher-grid" aria-label="Admin destinations">
-          <a class="nav-btn magix-btn" href="https://magix-production.up.railway.app/admin/login?next=/" target="_blank" rel="noreferrer">Magix</a>
+          <a class="nav-btn magix-btn" href="https://magix-production.up.railway.app/admin/login?next=/viewer.html" target="_blank" rel="noreferrer">Magix</a>
           <a class="nav-btn odte-btn" href="/admin/odte-dashboard.html">SPX 0DTE</a>
           <a class="nav-btn helo-btn" href="/admin/command-center.html">HELO</a>
           <a class="nav-btn old-btn" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Old 0DTE</a>
