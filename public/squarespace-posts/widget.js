@@ -99,11 +99,12 @@
     const tags = (post.tags || []).map((tag) => '<span class="ss-feed-tag">' + escapeHtml(tag) + '</span>').join('');
     const type = post.type || 'post';
     const lane = postLane(post);
+    const summary = cleanSummary(post.summary || '', post.body || '');
     return [
       '<article class="ss-feed-post ss-feed-' + escapeAttr(type) + '" data-type="' + escapeAttr(type) + '" data-feed-lane="' + escapeAttr(lane) + '" id="' + escapeAttr(post.id) + '">',
       '  <div class="ss-feed-meta">' + escapeHtml(dateText) + ' / ' + escapeHtml(typeLabel(type)) + '</div>',
       '  <h3>' + escapeHtml(post.title) + '</h3>',
-      '  <p class="ss-feed-summary">' + escapeHtml(post.summary || '') + '</p>',
+      summary ? '  <p class="ss-feed-summary">' + inlineFormat(summary) + '</p>' : '',
       '  <div class="ss-feed-body">' + renderRichText(post.body || '') + '</div>',
       '  <div class="ss-feed-tagrow">' + tags + '</div>',
       '</article>'
@@ -149,9 +150,46 @@
   }
 
   function inlineFormat(value) {
+    const source = String(value == null ? '' : value);
+    const linkPattern = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g;
+    let out = '';
+    let lastIndex = 0;
+    let match;
+
+    while ((match = linkPattern.exec(source)) !== null) {
+      out += inlineText(source.slice(lastIndex, match.index));
+      out += '<a href="' + escapeUrlAttr(match[2]) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(match[1]) + '</a>';
+      lastIndex = match.index + match[0].length;
+    }
+
+    out += inlineText(source.slice(lastIndex));
+    return out;
+  }
+
+  function inlineText(value) {
     return escapeHtml(value)
       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-      .replace(/\b([A-Z]{1,5})(?=\b)/g, '<span class="ss-feed-ticker">$1</span>');
+      .replace(/\b([A-Z]{2,5})(?=\b)/g, '<span class="ss-feed-ticker">$1</span>');
+  }
+
+  function cleanSummary(summary, body) {
+    const text = String(summary || '').trim();
+    if (!text) return '';
+    const firstBodyLine = String(body || '').replace(/\r\n/g, '\n').split('\n').map((line) => line.trim()).find(Boolean) || '';
+    return sameFeedText(text, firstBodyLine) ? '' : text;
+  }
+
+  function sameFeedText(a, b) {
+    return normalizeFeedText(a) === normalizeFeedText(b);
+  }
+
+  function normalizeFeedText(value) {
+    return String(value || '')
+      .replace(/^\s*[-*!>]\s+/, '')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '$1')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
   }
 
   function typeLabel(type) {
@@ -219,6 +257,10 @@
 
   function escapeAttr(value) {
     return escapeHtml(value).replace(/\s+/g, '-');
+  }
+
+  function escapeUrlAttr(value) {
+    return escapeHtml(value);
   }
 
   function searchTerms(query) {

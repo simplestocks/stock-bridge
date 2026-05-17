@@ -1,5 +1,13 @@
 [
   {
+    "worker": "Russell",
+    "project": "Member Feed",
+    "task": "Fix Sunday Videos feed formatting, links, duplicate summary, and colors",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh the member feed and confirm video links render under HERE labels, no duplicate live-room line, and video/misc colors are blue"
+  },
+  {
     "worker": "Codex",
     "project": "Alerts Generator",
     "task": "Add Sunday Session Send to Squarespace feed button",

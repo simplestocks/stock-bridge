@@ -136,6 +136,26 @@ h1 {
   border-left-color: var(--ss-blue);
 }
 
+.ss-feed-post a {
+  color: var(--ss-hot-pink);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ss-feed-video a,
+.ss-feed-videos a,
+.ss-feed-event a,
+.ss-feed-education a,
+.ss-feed-member-note a {
+  color: var(--ss-blue);
+}
+
+.ss-feed-new-trade a,
+.ss-feed-trade-update a {
+  color: var(--ss-lime);
+}
+
 .ss-feed-meta {
   color: var(--ss-muted);
   font-size: 12px;
@@ -204,9 +224,37 @@ h1 {
   border-radius: 999px;
   padding: 1px 6px;
   background: #fff;
-  color: var(--ss-blue);
+  color: var(--ss-hot-pink);
   font-size: 0.88em;
   font-weight: 800;
+}
+
+.ss-feed-video .ss-feed-ticker,
+.ss-feed-videos .ss-feed-ticker,
+.ss-feed-event .ss-feed-ticker,
+.ss-feed-education .ss-feed-ticker,
+.ss-feed-member-note .ss-feed-ticker {
+  color: var(--ss-blue);
+}
+
+.ss-feed-new-trade .ss-feed-ticker,
+.ss-feed-trade-update .ss-feed-ticker {
+  color: var(--ss-lime);
+}
+
+.ss-feed-video .ss-feed-tag,
+.ss-feed-videos .ss-feed-tag,
+.ss-feed-event .ss-feed-tag,
+.ss-feed-education .ss-feed-tag,
+.ss-feed-member-note .ss-feed-tag {
+  border-color: rgba(23, 95, 143, 0.3);
+  color: var(--ss-blue);
+}
+
+.ss-feed-new-trade .ss-feed-tag,
+.ss-feed-trade-update .ss-feed-tag {
+  border-color: rgba(140, 207, 0, 0.35);
+  color: #527900;
 }
 
 .ss-feed-tagrow {
