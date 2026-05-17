@@ -30,5 +30,13 @@
     "status": "Done",
     "waitingOn": "Live verification",
     "nextStep": "Refresh Command Center and confirm the dark project dashboard loads"
+  },
+  {
+    "worker": "Gibbs",
+    "project": "Admin Cockpit",
+    "task": "Redesign admin home into compact cockpit",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh Admin and confirm compact cockpit layout"
   }
 ]

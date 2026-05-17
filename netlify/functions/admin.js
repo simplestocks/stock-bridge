@@ -87,23 +87,23 @@ function readWorkerStatuses() {
   }
 }
 
-function renderWorkerStatusRows(statuses) {
+function renderWorkerStatusCards(statuses) {
   if (!Array.isArray(statuses) || !statuses.length) {
-    return '<tr><td colspan="6">No worker status rows yet.</td></tr>';
+    return '<div class="status-empty">No worker status yet.</div>';
   }
 
-  return statuses.map((row) => `<tr>
-        <td>${escapeHtml(row.worker)}</td>
-        <td>${escapeHtml(row.project)}</td>
-        <td>${escapeHtml(row.task)}</td>
-        <td>${escapeHtml(row.status)}</td>
-        <td>${escapeHtml(row.waitingOn)}</td>
-        <td>${escapeHtml(row.nextStep)}</td>
-      </tr>`).join('');
+  return statuses.map((row) => `<article class="worker-card">
+          <div class="worker-top">
+            <strong>${escapeHtml(row.worker)}</strong>
+            <span>${escapeHtml(row.status)}</span>
+          </div>
+          <p>${escapeHtml(row.project)}</p>
+          <small>${escapeHtml(row.nextStep || row.task || row.waitingOn)}</small>
+        </article>`).join('');
 }
 
 function homePage() {
-  const workerStatusRows = renderWorkerStatusRows(readWorkerStatuses());
+  const workerStatusCards = renderWorkerStatusCards(readWorkerStatuses());
   return html(200, `<!doctype html>
 <html lang="en">
 <head>
@@ -111,78 +111,124 @@ function homePage() {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SimpleStocks Admin</title>
   <style>
-    :root { color-scheme: dark; }
-    body { margin:0; background:#090d14; color:#e8eef8; font-family:Arial,Helvetica,sans-serif; padding:28px; }
-    main { max-width:880px; margin:0 auto; }
-    h1 { margin:0 0 16px; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
-    a { display:block; border:1px solid #263244; border-radius:9px; background:#121927; color:#e8eef8; padding:16px; text-decoration:none; font-weight:800; }
-    a span { display:block; margin-top:6px; color:#9daabe; font-weight:400; font-size:13px; }
-    a.railway { border-color:#79b8ff; background:#10243d; color:#d9ecff; }
-    a.railway span { color:#9fc9f5; }
-    a.event-app { border-color:#ffb454; background:#3a2209; color:#ffe1b5; }
-    a.event-app span { color:#ffc977; }
-    section { margin-top:22px; }
-    h2 { margin:0 0 10px; font-size:18px; }
-    .status-wrap { overflow-x:auto; border:1px solid #263244; border-radius:9px; background:#121927; }
-    table { width:100%; border-collapse:collapse; min-width:760px; }
-    th, td { padding:10px 12px; border-bottom:1px solid #263244; text-align:left; vertical-align:top; font-size:13px; }
-    th { color:#9daabe; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
-    tr:last-child td { border-bottom:0; }
-    .top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:18px; }
-    .logout { border-color:#49313a; color:#ffb0b0; }
-    .panic-corner {
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      z-index:10;
-      width:min(260px, calc(100vw - 36px));
-      border-color:#ff5b5b;
-      background:#d60000;
-      color:#fff;
-      box-shadow:0 16px 40px rgba(0,0,0,.42);
+    :root { color-scheme: dark; --line:#253247; --panel:#111a28; --text:#e8eef8; --muted:#91a1b8; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:#080d15; color:var(--text); font-family:Arial,Helvetica,sans-serif; padding:20px; }
+    main { max-width:1160px; margin:0 auto; }
+    a, button { font:inherit; }
+    a { color:inherit; text-decoration:none; }
+    .top { display:grid; grid-template-columns:1fr minmax(260px, 360px); gap:18px; align-items:start; margin-bottom:18px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:38px; }
+    .brand { display:flex; align-items:baseline; gap:8px; text-transform:uppercase; }
+    .logo { font-size:15px; font-weight:900; letter-spacing:.08em; }
+    .tagline { color:#6fffd2; font-size:13px; font-weight:800; letter-spacing:.1em; }
+    .logout { border:1px solid #49313a; border-radius:6px; color:#ffb0b0; padding:8px 11px; font-size:12px; font-weight:800; text-transform:uppercase; }
+    .launcher-grid { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .nav-btn { display:inline-flex; align-items:center; justify-content:center; min-height:38px; padding:9px 16px; border-radius:6px; font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; border:1px solid transparent; box-shadow:0 0 10px rgba(0,0,0,.28); transition:opacity .15s, transform .1s; }
+    .nav-btn:hover { opacity:.84; transform:translateY(-1px); }
+    .magix-btn { background:linear-gradient(135deg,#00c8ff 0%,#0070f3 100%); border-color:#0070f3; color:#fff; box-shadow:0 0 10px rgba(0,112,243,.45); }
+    .odte-btn { background:linear-gradient(135deg,#b7ff00 0%,#63d600 100%); border-color:#9cff00; color:#041000; box-shadow:0 0 10px rgba(156,255,0,.42); }
+    .helo-btn { background:linear-gradient(135deg,#a855f7 0%,#7c3aed 100%); border-color:#7c3aed; color:#fff; box-shadow:0 0 10px rgba(124,58,237,.45); }
+    .old-btn { background:linear-gradient(135deg,#555 0%,#2a2a2a 100%); border-color:#444; color:#c9c9c9; }
+    .earnings-btn { background:linear-gradient(135deg,#ff8c00 0%,#cc6600 100%); border-color:#cc6600; color:#fff; box-shadow:0 0 10px rgba(255,140,0,.4); }
+    .viewer-btn { background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%); border-color:#6366f1; color:#fff; box-shadow:0 0 8px rgba(99,102,241,.42); }
+    .tos-btn { background:linear-gradient(135deg,#d29922 0%,#b7791f 100%); border-color:#d29922; color:#050505; box-shadow:0 0 8px rgba(210,153,34,.35); }
+    .writer-btn { background:linear-gradient(135deg,#38d39f 0%,#119c74 100%); border-color:#21b889; color:#04120e; }
+    .doctor-btn { background:linear-gradient(135deg,#ff4b4b 0%,#c40000 100%); border-color:#ff5b5b; color:#fff; }
+    .event-btn { background:linear-gradient(135deg,#ffd166 0%,#f59e0b 100%); border-color:#f59e0b; color:#211000; }
+    .status-panel, .helo-panel, .intake-panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+    .status-panel { padding:12px; }
+    .panel-title { margin:0 0 10px; color:#aab8ca; font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+    .worker-list { display:grid; gap:8px; max-height:236px; overflow:auto; }
+    .worker-card { border:1px solid #26364f; border-radius:7px; background:#0b1220; padding:9px; }
+    .worker-top { display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .worker-top strong { font-size:13px; }
+    .worker-top span { border:1px solid #2f8f6c; border-radius:99px; color:#77ffc9; padding:2px 7px; font-size:10px; font-weight:900; text-transform:uppercase; }
+    .worker-card p { margin:5px 0 4px; color:#d6e2f1; font-size:12px; font-weight:800; }
+    .worker-card small, .status-empty { color:var(--muted); font-size:11px; line-height:1.35; }
+    .below { display:grid; grid-template-columns:1fr 340px; gap:18px; align-items:start; }
+    .helo-panel { padding:16px; min-height:190px; }
+    .helo-head { display:flex; justify-content:space-between; gap:16px; align-items:start; margin-bottom:14px; }
+    h1 { margin:0; font-size:19px; line-height:1.15; }
+    .helo-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+    .launch-command { background:#1f2937; border:1px solid #5b6b83; color:#f4f8ff; border-radius:6px; padding:10px 13px; font-size:12px; font-weight:900; text-transform:uppercase; white-space:nowrap; }
+    .project-board { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; }
+    .project-tile { min-height:74px; border:1px solid #26364f; border-radius:7px; background:#0b1220; padding:10px; }
+    .project-tile strong { display:block; font-size:13px; }
+    .project-tile span { display:block; margin-top:7px; color:var(--muted); font-size:11px; line-height:1.3; }
+    .intake-panel { padding:12px; }
+    textarea { width:100%; min-height:128px; resize:vertical; border:1px solid #31405a; border-radius:7px; background:#090f19; color:#e8eef8; padding:10px; font:12px/1.45 Arial,Helvetica,sans-serif; }
+    .copy-btn { width:100%; min-height:36px; margin-top:8px; border:0; border-radius:6px; background:#4ea1ff; color:#06101f; cursor:pointer; font-size:12px; font-weight:900; text-transform:uppercase; }
+    @media (max-width: 860px) {
+      body { padding:14px; }
+      .top, .below { grid-template-columns:1fr; }
+      header { align-items:flex-start; }
+      .project-board { grid-template-columns:repeat(2, minmax(0, 1fr)); }
     }
-    .panic-corner span { color:#ffe5e5; }
+    @media (max-width: 520px) {
+      .launcher-grid { display:grid; grid-template-columns:1fr 1fr; }
+      .nav-btn { width:100%; min-width:0; padding-left:8px; padding-right:8px; letter-spacing:.04em; }
+      .project-board { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
-  <a class="panic-corner" href="/admin/feed-doctor.html">FEED DOCTOR<span>Checks the member feed and gives the emergency fallback.</span></a>
   <main>
     <div class="top">
-      <h1>SimpleStocks Admin</h1>
-      <a class="logout" href="/admin/logout">Log out</a>
-    </div>
-    <div class="grid">
-      <a href="/admin/writer.html">Post Writer<span>Create member feed posts.</span></a>
-      <a href="/admin/alerts.html">Alert Generator<span>Morning notes, alerts, trades.</span></a>
-      <a href="/admin/command-center.html">Command Center<span>Old Hilo dashboard.</span></a>
-      <a href="/admin/odte-dashboard.html">0DTE Dashboard<span>Netlify dashboard shell.</span></a>
-      <a href="/admin/index.html">Feed Viewer<span>Protected feed test page.</span></a>
-      <a href="/admin/feed-doctor.html">Feed Doctor<span>Panic check and recovery snippet.</span></a>
-      <a class="event-app" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager<span>Apps Script event dashboard.</span></a>
-      <a class="railway" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix Railway<span>Live Railway dashboard root.</span></a>
-      <a class="railway" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Magix Viewer<span>Live Railway viewer page.</span></a>
-    </div>
-    <section>
-      <h2>Worker Status</h2>
-      <div class="status-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Worker</th>
-              <th>Project</th>
-              <th>Task</th>
-              <th>Status</th>
-              <th>Waiting on</th>
-              <th>Next step</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${workerStatusRows}
-          </tbody>
-        </table>
+      <div>
+        <header>
+          <div class="brand">
+            <div class="logo">SIMPLESTOCKS</div>
+            <div class="tagline">// cockpit</div>
+          </div>
+          <a class="logout" href="/admin/logout">Log out</a>
+        </header>
+        <nav class="launcher-grid" aria-label="Admin destinations">
+          <a class="nav-btn magix-btn" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Magix</a>
+          <a class="nav-btn odte-btn" href="/admin/odte-dashboard.html">SPX 0DTE</a>
+          <a class="nav-btn helo-btn" href="/admin/command-center.html">HELO</a>
+          <a class="nav-btn old-btn" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Old 0DTE</a>
+          <a class="nav-btn earnings-btn" href="/admin/alerts.html">Earnings</a>
+          <a class="nav-btn viewer-btn" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Viewer</a>
+          <a class="nav-btn tos-btn" href="https://magix-production.up.railway.app/auth/tos" target="_blank" rel="noreferrer">Magix Auth TOS</a>
+          <a class="nav-btn writer-btn" href="/admin/writer.html">Post Writer</a>
+          <a class="nav-btn doctor-btn" href="/admin/feed-doctor.html">Feed Doctor</a>
+          <a class="nav-btn event-btn" href="https://script.google.com/macros/s/AKfycbzap3pKAGdBirffsG5BbSqhkfbdd_kUInpyFVKidrBTr-Kk-n34NYc4jMR3qr-MrV5z/exec" target="_blank" rel="noreferrer">Event Manager</a>
+        </nav>
       </div>
-    </section>
+      <aside class="status-panel">
+        <h2 class="panel-title">Worker Status</h2>
+        <div class="worker-list">
+          ${workerStatusCards}
+        </div>
+      </aside>
+    </div>
+    <div class="below">
+      <section class="helo-panel">
+        <div class="helo-head">
+          <div>
+            <h1>HELO project board</h1>
+            <p>Front door for the command center and active worker tracks.</p>
+          </div>
+          <a class="launch-command" href="/admin/command-center.html">Open Command Center</a>
+        </div>
+        <div class="project-board">
+          <div class="project-tile"><strong>Alerts</strong><span>Generator, earnings, trade post flow.</span></div>
+          <div class="project-tile"><strong>0DTE</strong><span>SPX dashboard and Magix bridge.</span></div>
+          <div class="project-tile"><strong>Feed</strong><span>Writer, doctor, member output.</span></div>
+          <div class="project-tile"><strong>Events</strong><span>Apps Script event dashboard.</span></div>
+        </div>
+      </section>
+      <aside class="intake-panel">
+        <h2 class="panel-title">Codex Intake</h2>
+        <textarea id="codexPrompt">Work in C:\\FUCKYOUCHATGPT\\stock-bridge-push-work.
+Task:
+Ownership:
+Checks:
+No commit, no push.</textarea>
+        <button class="copy-btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('codexPrompt').value); this.textContent='Copied'; setTimeout(()=>this.textContent='Copy Prompt',1200);">Copy Prompt</button>
+      </aside>
+    </div>
   </main>
 </body>
 </html>`);
