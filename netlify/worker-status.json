@@ -1,5 +1,13 @@
 [
   {
+    "worker": "Archimedes",
+    "project": "Trade Idea Skill",
+    "task": "Create shell project and add dashboard card",
+    "status": "Done",
+    "waitingOn": "Future examples from Nic",
+    "nextStep": "Collect raw dictated trade rambles and the exact polished write-ups Nic wants"
+  },
+  {
     "worker": "Maxwell",
     "project": "Admin Cockpit",
     "task": "Move Alerts target into blue Main button and remove Earns duplicate",
