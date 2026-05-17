@@ -1,5 +1,13 @@
 [
   {
+    "worker": "Maxwell",
+    "project": "Admin Cockpit",
+    "task": "Move Alerts target into blue Main button and remove Earns duplicate",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Refresh Admin and confirm Main opens the Alerts/Morning Note page"
+  },
+  {
     "worker": "Lovelace",
     "project": "Member Feed",
     "task": "Send Morning Note to protected feed",

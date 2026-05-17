@@ -132,7 +132,6 @@ function homePage() {
     .odte-btn { background:linear-gradient(135deg,#b7ff00 0%,#63d600 100%); border-color:#9cff00; color:#041000; box-shadow:0 0 10px rgba(156,255,0,.42); }
     .helo-btn { background:linear-gradient(135deg,#a855f7 0%,#7c3aed 100%); border-color:#7c3aed; color:#fff; box-shadow:0 0 10px rgba(124,58,237,.45); }
     .old-btn { background:linear-gradient(135deg,#555 0%,#2a2a2a 100%); border-color:#444; color:#c9c9c9; }
-    .earnings-btn { background:linear-gradient(135deg,#ff8c00 0%,#cc6600 100%); border-color:#cc6600; color:#fff; box-shadow:0 0 10px rgba(255,140,0,.4); }
     .viewer-btn { background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%); border-color:#6366f1; color:#fff; box-shadow:0 0 8px rgba(99,102,241,.42); }
     .tos-btn { background:linear-gradient(135deg,#d29922 0%,#b7791f 100%); border-color:#d29922; color:#050505; box-shadow:0 0 8px rgba(210,153,34,.35); }
     .writer-btn { background:linear-gradient(135deg,#38d39f 0%,#119c74 100%); border-color:#21b889; color:#04120e; }
@@ -187,11 +186,10 @@ function homePage() {
           <a class="logout" href="/admin/logout">Log out</a>
         </header>
         <nav class="launcher-grid" aria-label="Admin destinations">
-          <a class="nav-btn magix-btn" href="https://magix-production.up.railway.app/admin/login?next=/viewer.html" target="_blank" rel="noreferrer">Magix</a>
+          <a class="nav-btn magix-btn" href="/admin/alerts.html">Main</a>
           <a class="nav-btn odte-btn" href="/admin/odte-dashboard.html">SPX 0DTE</a>
           <a class="nav-btn helo-btn" href="/admin/command-center.html">HELO</a>
           <a class="nav-btn old-btn" href="https://magix-production.up.railway.app/" target="_blank" rel="noreferrer">Old 0DTE</a>
-          <a class="nav-btn earnings-btn" href="/admin/alerts.html">Earns</a>
           <a class="nav-btn viewer-btn" href="https://magix-production.up.railway.app/viewer.html" target="_blank" rel="noreferrer">Viewer</a>
           <a class="nav-btn tos-btn" href="https://magix-production.up.railway.app/auth/tos" target="_blank" rel="noreferrer">Auth TOS</a>
           <a class="nav-btn writer-btn" href="/admin/writer.html">Writer</a>
