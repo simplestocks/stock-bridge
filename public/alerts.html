@@ -604,6 +604,13 @@
       <div class="output-doc" id="bullDoc"></div>
       <div class="meta-strip" id="bullMeta"></div>
       <div class="send-row">
+        <div class="member-feed-type">
+          <label for="bullFeedType">Member Feed Type</label>
+          <select id="bullFeedType">
+            <option>New Trade</option>
+            <option>Trade Update</option>
+          </select>
+        </div>
         <button class="btn-discord" onclick="sendToDiscord('bullDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bullDoc')">Send to Slack</button>
         <button class="btn-squarespace" onclick="sendToSquarespace('bullDoc')" id="bullSqsBtn">Send to Squarespace</button>
@@ -662,6 +669,13 @@
       <div class="output-doc" id="bearDoc"></div>
       <div class="meta-strip" id="bearMeta"></div>
       <div class="send-row">
+        <div class="member-feed-type">
+          <label for="bearFeedType">Member Feed Type</label>
+          <select id="bearFeedType">
+            <option>New Trade</option>
+            <option>Trade Update</option>
+          </select>
+        </div>
         <button class="btn-discord" onclick="sendToDiscord('bearDoc',false)">Send to Discord</button>
         <button class="btn-slack"   onclick="sendToSlack('bearDoc')">Send to Slack</button>
         <button class="btn-squarespace" onclick="sendToSquarespace('bearDoc')" id="bearSqsBtn">Send to Squarespace</button>
@@ -1198,6 +1212,10 @@
       await saveMorningNoteToMemberFeed();
       return;
     }
+    if(docId==='bullDoc'||docId==='bearDoc'){
+      await saveTradeAlertToMemberFeed(docId);
+      return;
+    }
 
     const doc=document.getElementById(docId);
     if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
@@ -1250,6 +1268,17 @@
     return map[label]||map['Morning Note'];
   }
 
+  function getTradeFeedTypeConfig(docId){
+    const selectId=docId==='bearDoc'?'bearFeedType':'bullFeedType';
+    const select=document.getElementById(selectId);
+    const label=(select&&select.value)||'New Trade';
+    const map={
+      'New Trade':{type:'new-trade',tags:['New Trade','Trade']},
+      'Trade Update':{type:'trade-update',tags:['Trade Update','Trade']}
+    };
+    return map[label]||map['New Trade'];
+  }
+
   function setDefaultMorningFeedType(){
     const select=document.getElementById('mornFeedType');
     if(!select||select.dataset.userSet==='1')return;
@@ -1300,6 +1329,42 @@
     };
   }
 
+  function buildTradeAlertFeedPayload(doc,docId){
+    const headEl=doc.querySelector('.doc-head');
+    const subEl=doc.querySelector('.doc-sub');
+    const bodyEl=doc.querySelector('.doc-body');
+    const title=headEl?headEl.textContent.trim():`Trade Alert ${new Date().toLocaleDateString()}`;
+    const children=bodyEl?Array.from(bodyEl.children):[];
+    const bodyLines=[];
+    const summaryParts=[];
+
+    children.forEach((child)=>{
+      if(child.classList.contains('doc-sig')||child.classList.contains('doc-meta'))return;
+      const text=textWithLinks(child);
+      if(!text)return;
+      if(!summaryParts.length&&!text.startsWith('+ ')&&!text.startsWith('* '))summaryParts.push(text);
+      if(text.startsWith('+ ')){
+        bodyLines.push('- '+text.slice(2));
+      }else if(text.startsWith('* ')){
+        bodyLines.push('! '+text.slice(2));
+      }else{
+        bodyLines.push(text);
+      }
+    });
+
+    const config=getTradeFeedTypeConfig(docId);
+    const direction=docId==='bearDoc'?'Bearish Alert':'Bullish Alert';
+    return {
+      title,
+      summary:summaryParts[0]||(subEl&&subEl.textContent.trim())||title,
+      body:bodyLines.join('\n\n'),
+      tags:[...config.tags,direction],
+      type:config.type,
+      author:'Nic',
+      date:new Date().toISOString()
+    };
+  }
+
   async function saveMorningNoteToMemberFeed(){
     const doc=document.getElementById('mornDoc');
     if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
@@ -1311,6 +1376,35 @@
 
     try{
       const payload=buildMorningFeedPayload(doc);
+      const res=await fetch('/.netlify/functions/squarespace-posts-save',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok||!data.ok)throw new Error(data.error||`HTTP ${res.status}`);
+      if(statusEl){statusEl.textContent='Saved to member feed.';statusEl.className='send-status ok';}
+      if(btn){btn.textContent='Saved';setTimeout(()=>{btn.textContent='Send to Squarespace';btn.disabled=false;},3000);}
+    }catch(e){
+      if(statusEl){statusEl.textContent=`Save failed: ${e.message}`;statusEl.className='send-status err';}
+      if(btn){btn.textContent='Send to Squarespace';btn.disabled=false;}
+    }
+    setTimeout(()=>{if(statusEl)statusEl.textContent='';},7000);
+  }
+
+  async function saveTradeAlertToMemberFeed(docId){
+    const doc=document.getElementById(docId);
+    if(!doc||!doc.innerHTML.trim()){alert('Generate the content first.');return;}
+
+    const btnId=docId.replace('Doc','SqsBtn');
+    const btn=document.getElementById(btnId);
+    const statusId=docId.replace('Doc','SendStatus');
+    const statusEl=document.getElementById(statusId);
+    if(btn){btn.disabled=true;btn.textContent='Saving...';}
+    if(statusEl){statusEl.textContent='Saving to member feed...';statusEl.className='send-status';}
+
+    try{
+      const payload=buildTradeAlertFeedPayload(doc,docId);
       const res=await fetch('/.netlify/functions/squarespace-posts-save',{
         method:'POST',
         headers:{'Content-Type':'application/json'},

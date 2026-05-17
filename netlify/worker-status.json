@@ -1,5 +1,13 @@
 [
   {
+    "worker": "Halley",
+    "project": "Alerts Generator",
+    "task": "Send Bullish and Bearish alerts to protected member feed",
+    "status": "Done",
+    "waitingOn": "Live verification",
+    "nextStep": "Generate a Bullish or Bearish Alert, choose New Trade or Trade Update, click Send to Squarespace, and confirm it appears in the member feed"
+  },
+  {
     "worker": "Archimedes",
     "project": "Trade Idea Skill",
     "task": "Create shell project and add dashboard card",

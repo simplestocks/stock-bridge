@@ -133,7 +133,7 @@ h1 {
 .ss-feed-education,
 .ss-feed-event,
 .ss-feed-member-note {
-  border-left-color: var(--ss-green);
+  border-left-color: var(--ss-blue);
 }
 
 .ss-feed-meta {
