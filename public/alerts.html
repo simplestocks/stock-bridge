@@ -1174,6 +1174,18 @@
     return text.trim();
   }
 
+  function discordFailureText(json, res){
+    if(res && res.status===401) return 'Discord send failed: admin session expired. Open Admin again, log in, then send again.';
+    if(json && json.rateLimited){
+      const seconds=Number(json.retryAfter||0);
+      const wait=seconds>=60?`${Math.ceil(seconds/60)} min`:`${Math.ceil(seconds)} sec`;
+      return `Discord send failed: rate limited. Retry after ${wait}.`;
+    }
+    const status=json&&json.status?`HTTP ${json.status}: `:'';
+    const err=(json&&(json.error||json.message))||'unknown error';
+    return `Discord send failed: ${status}${err}`;
+  }
+
   // ---- DISCORD SEND ----
   async function sendToDiscord(docId, useVidChannel){
     const text=getDiscordText(docId);
@@ -1182,12 +1194,14 @@
     const statusEl=document.getElementById(statusId);
     if(statusEl){statusEl.textContent='Sending to Discord...';statusEl.className='send-status';}
     try{
-      const res=await fetch(DISCORD_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.substring(0,2000)})});
+      const res=await fetch(DISCORD_PROXY_URL,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text})});
       const json=await res.json();
       const ok=Boolean(json.ok);
-      if(statusEl){statusEl.textContent=ok?'✓ Sent to Discord successfully.':'✗ Discord send failed.';statusEl.className=ok?'send-status ok':'send-status err';}
-    }catch(e){if(statusEl){statusEl.textContent=`✗ Discord send failed: ${e.message}`;statusEl.className='send-status err';}}
-    setTimeout(()=>{if(statusEl)statusEl.textContent='';},5000);
+      if(statusEl){statusEl.textContent=ok?`Sent to Discord successfully${json.chunks&&json.chunks>1?` (${json.chunks} parts)`:''}.`:discordFailureText(json,res);statusEl.className=ok?'send-status ok':'send-status err';}
+    }catch(e){
+      if(statusEl){statusEl.textContent=`Discord send failed: ${e.message}`;statusEl.className='send-status err';}
+    }
+    setTimeout(()=>{if(statusEl)statusEl.textContent='';},15000);
   }
 
   // ---- SLACK SEND ----
