@@ -1,308 +1,254 @@
 {
-  "generated_at": "2026-05-15T05:13:10.208240-07:00",
-  "week_start": "2026-05-11",
-  "week_end": "2026-05-15",
+  "generated_at": "2026-05-17T23:53:51.434216-07:00",
+  "week_start": "2026-05-18",
+  "week_end": "2026-05-22",
   "min_market_cap": 10000000000,
   "events_by_day": {
-    "2026-05-11": [
+    "2026-05-18": [
       {
-        "symbol": "PBR",
-        "name": "Petroleo Brasileiro S.A.- Petrobras",
-        "market_cap": 126245137404,
-        "when": "OTH"
-      },
-      {
-        "symbol": "PBR.A",
-        "name": "Petroleo Brasileiro S.A.- Petrobras",
-        "market_cap": 126245137404,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CEG",
-        "name": "Constellation Energy Corporation",
-        "market_cap": 99287536418,
-        "when": "OTH"
-      },
-      {
-        "symbol": "B",
-        "name": "Barrick Mining Corporation",
-        "market_cap": 75223761392,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SPG",
-        "name": "Simon Property Group, Inc.",
-        "market_cap": 65039584751,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VIV",
-        "name": "Telefonica Brasil S.A.",
-        "market_cap": 45505434452,
-        "when": "OTH"
-      },
-      {
-        "symbol": "IX",
-        "name": "ORIX Corporation",
-        "market_cap": 44146046782,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SATS",
-        "name": "EchoStar Corporation",
-        "market_cap": 38611851006,
-        "when": "OTH"
-      },
-      {
-        "symbol": "CRCL",
-        "name": "Circle Internet Group, Inc.",
-        "market_cap": 31462268117,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ASTS",
-        "name": "AST SpaceMobile, Inc.",
-        "market_cap": 29035599231,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FOX",
-        "name": "Fox Corporation",
-        "market_cap": 24988480153,
-        "when": "OTH"
-      },
-      {
-        "symbol": "FOXA",
-        "name": "Fox Corporation",
-        "market_cap": 24988480153,
-        "when": "OTH"
-      },
-      {
-        "symbol": "STE",
-        "name": "STERIS plc",
-        "market_cap": 20703637778,
-        "when": "OTH"
-      },
-      {
-        "symbol": "KSPI",
-        "name": "Joint Stock Company Kaspi.kz",
-        "market_cap": 16661344920,
+        "symbol": "BIDU",
+        "name": "Baidu, Inc.",
+        "market_cap": 48754803508,
         "when": "BMO"
       },
       {
-        "symbol": "OVV",
-        "name": "Ovintiv Inc.",
-        "market_cap": 16379649677,
+        "symbol": "TCOM",
+        "name": "Trip.com Group Limited",
+        "market_cap": 31661578562,
         "when": "OTH"
+      },
+      {
+        "symbol": "RYAAY",
+        "name": "Ryanair Holdings plc",
+        "market_cap": 30804405342,
+        "when": "BMO"
       }
     ],
-    "2026-05-12": [
+    "2026-05-19": [
       {
-        "symbol": "SE",
-        "name": "Sea Limited",
-        "market_cap": 57279552497,
-        "when": "OTH"
+        "symbol": "HD",
+        "name": "Home Depot, Inc. (The)",
+        "market_cap": 303141017712,
+        "when": "BMO"
       },
       {
-        "symbol": "FNV",
-        "name": "Franco-Nevada Corporation",
-        "market_cap": 46239104984,
-        "when": "OTH"
-      },
-      {
-        "symbol": "JD",
-        "name": "JD.com, Inc.",
-        "market_cap": 46123766120,
-        "when": "OTH"
-      },
-      {
-        "symbol": "Q",
-        "name": "Qnity Electronics, Inc.",
-        "market_cap": 33917138318,
-        "when": "OTH"
-      },
-      {
-        "symbol": "VG",
-        "name": "Venture Global, Inc.",
-        "market_cap": 32296654390,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ONON",
-        "name": "On Holding AG",
-        "market_cap": 22582891018,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MAIR",
-        "name": "Madison Air Solutions Corporation",
-        "market_cap": 21303888810,
-        "when": "OTH"
-      },
-      {
-        "symbol": "NXT",
-        "name": "Nextpower Inc.",
-        "market_cap": 20247650710,
-        "when": "OTH"
-      },
-      {
-        "symbol": "JBS",
-        "name": "JBS N.V.",
-        "market_cap": 15731181117,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TME",
-        "name": "Tencent Music Entertainment Group",
-        "market_cap": 14070706230,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TIGO",
-        "name": "Millicom International Cellular S.A.",
-        "market_cap": 13734997161,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ARMK",
-        "name": "Aramark",
-        "market_cap": 13344893373,
-        "when": "OTH"
-      },
-      {
-        "symbol": "QXO",
-        "name": "QXO, Inc.",
-        "market_cap": 12342359871,
-        "when": "OTH"
-      },
-      {
-        "symbol": "OKLO",
-        "name": "Oklo Inc.",
-        "market_cap": 12120212154,
-        "when": "OTH"
-      },
-      {
-        "symbol": "AG",
-        "name": "First Majestic Silver Corp.",
-        "market_cap": 11769306277,
-        "when": "OTH"
-      },
-      {
-        "symbol": "ZBRA",
-        "name": "Zebra Technologies Corporation",
-        "market_cap": 11754015810,
-        "when": "OTH"
-      },
-      {
-        "symbol": "RDY",
-        "name": "Dr. Reddy's Laboratories Ltd",
-        "market_cap": 10839575191,
-        "when": "OTH"
-      }
-    ],
-    "2026-05-13": [
-      {
-        "symbol": "CSCO",
-        "name": "Cisco Systems, Inc.",
-        "market_cap": 402375604189,
-        "when": "OTH"
-      },
-      {
-        "symbol": "BABA",
-        "name": "Alibaba Group Holding Limited",
-        "market_cap": 336716038646,
-        "when": "OTH"
-      },
-      {
-        "symbol": "SMFG",
-        "name": "Sumitomo Mitsui Financial Group Inc",
-        "market_cap": 144566111788,
-        "when": "OTH"
-      },
-      {
-        "symbol": "MFC",
-        "name": "Manulife Financial Corp",
-        "market_cap": 66857716530,
-        "when": "OTH"
-      },
-      {
-        "symbol": "NBIS",
-        "name": "Nebius Group N.V.",
-        "market_cap": 52625478670,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TAK",
-        "name": "Takeda Pharmaceutical Company Limited",
-        "market_cap": 52371060219,
-        "when": "OTH"
-      },
-      {
-        "symbol": "TSEM",
-        "name": "Tower Semiconductor Ltd.",
-        "market_cap": 30549610087,
-        "when": "OTH"
-      },
-      {
-        "symbol": "DT",
-        "name": "Dynatrace, Inc.",
-        "market_cap": 10358261189,
-        "when": "OTH"
-      }
-    ],
-    "2026-05-14": [
-      {
-        "symbol": "AMAT",
-        "name": "Applied Materials, Inc.",
-        "market_cap": 346498004031,
+        "symbol": "KEYS",
+        "name": "Keysight Technologies Inc.",
+        "market_cap": 62006727067,
         "when": "AMC"
       },
       {
-        "symbol": "BN",
-        "name": "Brookfield Corporation",
-        "market_cap": 101156904707,
+        "symbol": "CCEP",
+        "name": "Coca-Cola Europacific Partners plc",
+        "market_cap": 41266284052,
+        "when": "OTH"
+      },
+      {
+        "symbol": "BEKE",
+        "name": "KE Holdings Inc",
+        "market_cap": 21308780778,
         "when": "BMO"
       },
       {
-        "symbol": "VIK",
-        "name": "Viking Holdings Ltd",
-        "market_cap": 36630238825,
+        "symbol": "AS",
+        "name": "Amer Sports, Inc.",
+        "market_cap": 18587054009,
         "when": "BMO"
       },
       {
-        "symbol": "BAP",
-        "name": "Credicorp Ltd.",
-        "market_cap": 29983374465,
+        "symbol": "ZTO",
+        "name": "ZTO Express (Cayman) Inc.",
+        "market_cap": 18377529542,
         "when": "AMC"
       },
       {
-        "symbol": "NVMI",
-        "name": "Nova Ltd.",
-        "market_cap": 16007493848,
+        "symbol": "TOL",
+        "name": "Toll Brothers, Inc.",
+        "market_cap": 12501324000,
+        "when": "AMC"
+      },
+      {
+        "symbol": "JHX",
+        "name": "James Hardie Industries plc.",
+        "market_cap": 11478163200,
+        "when": "AMC"
+      },
+      {
+        "symbol": "VSAT",
+        "name": "ViaSat, Inc.",
+        "market_cap": 10092273094,
+        "when": "OTH"
+      }
+    ],
+    "2026-05-20": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corporation",
+        "market_cap": 5731344310289,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ADI",
+        "name": "Analog Devices, Inc.",
+        "market_cap": 208360652166,
         "when": "BMO"
       },
       {
-        "symbol": "FPS",
-        "name": "Forgent Power Solutions, Inc.",
-        "market_cap": 13857603027,
+        "symbol": "TJX",
+        "name": "TJX Companies, Inc. (The)",
+        "market_cap": 162941731653,
+        "when": "BMO"
+      },
+      {
+        "symbol": "LOW",
+        "name": "Lowe's Companies, Inc.",
+        "market_cap": 125235783359,
+        "when": "BMO"
+      },
+      {
+        "symbol": "INTU",
+        "name": "Intuit Inc.",
+        "market_cap": 104616099500,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TGT",
+        "name": "Target Corporation",
+        "market_cap": 55900012481,
+        "when": "BMO"
+      },
+      {
+        "symbol": "EC",
+        "name": "Ecopetrol S.A.",
+        "market_cap": 27178135197,
+        "when": "OTH"
+      },
+      {
+        "symbol": "ROIV",
+        "name": "Roivant Sciences Ltd.",
+        "market_cap": 21113183542,
+        "when": "BMO"
+      },
+      {
+        "symbol": "TLK",
+        "name": "PT Telekomunikasi Indonesia, Tbk",
+        "market_cap": 16682077275,
+        "when": "OTH"
+      },
+      {
+        "symbol": "NDSN",
+        "name": "Nordson Corporation",
+        "market_cap": 15635026847,
+        "when": "AMC"
+      },
+      {
+        "symbol": "DY",
+        "name": "Dycom Industries, Inc.",
+        "market_cap": 13537787777,
+        "when": "OTH"
+      },
+      {
+        "symbol": "HAS",
+        "name": "Hasbro, Inc.",
+        "market_cap": 13533584690,
         "when": "BMO"
       }
     ],
-    "2026-05-15": [
+    "2026-05-21": [
       {
-        "symbol": "RBC",
-        "name": "RBC Bearings Incorporated",
-        "market_cap": 19569291153,
+        "symbol": "WMT",
+        "name": "Walmart Inc.",
+        "market_cap": 1056024435282,
         "when": "BMO"
       },
       {
-        "symbol": "HTHT",
-        "name": "H World Group Limited",
-        "market_cap": 14432092826,
+        "symbol": "MUFG",
+        "name": "Mitsubishi UFJ Financial Group Inc",
+        "market_cap": 219315297802,
+        "when": "OTH"
+      },
+      {
+        "symbol": "DE",
+        "name": "Deere & Company",
+        "market_cap": 155214448528,
+        "when": "BMO"
+      },
+      {
+        "symbol": "MFG",
+        "name": "Mizuho Financial Group, Inc.",
+        "market_cap": 111319105709,
+        "when": "OTH"
+      },
+      {
+        "symbol": "NTES",
+        "name": "NetEase, Inc.",
+        "market_cap": 74201536049,
+        "when": "BMO"
+      },
+      {
+        "symbol": "ROST",
+        "name": "Ross Stores, Inc.",
+        "market_cap": 68704535524,
+        "when": "AMC"
+      },
+      {
+        "symbol": "TTWO",
+        "name": "Take-Two Interactive Software, Inc.",
+        "market_cap": 44888382289,
+        "when": "AMC"
+      },
+      {
+        "symbol": "CPRT",
+        "name": "Copart, Inc.",
+        "market_cap": 31452018868,
+        "when": "AMC"
+      },
+      {
+        "symbol": "SHG",
+        "name": "Shinhan Financial Group Co Ltd",
+        "market_cap": 31191779173,
+        "when": "OTH"
+      },
+      {
+        "symbol": "WDAY",
+        "name": "Workday, Inc.",
+        "market_cap": 29650159181,
+        "when": "AMC"
+      },
+      {
+        "symbol": "ZM",
+        "name": "Zoom Communications, Inc.",
+        "market_cap": 28886654741,
+        "when": "AMC"
+      },
+      {
+        "symbol": "NIO",
+        "name": "NIO Inc.",
+        "market_cap": 15660418888,
+        "when": "BMO"
+      },
+      {
+        "symbol": "DECK",
+        "name": "Deckers Outdoor Corporation",
+        "market_cap": 13480988746,
+        "when": "AMC"
+      },
+      {
+        "symbol": "WMS",
+        "name": "Advanced Drainage Systems, Inc.",
+        "market_cap": 10912392503,
+        "when": "BMO"
+      }
+    ],
+    "2026-05-22": [
+      {
+        "symbol": "BJ",
+        "name": "BJ's Wholesale Club Holdings, Inc.",
+        "market_cap": 12253365391,
         "when": "BMO"
       }
     ]
   },
-  "earnings_text": "Mon May 11: KSPI | (PBR PBR.A CEG B SPG VIV IX SATS CRCL ASTS FOX FOXA STE OVV)\nTue May 12: \u2014 | (SE FNV JD Q VG ONON MAIR NXT JBS TME TIGO ARMK QXO OKLO AG ZBRA RDY)\nWed May 13: \u2014 | (CSCO BABA SMFG MFC NBIS TAK TSEM DT)\nThu May 14: BN VIK NVMI FPS | AMAT BAP\nFri May 15: RBC HTHT | \u2014",
+  "earnings_text": "Mon May 18: BIDU RYAAY | (TCOM)\nTue May 19: HD BEKE AS | KEYS ZTO TOL JHX (CCEP VSAT)\nWed May 20: ADI TJX LOW TGT ROIV HAS | NVDA INTU NDSN (EC TLK DY)\nThu May 21: WMT DE NTES NIO WMS | ROST TTWO CPRT WDAY ZM DECK (MUFG MFG SHG)\nFri May 22: BJ | \u2014",
   "errors": []
 }
